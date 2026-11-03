@@ -270,6 +270,13 @@ body.theme-sunset #stars-layer {
   opacity: 0.6;
 }
 
+.sound-icon {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent-gold);
+}
+
 /* View Mode Switcher */
 .view-modes {
   display: flex;
@@ -417,9 +424,19 @@ body.theme-sunset #stars-layer {
   font-size: 0.88rem;
 }
 
-.city-flag {
-  font-size: 1.35rem;
+.city-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent-gold);
+  background: rgba(229, 179, 126, 0.15);
+  border: 1px solid rgba(229, 179, 126, 0.35);
+  border-radius: 6px;
+  padding: 0.2rem 0.45rem;
   margin-right: 0.85rem;
+  font-family: var(--font-mono, monospace);
+  min-width: 32px;
+  text-align: center;
 }
 .city-details {
   flex: 1;

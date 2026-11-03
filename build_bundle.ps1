@@ -27,22 +27,22 @@ function Clean-Module($content) {
 }
 
 # 1. world-cities.js
-$citiesContent = Clean-Module (Get-Content -Raw -Path ".\world-cities.js")
+$citiesContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\world-cities.js")
 
 # 2. sound.js
-$soundContent = Clean-Module (Get-Content -Raw -Path ".\sound.js")
+$soundContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\sound.js")
 
 # 3. watch.js
-$watchContent = Clean-Module (Get-Content -Raw -Path ".\watch.js")
+$watchContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\watch.js")
 
 # 4. watch3d.js
-$watch3DContent = Clean-Module (Get-Content -Raw -Path ".\watch3d.js")
+$watch3DContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\watch3d.js")
 
 # 5. scenery.js
-$sceneryContent = Clean-Module (Get-Content -Raw -Path ".\scenery.js")
+$sceneryContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\scenery.js")
 
 # 6. app.js
-$appContent = Clean-Module (Get-Content -Raw -Path ".\app.js")
+$appContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\app.js")
 
 $bundleContent = $header + `
 "`r`n  // =========================================================================`r`n  // 1. World Locations & Timezone Resolver`r`n  // =========================================================================`r`n" + $citiesContent + `

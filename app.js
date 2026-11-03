@@ -148,7 +148,7 @@ class WatchWorldApp {
       this.soundToggleBtn.setAttribute("aria-label", isSoundOn ? "Mute audio" : "Unmute audio");
       const icon = this.soundToggleBtn.querySelector(".sound-icon");
       if (icon) {
-        icon.textContent = isSoundOn ? "🔊" : "🔇";
+        icon.textContent = isSoundOn ? "ON" : "OFF";
       }
     });
 
@@ -195,7 +195,7 @@ class WatchWorldApp {
 
     this.suggestionsDropdown.innerHTML = matches.map((item, idx) => `
       <div class="suggestion-item" data-index="${idx}">
-        <span class="city-flag">${item.flag}</span>
+        <span class="city-badge">${item.code || "LOC"}</span>
         <div class="city-details">
           <span class="city-title">${item.name}</span>
           <span class="city-country">${item.isCountry ? (item.capital ? `Capital: ${item.capital}` : "Country") : item.country}</span>
@@ -230,7 +230,7 @@ class WatchWorldApp {
     this.selectLocation(matchedCity || {
       name: "London",
       country: "United Kingdom",
-      flag: "🇬🇧",
+      code: "GB",
       lat: 51.5074,
       lng: -0.1278,
       tz: "Europe/London"
@@ -260,7 +260,7 @@ class WatchWorldApp {
         this.watch3D.setFinish(this.watch.finish);
       }
       this.applyBackgroundTheme(timeInfo);
-      this.setTelemetry(`✦ ${city.flag} ${city.name.toUpperCase()} • SYNCHRONIZED`, false);
+      this.setTelemetry(`${city.name.toUpperCase()} - SYNCHRONIZED`, false);
       this.startLiveClock();
       return;
     }
@@ -268,7 +268,7 @@ class WatchWorldApp {
     this.isTransitioning = true;
 
     // --- Fast Hand Spin & Deceleration Animation ---
-    this.setTelemetry(`✦ TARGETING ${city.flag} ${city.name.toUpperCase()} • SPINNING HANDS...`, true);
+    this.setTelemetry(`TARGETING ${city.name.toUpperCase()} - SPINNING HANDS...`, true);
 
     // Background theme starts morphing as the hands spin
     this.applyBackgroundTheme(timeInfo);
@@ -279,7 +279,7 @@ class WatchWorldApp {
 
     this.watch.setTime(timeInfo, true, () => {
       // When hands finish spinning and lock onto time
-      this.setTelemetry(`✦ ${city.flag} ${city.name.toUpperCase()} • SYNCHRONIZED`, false);
+      this.setTelemetry(`${city.name.toUpperCase()} - SYNCHRONIZED`, false);
       this.isTransitioning = false;
       this.startLiveClock();
     });
@@ -322,7 +322,7 @@ class WatchWorldApp {
     }
     if (this.timePeriodEl) this.timePeriodEl.textContent = ampm;
 
-    if (this.timezoneBadgeEl) this.timezoneBadgeEl.textContent = `${timeInfo.offsetStr} • ${city.tz.split("/")[1] || city.tz}`;
+    if (this.timezoneBadgeEl) this.timezoneBadgeEl.textContent = `${timeInfo.offsetStr} | ${city.tz.split("/")[1] || city.tz}`;
 
     // Relative difference vs user's home timezone
     const homeNow = new Date();
@@ -342,19 +342,19 @@ class WatchWorldApp {
 
     // Solar Status Badge
     if (this.solarStatusEl) {
-      const solarIcons = {
-        dawn: "🌅 Dawn / Sunrise",
-        day: "☀️ Broad Daylight",
-        sunset: "🌇 Golden Hour Sunset",
-        dusk: "🌆 Twilight / Dusk",
-        night: "🌙 Starlit Night"
+      const solarStatusNames = {
+        dawn: "Dawn / Sunrise",
+        day: "Broad Daylight",
+        sunset: "Golden Hour Sunset",
+        dusk: "Twilight / Dusk",
+        night: "Starlit Night"
       };
-      this.solarStatusEl.textContent = solarIcons[timeInfo.timeOfDay] || "☀️ Day";
+      this.solarStatusEl.textContent = solarStatusNames[timeInfo.timeOfDay] || "Daytime";
     }
 
     if (this.coordsBadgeEl) {
-      const latStr = `${Math.abs(city.lat).toFixed(2)}° ${city.lat >= 0 ? "N" : "S"}`;
-      const lngStr = `${Math.abs(city.lng).toFixed(2)}° ${city.lng >= 0 ? "E" : "W"}`;
+      const latStr = `${Math.abs(city.lat).toFixed(2)} ${city.lat >= 0 ? "N" : "S"}`;
+      const lngStr = `${Math.abs(city.lng).toFixed(2)} ${city.lng >= 0 ? "E" : "W"}`;
       this.coordsBadgeEl.textContent = `${latStr}, ${lngStr}`;
     }
   }

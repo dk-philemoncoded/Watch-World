@@ -1,5 +1,5 @@
 /**
- * 2D Vector Animated Horizon & Living Human Activity Scenery — PHILL
+ * 2D Vector Animated Horizon & Living Human Activity Scenery - PHILL
  * Depicts a vibrant, authentic sky & living horizon that unmistakably reflects the
  * exact time of day (Dawn, Broad Daylight, Golden Hour Sunset, Twilight Dusk, Midnight).
  * Populates the promenade with animated 2D vector humans engaging in rich, authentic activities
@@ -168,7 +168,7 @@ export class HorizonScenery {
     this.characters = [];
 
     if (time === "dawn") {
-      // 🌅 DAWN: Morning Jogger, Dog Walker, Commuter with Coffee, Sunrise Cyclist, Stretcher, Early Walker
+      // DAWN: Morning Jogger, Dog Walker, Commuter with Coffee, Sunrise Cyclist, Stretcher, Early Walker
       this.characters.push(
         { type: "jogger", x: w * 0.12, y: groundY, vx: 75, scale: 0.92, facing: 1 },
         { type: "dog_walker", x: w * 0.38, y: groundY, vx: 34, scale: 0.90, facing: 1 },
@@ -179,7 +179,7 @@ export class HorizonScenery {
         { type: "stretcher", x: w * 0.60, y: groundY, scale: 0.90, facing: 1 }
       );
     } else if (time === "day") {
-      // ☀️ BROAD DAYLIGHT: Bustling park promenade with readers, skaters, strollers, cyclists, tourists
+      // BROAD DAYLIGHT: Bustling park promenade with readers, skaters, strollers, cyclists, tourists
       this.characters.push(
         { type: "bench_reader", x: this.benches[0].x, y: groundY, scale: 0.90, facing: 1 },
         { type: "bench_laptop", x: this.benches[1].x, y: groundY, scale: 0.90, facing: 1 },
@@ -192,7 +192,7 @@ export class HorizonScenery {
         { type: "walker_phone", x: w * 0.05, y: groundY, vx: 30, scale: 0.90, facing: 1 }
       );
     } else if (time === "sunset") {
-      // 🌇 SUNSET / GOLDEN HOUR: Romantic couple, Sunset watcher, Evening jogger, Dog walker, Cyclist, Railing photographer
+      // SUNSET / GOLDEN HOUR: Romantic couple, Sunset watcher, Evening jogger, Dog walker, Cyclist, Railing photographer
       this.characters.push(
         { type: "couple", x: w * 0.28, y: groundY, vx: 26, scale: 0.92, facing: 1 },
         { type: "bench_watcher", x: this.benches[1].x, y: groundY, scale: 0.90, facing: 1 },
@@ -203,7 +203,7 @@ export class HorizonScenery {
         { type: "photographer", x: w * 0.50, y: groundY, vx: 0, scale: 0.90, facing: 1 }
       );
     } else if (time === "dusk") {
-      // 🌆 DUSK: Acoustic guitarist on bench, evening stroll in coats, phone texter under streetlamp, couple
+      // DUSK: Acoustic guitarist on bench, evening stroll in coats, phone texter under streetlamp, couple
       this.characters.push(
         { type: "bench_guitarist", x: this.benches[0].x, y: groundY, scale: 0.92, facing: 1 },
         { type: "bench_watcher", x: this.benches[1].x, y: groundY, scale: 0.90, facing: 1 },
@@ -214,7 +214,7 @@ export class HorizonScenery {
         { type: "jogger", x: w * 0.88, y: groundY, vx: -70, scale: 0.88, facing: -1 }
       );
     } else {
-      // 🌙 NIGHT: Stargazer at telescope, solitary nocturnal walker, late night runner, bench thinker
+      // NIGHT: Stargazer at telescope, solitary nocturnal walker, late night runner, bench thinker
       this.characters.push(
         { type: "stargazer", x: w * 0.26, y: groundY, scale: 0.92, facing: 1 },
         { type: "walker_coat", x: w * 0.54, y: groundY, vx: 28, scale: 0.90, facing: 1 },

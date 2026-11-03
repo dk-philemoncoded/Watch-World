@@ -1,5 +1,5 @@
 /**
- * 3D Wristwatch WebGL Engine — PHILL
+ * 3D Wristwatch WebGL Engine - PHILL
  * Renders an ultra-luxurious, fully buckled 3D mechanical timepiece in real-time.
  * 
  * Features:
@@ -12,7 +12,7 @@
  * - Live Dial Projection: Active 2D Swiss dial texture projected onto the 3D dial face
  *   (hands spin, settle, and tick dead-beat in real-time 3D!)
  * - Dome Sapphire Crystal: Dynamic specular sheen and Fresnel lighting
- * - Interactive 3D Orbit Controls: Drag to inspect full 360° (front, sides, back buckle), scroll to zoom
+ * - Interactive 3D Orbit Controls: Drag to inspect full 360-degree rotation (front, sides, back buckle), scroll to zoom
  * - Cinematic Spin & Settling Animation on location search
  */
 
@@ -638,7 +638,7 @@ export class Watch3DEngine {
     const points = [];
     const segments = 24;
 
-    // Cubic Bézier control points
+    // Cubic Bezier control points
     const p0 = { y: 1.18, z: -0.05 };
     const p1 = { y: 1.82, z: -0.16 };
     const p2 = { y: 1.88, z: -1.34 };
@@ -661,7 +661,7 @@ export class Watch3DEngine {
     const points = [];
     const segments = 24;
 
-    // Cubic Bézier control points
+    // Cubic Bezier control points
     const p0 = { y: -1.18, z: -0.05 };
     const p1 = { y: -1.82, z: -0.16 };
     const p2 = { y: -1.88, z: -1.32 };

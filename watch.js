@@ -1,5 +1,5 @@
 /**
- * Luxury 2D Mechanical Wrist Watch Engine — PHILL
+ * Luxury 2D Mechanical Wrist Watch Engine - PHILL
  * Faithfully re-creates the Swiss luxury dress watch (Rolex 1908 aesthetic):
  * - Double Bezel: Outer fine coin-edge fluted bezel & inner mirror-polished ring
  * - Pure porcelain white/ivory dial with delicate railroad minute track
@@ -257,7 +257,7 @@ export class WatchEngine {
     // 7. Applied Faceted Gold Numerals (12, 3, 9) and Dagger Markers
     this.drawHourMarkers(ctx, r);
 
-    // 8. Brand Emblem (Crown, "PHILL", "GENÈVE")
+    // 8. Brand Emblem (Crown, "PHILL", "GENEVE")
     this.drawBrand(ctx, r);
 
     // 9. Small Seconds Subdial at 6 o'clock (Azurage, Track, "SUPERLATIVE CHRONOMETER")
@@ -857,11 +857,11 @@ export class WatchEngine {
     ctx.letterSpacing = "5px";
     ctx.fillText("PHILL", 0, -dialR * 0.31);
 
-    // C. Subtitle: "GENÈVE"
+    // C. Subtitle: "GENEVE"
     ctx.font = `500 ${r * 0.022}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
     ctx.fillStyle = "#333945";
     ctx.letterSpacing = "3px";
-    ctx.fillText("GENÈVE", 0, -dialR * 0.22);
+    ctx.fillText("GENEVE", 0, -dialR * 0.22);
 
     ctx.restore();
   }

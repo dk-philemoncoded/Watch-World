@@ -29,7 +29,10 @@
     <!-- Site Header -->
     <header class="site-header">
       <div class="brand-badge">
-        <span class="brand-icon">⏱️</span>
+        <svg class="brand-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
         <div>
           <h1 class="brand-title">PHILL</h1>
           <p class="brand-tagline">Planetary Horology & World Time</p>
@@ -39,7 +42,7 @@
       <div class="header-actions">
         <!-- Sound Toggle -->
         <button id="sound-toggle-btn" class="icon-btn" aria-label="Toggle mechanical watch sound" title="Toggle Mechanical Audio">
-          <span class="sound-icon">🔊</span>
+          <span class="sound-icon">ON</span>
         </button>
       </div>
     </header>
@@ -49,7 +52,10 @@
       <div class="search-container">
         <form id="search-form" class="search-form" autocomplete="off">
           <div class="search-input-wrapper">
-            <span class="search-icon">🔍</span>
+            <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
             <input 
               type="text" 
               id="search-input" 
@@ -60,7 +66,7 @@
             >
             <button type="submit" class="search-submit-btn">
               <span>Find Time</span>
-              <span class="btn-arrow">→</span>
+              <span class="btn-arrow">-&gt;</span>
             </button>
           </div>
 
@@ -71,14 +77,14 @@
         <!-- Quick Access Popular Locations -->
         <div class="popular-cities">
           <span class="popular-label">Popular:</span>
-          <button type="button" class="city-chip" data-city="Nigeria">Nigeria 🇳🇬</button>
-          <button type="button" class="city-chip" data-city="Tokyo">Tokyo 🇯🇵</button>
-          <button type="button" class="city-chip" data-city="London">London 🇬🇧</button>
-          <button type="button" class="city-chip" data-city="New York">New York 🇺🇸</button>
-          <button type="button" class="city-chip" data-city="Paris">Paris 🇫🇷</button>
-          <button type="button" class="city-chip" data-city="Dubai">Dubai 🇦🇪</button>
-          <button type="button" class="city-chip" data-city="Sydney">Sydney 🇦🇺</button>
-          <button type="button" class="city-chip" data-city="Cairo">Cairo 🇪🇬</button>
+          <button type="button" class="city-chip" data-city="Nigeria">Nigeria</button>
+          <button type="button" class="city-chip" data-city="Tokyo">Tokyo</button>
+          <button type="button" class="city-chip" data-city="London">London</button>
+          <button type="button" class="city-chip" data-city="New York">New York</button>
+          <button type="button" class="city-chip" data-city="Paris">Paris</button>
+          <button type="button" class="city-chip" data-city="Dubai">Dubai</button>
+          <button type="button" class="city-chip" data-city="Sydney">Sydney</button>
+          <button type="button" class="city-chip" data-city="Cairo">Cairo</button>
         </div>
       </div>
     </section>
@@ -90,8 +96,8 @@
       <div id="watch-wrapper" class="watch-wrapper">
         <canvas id="watch-3d-canvas" class="watch-3d-canvas" width="760" height="760"></canvas>
         <canvas id="watch-canvas" class="watch-canvas" width="760" height="760" style="display: none;"></canvas>
-        <div id="watch-telemetry" class="watch-telemetry">✦ CALIBRATING TIMEZONE...</div>
-        <div class="watch-hint">✦ Drag to rotate in 3D • Scroll to zoom • Buckled strap & clasp • Hands reflect local time</div>
+        <div id="watch-telemetry" class="watch-telemetry">CALIBRATING TIMEZONE...</div>
+        <div class="watch-hint">Drag to rotate in 3D | Scroll to zoom | Buckled strap &amp; clasp | Hands reflect local time</div>
       </div>
 
     </main>
@@ -106,7 +112,7 @@
         <div id="location-country" class="location-country">--</div>
         <div class="card-meta-pills">
           <span id="timezone-badge" class="meta-pill">UTC+0</span>
-          <span id="coords-badge" class="meta-pill">0.00°, 0.00°</span>
+          <span id="coords-badge" class="meta-pill">0.00 N, 0.00 E</span>
         </div>
       </div>
 
@@ -120,7 +126,7 @@
           <span id="time-period" class="time-period">PM</span>
         </div>
         <div id="relative-time" class="relative-time">Calculating difference...</div>
-        <div id="solar-status" class="solar-status">☀️ Daytime</div>
+        <div id="solar-status" class="solar-status">Daytime</div>
       </div>
 
       <!-- Watch Customizer (Case Finish) -->

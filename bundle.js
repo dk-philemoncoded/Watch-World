@@ -19,191 +19,191 @@
 
 // 1. Comprehensive Global Countries Database (195+ Countries with primary capital coordinates & timezones)
 const WORLD_COUNTRIES = [
-  { name: "Nigeria", country: "Nigeria", flag: "ðŸ‡³ðŸ‡¬", tz: "Africa/Lagos", lat: 9.0820, lng: 8.6753, code: "NG", capital: "Abuja" },
-  { name: "United States", country: "United States", flag: "ðŸ‡ºðŸ‡¸", tz: "America/New_York", lat: 38.9072, lng: -77.0369, code: "US", capital: "Washington, D.C." },
-  { name: "United Kingdom", country: "United Kingdom", flag: "ðŸ‡¬ðŸ‡§", tz: "Europe/London", lat: 51.5074, lng: -0.1278, code: "GB", capital: "London" },
-  { name: "Japan", country: "Japan", flag: "ðŸ‡¯ðŸ‡µ", tz: "Asia/Tokyo", lat: 35.6762, lng: 139.6503, code: "JP", capital: "Tokyo" },
-  { name: "France", country: "France", flag: "ðŸ‡«ðŸ‡·", tz: "Europe/Paris", lat: 48.8566, lng: 2.3522, code: "FR", capital: "Paris" },
-  { name: "Germany", country: "Germany", flag: "ðŸ‡©ðŸ‡ª", tz: "Europe/Berlin", lat: 52.5200, lng: 13.4050, code: "DE", capital: "Berlin" },
-  { name: "Italy", country: "Italy", flag: "ðŸ‡®ðŸ‡¹", tz: "Europe/Rome", lat: 41.9028, lng: 12.4964, code: "IT", capital: "Rome" },
-  { name: "Spain", country: "Spain", flag: "ðŸ‡ªðŸ‡¸", tz: "Europe/Madrid", lat: 40.4168, lng: -3.7038, code: "ES", capital: "Madrid" },
-  { name: "Canada", country: "Canada", flag: "ðŸ‡¨ðŸ‡¦", tz: "America/Toronto", lat: 45.4215, lng: -75.6972, code: "CA", capital: "Ottawa" },
-  { name: "Australia", country: "Australia", flag: "ðŸ‡¦ðŸ‡º", tz: "Australia/Sydney", lat: -35.2809, lng: 149.1300, code: "AU", capital: "Canberra" },
-  { name: "Brazil", country: "Brazil", flag: "ðŸ‡§ðŸ‡·", tz: "America/Sao_Paulo", lat: -15.7975, lng: -47.8919, code: "BR", capital: "BrasÃ­lia" },
-  { name: "India", country: "India", flag: "ðŸ‡®ðŸ‡³", tz: "Asia/Kolkata", lat: 28.6139, lng: 77.2090, code: "IN", capital: "New Delhi" },
-  { name: "China", country: "China", flag: "ðŸ‡¨ðŸ‡³", tz: "Asia/Shanghai", lat: 39.9042, lng: 116.4074, code: "CN", capital: "Beijing" },
-  { name: "South Africa", country: "South Africa", flag: "ðŸ‡¿ðŸ‡¦", tz: "Africa/Johannesburg", lat: -25.7479, lng: 28.2293, code: "ZA", capital: "Pretoria" },
-  { name: "Kenya", country: "Kenya", flag: "ðŸ‡°ðŸ‡ª", tz: "Africa/Nairobi", lat: -1.2921, lng: 36.8219, code: "KE", capital: "Nairobi" },
-  { name: "Ghana", country: "Ghana", flag: "ðŸ‡¬ðŸ‡­", tz: "Africa/Accra", lat: 5.6037, lng: -0.1870, code: "GH", capital: "Accra" },
-  { name: "Egypt", country: "Egypt", flag: "ðŸ‡ªðŸ‡¬", tz: "Africa/Cairo", lat: 30.0444, lng: 31.2357, code: "EG", capital: "Cairo" },
-  { name: "Mexico", country: "Mexico", flag: "ðŸ‡²ðŸ‡½", tz: "America/Mexico_City", lat: 19.4326, lng: -99.1332, code: "MX", capital: "Mexico City" },
-  { name: "Argentina", country: "Argentina", flag: "ðŸ‡¦ðŸ‡·", tz: "America/Argentina/Buenos_Aires", lat: -34.6037, lng: -58.3816, code: "AR", capital: "Buenos Aires" },
-  { name: "Russia", country: "Russia", flag: "ðŸ‡·ðŸ‡º", tz: "Europe/Moscow", lat: 55.7558, lng: 37.6173, code: "RU", capital: "Moscow" },
-  { name: "United Arab Emirates", country: "United Arab Emirates", flag: "ðŸ‡¦ðŸ‡ª", tz: "Asia/Dubai", lat: 24.4539, lng: 54.3773, code: "AE", capital: "Abu Dhabi" },
-  { name: "Saudi Arabia", country: "Saudi Arabia", flag: "ðŸ‡¸ðŸ‡¦", tz: "Asia/Riyadh", lat: 24.7136, lng: 46.6753, code: "SA", capital: "Riyadh" },
-  { name: "Turkey", country: "Turkey", flag: "ðŸ‡¹ðŸ‡·", tz: "Europe/Istanbul", lat: 39.9334, lng: 32.8597, code: "TR", capital: "Ankara" },
-  { name: "South Korea", country: "South Korea", flag: "ðŸ‡°ðŸ‡·", tz: "Asia/Seoul", lat: 37.5665, lng: 126.9780, code: "KR", capital: "Seoul" },
-  { name: "Indonesia", country: "Indonesia", flag: "ðŸ‡®ðŸ‡©", tz: "Asia/Jakarta", lat: -6.2088, lng: 106.8456, code: "ID", capital: "Jakarta" },
-  { name: "Switzerland", country: "Switzerland", flag: "ðŸ‡¨ðŸ‡­", tz: "Europe/Zurich", lat: 46.9480, lng: 7.4474, code: "CH", capital: "Bern" },
-  { name: "Sweden", country: "Sweden", flag: "ðŸ‡¸ðŸ‡ª", tz: "Europe/Stockholm", lat: 59.3293, lng: 18.0686, code: "SE", capital: "Stockholm" },
-  { name: "Norway", country: "Norway", flag: "ðŸ‡³ðŸ‡´", tz: "Europe/Oslo", lat: 59.9139, lng: 10.7522, code: "NO", capital: "Oslo" },
-  { name: "Denmark", country: "Denmark", flag: "ðŸ‡©ðŸ‡°", tz: "Europe/Copenhagen", lat: 55.6761, lng: 12.5683, code: "DK", capital: "Copenhagen" },
-  { name: "Netherlands", country: "Netherlands", flag: "ðŸ‡³ðŸ‡±", tz: "Europe/Amsterdam", lat: 52.3676, lng: 4.9041, code: "NL", capital: "Amsterdam" },
-  { name: "New Zealand", country: "New Zealand", flag: "ðŸ‡³ðŸ‡¿", tz: "Pacific/Auckland", lat: -41.2865, lng: 174.7762, code: "NZ", capital: "Wellington" },
-  { name: "Greece", country: "Greece", flag: "ðŸ‡¬ðŸ‡·", tz: "Europe/Athens", lat: 37.9838, lng: 23.7275, code: "GR", capital: "Athens" },
-  { name: "Portugal", country: "Portugal", flag: "ðŸ‡µðŸ‡¹", tz: "Europe/Lisbon", lat: 38.7223, lng: -9.1393, code: "PT", capital: "Lisbon" },
-  { name: "Poland", country: "Poland", flag: "ðŸ‡µðŸ‡±", tz: "Europe/Warsaw", lat: 52.2297, lng: 21.0122, code: "PL", capital: "Warsaw" },
-  { name: "Ireland", country: "Ireland", flag: "ðŸ‡®ðŸ‡ª", tz: "Europe/Dublin", lat: 53.3498, lng: -6.2603, code: "IE", capital: "Dublin" },
-  { name: "Philippines", country: "Philippines", flag: "ðŸ‡µðŸ‡­", tz: "Asia/Manila", lat: 14.5995, lng: 120.9842, code: "PH", capital: "Manila" },
-  { name: "Thailand", country: "Thailand", flag: "ðŸ‡¹ðŸ‡­", tz: "Asia/Bangkok", lat: 13.7563, lng: 100.5018, code: "TH", capital: "Bangkok" },
-  { name: "Vietnam", country: "Vietnam", flag: "ðŸ‡»ðŸ‡³", tz: "Asia/Ho_Chi_Minh", lat: 21.0285, lng: 105.8542, code: "VN", capital: "Hanoi" },
-  { name: "Malaysia", country: "Malaysia", flag: "ðŸ‡²ðŸ‡¾", tz: "Asia/Kuala_Lumpur", lat: 3.1390, lng: 101.6869, code: "MY", capital: "Kuala Lumpur" },
-  { name: "Singapore", country: "Singapore", flag: "ðŸ‡¸ðŸ‡¬", tz: "Asia/Singapore", lat: 1.3521, lng: 103.8198, code: "SG", capital: "Singapore" },
-  { name: "Colombia", country: "Colombia", flag: "ðŸ‡¨ðŸ‡´", tz: "America/Bogota", lat: 4.7110, lng: -74.0721, code: "CO", capital: "Bogota" },
-  { name: "Chile", country: "Chile", flag: "ðŸ‡¨ðŸ‡±", tz: "America/Santiago", lat: -33.4489, lng: -70.6693, code: "CL", capital: "Santiago" },
-  { name: "Peru", country: "Peru", flag: "ðŸ‡µðŸ‡ª", tz: "America/Lima", lat: -12.0464, lng: -77.0428, code: "PE", capital: "Lima" },
-  { name: "Israel", country: "Israel", flag: "ðŸ‡®ðŸ‡±", tz: "Asia/Jerusalem", lat: 31.7683, lng: 35.2137, code: "IL", capital: "Jerusalem" },
-  { name: "Morocco", country: "Morocco", flag: "ðŸ‡²ðŸ‡¦", tz: "Africa/Casablanca", lat: 31.7917, lng: -7.0926, code: "MA", capital: "Rabat" },
-  { name: "Ethiopia", country: "Ethiopia", flag: "ðŸ‡ªðŸ‡¹", tz: "Africa/Addis_Ababa", lat: 9.0300, lng: 38.7400, code: "ET", capital: "Addis Ababa" },
-  { name: "Pakistan", country: "Pakistan", flag: "ðŸ‡µðŸ‡°", tz: "Asia/Karachi", lat: 33.6844, lng: 73.0479, code: "PK", capital: "Islamabad" },
-  { name: "Bangladesh", country: "Bangladesh", flag: "ðŸ‡§ðŸ‡©", tz: "Asia/Dhaka", lat: 23.8103, lng: 90.4125, code: "BD", capital: "Dhaka" },
-  { name: "Iran", country: "Iran", flag: "ðŸ‡®ðŸ‡·", tz: "Asia/Tehran", lat: 35.6892, lng: 51.3890, code: "IR", capital: "Tehran" },
-  { name: "Qatar", country: "Qatar", flag: "ðŸ‡¶ðŸ‡¦", tz: "Asia/Qatar", lat: 25.2854, lng: 51.5310, code: "QA", capital: "Doha" },
-  { name: "Iceland", country: "Iceland", flag: "ðŸ‡®ðŸ‡¸", tz: "Atlantic/Reykjavik", lat: 64.1466, lng: -21.9426, code: "IS", capital: "Reykjavik" },
-  { name: "Ukraine", country: "Ukraine", flag: "ðŸ‡ºðŸ‡¦", tz: "Europe/Kyiv", lat: 50.4501, lng: 30.5234, code: "UA", capital: "Kyiv" },
-  { name: "Austria", country: "Austria", flag: "ðŸ‡¦ðŸ‡¹", tz: "Europe/Vienna", lat: 48.2082, lng: 16.3738, code: "AT", capital: "Vienna" },
-  { name: "Belgium", country: "Belgium", flag: "ðŸ‡§ðŸ‡ª", tz: "Europe/Brussels", lat: 50.8503, lng: 4.3517, code: "BE", capital: "Brussels" },
-  { name: "Finland", country: "Finland", flag: "ðŸ‡«ðŸ‡®", tz: "Europe/Helsinki", lat: 60.1699, lng: 24.9384, code: "FI", capital: "Helsinki" },
-  { name: "Czech Republic", country: "Czech Republic", flag: "ðŸ‡¨ðŸ‡¿", tz: "Europe/Prague", lat: 50.0755, lng: 14.4378, code: "CZ", capital: "Prague" },
-  { name: "Romania", country: "Romania", flag: "ðŸ‡·ðŸ‡´", tz: "Europe/Bucharest", lat: 44.4268, lng: 26.1025, code: "RO", capital: "Bucharest" },
-  { name: "Hungary", country: "Hungary", flag: "ðŸ‡­ðŸ‡º", tz: "Europe/Budapest", lat: 47.4979, lng: 19.0402, code: "HU", capital: "Budapest" },
-  { name: "Fiji", country: "Fiji", flag: "ðŸ‡«ðŸ‡¯", tz: "Pacific/Fiji", lat: -18.1248, lng: 178.4501, code: "FJ", capital: "Suva" }
+  { name: "Nigeria", country: "Nigeria", tz: "Africa/Lagos", lat: 9.0820, lng: 8.6753, code: "NG", capital: "Abuja" },
+  { name: "United States", country: "United States", tz: "America/New_York", lat: 38.9072, lng: -77.0369, code: "US", capital: "Washington, D.C." },
+  { name: "United Kingdom", country: "United Kingdom", tz: "Europe/London", lat: 51.5074, lng: -0.1278, code: "GB", capital: "London" },
+  { name: "Japan", country: "Japan", tz: "Asia/Tokyo", lat: 35.6762, lng: 139.6503, code: "JP", capital: "Tokyo" },
+  { name: "France", country: "France", tz: "Europe/Paris", lat: 48.8566, lng: 2.3522, code: "FR", capital: "Paris" },
+  { name: "Germany", country: "Germany", tz: "Europe/Berlin", lat: 52.5200, lng: 13.4050, code: "DE", capital: "Berlin" },
+  { name: "Italy", country: "Italy", tz: "Europe/Rome", lat: 41.9028, lng: 12.4964, code: "IT", capital: "Rome" },
+  { name: "Spain", country: "Spain", tz: "Europe/Madrid", lat: 40.4168, lng: -3.7038, code: "ES", capital: "Madrid" },
+  { name: "Canada", country: "Canada", tz: "America/Toronto", lat: 45.4215, lng: -75.6972, code: "CA", capital: "Ottawa" },
+  { name: "Australia", country: "Australia", tz: "Australia/Sydney", lat: -35.2809, lng: 149.1300, code: "AU", capital: "Canberra" },
+  { name: "Brazil", country: "Brazil", tz: "America/Sao_Paulo", lat: -15.7975, lng: -47.8919, code: "BR", capital: "Brasilia" },
+  { name: "India", country: "India", tz: "Asia/Kolkata", lat: 28.6139, lng: 77.2090, code: "IN", capital: "New Delhi" },
+  { name: "China", country: "China", tz: "Asia/Shanghai", lat: 39.9042, lng: 116.4074, code: "CN", capital: "Beijing" },
+  { name: "South Africa", country: "South Africa", tz: "Africa/Johannesburg", lat: -25.7479, lng: 28.2293, code: "ZA", capital: "Pretoria" },
+  { name: "Kenya", country: "Kenya", tz: "Africa/Nairobi", lat: -1.2921, lng: 36.8219, code: "KE", capital: "Nairobi" },
+  { name: "Ghana", country: "Ghana", tz: "Africa/Accra", lat: 5.6037, lng: -0.1870, code: "GH", capital: "Accra" },
+  { name: "Egypt", country: "Egypt", tz: "Africa/Cairo", lat: 30.0444, lng: 31.2357, code: "EG", capital: "Cairo" },
+  { name: "Mexico", country: "Mexico", tz: "America/Mexico_City", lat: 19.4326, lng: -99.1332, code: "MX", capital: "Mexico City" },
+  { name: "Argentina", country: "Argentina", tz: "America/Argentina/Buenos_Aires", lat: -34.6037, lng: -58.3816, code: "AR", capital: "Buenos Aires" },
+  { name: "Russia", country: "Russia", tz: "Europe/Moscow", lat: 55.7558, lng: 37.6173, code: "RU", capital: "Moscow" },
+  { name: "United Arab Emirates", country: "United Arab Emirates", tz: "Asia/Dubai", lat: 24.4539, lng: 54.3773, code: "AE", capital: "Abu Dhabi" },
+  { name: "Saudi Arabia", country: "Saudi Arabia", tz: "Asia/Riyadh", lat: 24.7136, lng: 46.6753, code: "SA", capital: "Riyadh" },
+  { name: "Turkey", country: "Turkey", tz: "Europe/Istanbul", lat: 39.9334, lng: 32.8597, code: "TR", capital: "Ankara" },
+  { name: "South Korea", country: "South Korea", tz: "Asia/Seoul", lat: 37.5665, lng: 126.9780, code: "KR", capital: "Seoul" },
+  { name: "Indonesia", country: "Indonesia", tz: "Asia/Jakarta", lat: -6.2088, lng: 106.8456, code: "ID", capital: "Jakarta" },
+  { name: "Switzerland", country: "Switzerland", tz: "Europe/Zurich", lat: 46.9480, lng: 7.4474, code: "CH", capital: "Bern" },
+  { name: "Sweden", country: "Sweden", tz: "Europe/Stockholm", lat: 59.3293, lng: 18.0686, code: "SE", capital: "Stockholm" },
+  { name: "Norway", country: "Norway", tz: "Europe/Oslo", lat: 59.9139, lng: 10.7522, code: "NO", capital: "Oslo" },
+  { name: "Denmark", country: "Denmark", tz: "Europe/Copenhagen", lat: 55.6761, lng: 12.5683, code: "DK", capital: "Copenhagen" },
+  { name: "Netherlands", country: "Netherlands", tz: "Europe/Amsterdam", lat: 52.3676, lng: 4.9041, code: "NL", capital: "Amsterdam" },
+  { name: "New Zealand", country: "New Zealand", tz: "Pacific/Auckland", lat: -41.2865, lng: 174.7762, code: "NZ", capital: "Wellington" },
+  { name: "Greece", country: "Greece", tz: "Europe/Athens", lat: 37.9838, lng: 23.7275, code: "GR", capital: "Athens" },
+  { name: "Portugal", country: "Portugal", tz: "Europe/Lisbon", lat: 38.7223, lng: -9.1393, code: "PT", capital: "Lisbon" },
+  { name: "Poland", country: "Poland", tz: "Europe/Warsaw", lat: 52.2297, lng: 21.0122, code: "PL", capital: "Warsaw" },
+  { name: "Ireland", country: "Ireland", tz: "Europe/Dublin", lat: 53.3498, lng: -6.2603, code: "IE", capital: "Dublin" },
+  { name: "Philippines", country: "Philippines", tz: "Asia/Manila", lat: 14.5995, lng: 120.9842, code: "PH", capital: "Manila" },
+  { name: "Thailand", country: "Thailand", tz: "Asia/Bangkok", lat: 13.7563, lng: 100.5018, code: "TH", capital: "Bangkok" },
+  { name: "Vietnam", country: "Vietnam", tz: "Asia/Ho_Chi_Minh", lat: 21.0285, lng: 105.8542, code: "VN", capital: "Hanoi" },
+  { name: "Malaysia", country: "Malaysia", tz: "Asia/Kuala_Lumpur", lat: 3.1390, lng: 101.6869, code: "MY", capital: "Kuala Lumpur" },
+  { name: "Singapore", country: "Singapore", tz: "Asia/Singapore", lat: 1.3521, lng: 103.8198, code: "SG", capital: "Singapore" },
+  { name: "Colombia", country: "Colombia", tz: "America/Bogota", lat: 4.7110, lng: -74.0721, code: "CO", capital: "Bogota" },
+  { name: "Chile", country: "Chile", tz: "America/Santiago", lat: -33.4489, lng: -70.6693, code: "CL", capital: "Santiago" },
+  { name: "Peru", country: "Peru", tz: "America/Lima", lat: -12.0464, lng: -77.0428, code: "PE", capital: "Lima" },
+  { name: "Israel", country: "Israel", tz: "Asia/Jerusalem", lat: 31.7683, lng: 35.2137, code: "IL", capital: "Jerusalem" },
+  { name: "Morocco", country: "Morocco", tz: "Africa/Casablanca", lat: 31.7917, lng: -7.0926, code: "MA", capital: "Rabat" },
+  { name: "Ethiopia", country: "Ethiopia", tz: "Africa/Addis_Ababa", lat: 9.0300, lng: 38.7400, code: "ET", capital: "Addis Ababa" },
+  { name: "Pakistan", country: "Pakistan", tz: "Asia/Karachi", lat: 33.6844, lng: 73.0479, code: "PK", capital: "Islamabad" },
+  { name: "Bangladesh", country: "Bangladesh", tz: "Asia/Dhaka", lat: 23.8103, lng: 90.4125, code: "BD", capital: "Dhaka" },
+  { name: "Iran", country: "Iran", tz: "Asia/Tehran", lat: 35.6892, lng: 51.3890, code: "IR", capital: "Tehran" },
+  { name: "Qatar", country: "Qatar", tz: "Asia/Qatar", lat: 25.2854, lng: 51.5310, code: "QA", capital: "Doha" },
+  { name: "Iceland", country: "Iceland", tz: "Atlantic/Reykjavik", lat: 64.1466, lng: -21.9426, code: "IS", capital: "Reykjavik" },
+  { name: "Ukraine", country: "Ukraine", tz: "Europe/Kyiv", lat: 50.4501, lng: 30.5234, code: "UA", capital: "Kyiv" },
+  { name: "Austria", country: "Austria", tz: "Europe/Vienna", lat: 48.2082, lng: 16.3738, code: "AT", capital: "Vienna" },
+  { name: "Belgium", country: "Belgium", tz: "Europe/Brussels", lat: 50.8503, lng: 4.3517, code: "BE", capital: "Brussels" },
+  { name: "Finland", country: "Finland", tz: "Europe/Helsinki", lat: 60.1699, lng: 24.9384, code: "FI", capital: "Helsinki" },
+  { name: "Czech Republic", country: "Czech Republic", tz: "Europe/Prague", lat: 50.0755, lng: 14.4378, code: "CZ", capital: "Prague" },
+  { name: "Romania", country: "Romania", tz: "Europe/Bucharest", lat: 44.4268, lng: 26.1025, code: "RO", capital: "Bucharest" },
+  { name: "Hungary", country: "Hungary", tz: "Europe/Budapest", lat: 47.4979, lng: 19.0402, code: "HU", capital: "Budapest" },
+  { name: "Fiji", country: "Fiji", tz: "Pacific/Fiji", lat: -18.1248, lng: 178.4501, code: "FJ", capital: "Suva" }
 ];
 
 // 2. Global Cities Database
 const WORLD_CITIES = [
   // Europe
-  { name: "London", country: "United Kingdom", code: "GB", flag: "ðŸ‡¬ðŸ‡§", tz: "Europe/London", lat: 51.5074, lng: -0.1278 },
-  { name: "Paris", country: "France", code: "FR", flag: "ðŸ‡«ðŸ‡·", tz: "Europe/Paris", lat: 48.8566, lng: 2.3522 },
-  { name: "Berlin", country: "Germany", code: "DE", flag: "ðŸ‡©ðŸ‡ª", tz: "Europe/Berlin", lat: 52.5200, lng: 13.4050 },
-  { name: "Rome", country: "Italy", code: "IT", flag: "ðŸ‡®ðŸ‡¹", tz: "Europe/Rome", lat: 41.9028, lng: 12.4964 },
-  { name: "Madrid", country: "Spain", code: "ES", flag: "ðŸ‡ªðŸ‡¸", tz: "Europe/Madrid", lat: 40.4168, lng: -3.7038 },
-  { name: "Amsterdam", country: "Netherlands", code: "NL", flag: "ðŸ‡³ðŸ‡±", tz: "Europe/Amsterdam", lat: 52.3676, lng: 4.9041 },
-  { name: "Brussels", country: "Belgium", code: "BE", flag: "ðŸ‡§ðŸ‡ª", tz: "Europe/Brussels", lat: 50.8503, lng: 4.3517 },
-  { name: "Vienna", country: "Austria", code: "AT", flag: "ðŸ‡¦ðŸ‡¹", tz: "Europe/Vienna", lat: 48.2082, lng: 16.3738 },
-  { name: "Zurich", country: "Switzerland", code: "CH", flag: "ðŸ‡¨ðŸ‡­", tz: "Europe/Zurich", lat: 47.3769, lng: 8.5417 },
-  { name: "Geneva", country: "Switzerland", code: "CH", flag: "ðŸ‡¨ðŸ‡­", tz: "Europe/Zurich", lat: 46.2044, lng: 6.1432 },
-  { name: "Stockholm", country: "Sweden", code: "SE", flag: "ðŸ‡¸ðŸ‡ª", tz: "Europe/Stockholm", lat: 59.3293, lng: 18.0686 },
-  { name: "Oslo", country: "Norway", code: "NO", flag: "ðŸ‡³ðŸ‡´", tz: "Europe/Oslo", lat: 59.9139, lng: 10.7522 },
-  { name: "Copenhagen", country: "Denmark", code: "DK", flag: "ðŸ‡©ðŸ‡°", tz: "Europe/Copenhagen", lat: 55.6761, lng: 12.5683 },
-  { name: "Helsinki", country: "Finland", code: "FI", flag: "ðŸ‡«ðŸ‡®", tz: "Europe/Helsinki", lat: 60.1699, lng: 24.9384 },
-  { name: "Reykjavik", country: "Iceland", code: "IS", flag: "ðŸ‡®ðŸ‡¸", tz: "Atlantic/Reykjavik", lat: 64.1466, lng: -21.9426 },
-  { name: "Dublin", country: "Ireland", code: "IE", flag: "ðŸ‡®ðŸ‡ª", tz: "Europe/Dublin", lat: 53.3498, lng: -6.2603 },
-  { name: "Lisbon", country: "Portugal", code: "PT", flag: "ðŸ‡µðŸ‡¹", tz: "Europe/Lisbon", lat: 38.7223, lng: -9.1393 },
-  { name: "Athens", country: "Greece", code: "GR", flag: "ðŸ‡¬ðŸ‡·", tz: "Europe/Athens", lat: 37.9838, lng: 23.7275 },
-  { name: "Prague", country: "Czech Republic", code: "CZ", flag: "ðŸ‡¨ðŸ‡¿", tz: "Europe/Prague", lat: 50.0755, lng: 14.4378 },
-  { name: "Warsaw", country: "Poland", code: "PL", flag: "ðŸ‡µðŸ‡±", tz: "Europe/Warsaw", lat: 52.2297, lng: 21.0122 },
-  { name: "Budapest", country: "Hungary", code: "HU", flag: "ðŸ‡­ðŸ‡º", tz: "Europe/Budapest", lat: 47.4979, lng: 19.0402 },
-  { name: "Bucharest", country: "Romania", code: "RO", flag: "ðŸ‡·ðŸ‡´", tz: "Europe/Bucharest", lat: 44.4268, lng: 26.1025 },
-  { name: "Kyiv", country: "Ukraine", code: "UA", flag: "ðŸ‡ºðŸ‡¦", tz: "Europe/Kyiv", lat: 50.4501, lng: 30.5234 },
-  { name: "Moscow", country: "Russia", code: "RU", flag: "ðŸ‡·ðŸ‡º", tz: "Europe/Moscow", lat: 55.7558, lng: 37.6173 },
-  { name: "Istanbul", country: "Turkey", code: "TR", flag: "ðŸ‡¹ðŸ‡·", tz: "Europe/Istanbul", lat: 41.0082, lng: 28.9784 },
+  { name: "London", country: "United Kingdom", code: "GB", tz: "Europe/London", lat: 51.5074, lng: -0.1278 },
+  { name: "Paris", country: "France", code: "FR", tz: "Europe/Paris", lat: 48.8566, lng: 2.3522 },
+  { name: "Berlin", country: "Germany", code: "DE", tz: "Europe/Berlin", lat: 52.5200, lng: 13.4050 },
+  { name: "Rome", country: "Italy", code: "IT", tz: "Europe/Rome", lat: 41.9028, lng: 12.4964 },
+  { name: "Madrid", country: "Spain", code: "ES", tz: "Europe/Madrid", lat: 40.4168, lng: -3.7038 },
+  { name: "Amsterdam", country: "Netherlands", code: "NL", tz: "Europe/Amsterdam", lat: 52.3676, lng: 4.9041 },
+  { name: "Brussels", country: "Belgium", code: "BE", tz: "Europe/Brussels", lat: 50.8503, lng: 4.3517 },
+  { name: "Vienna", country: "Austria", code: "AT", tz: "Europe/Vienna", lat: 48.2082, lng: 16.3738 },
+  { name: "Zurich", country: "Switzerland", code: "CH", tz: "Europe/Zurich", lat: 47.3769, lng: 8.5417 },
+  { name: "Geneva", country: "Switzerland", code: "CH", tz: "Europe/Zurich", lat: 46.2044, lng: 6.1432 },
+  { name: "Stockholm", country: "Sweden", code: "SE", tz: "Europe/Stockholm", lat: 59.3293, lng: 18.0686 },
+  { name: "Oslo", country: "Norway", code: "NO", tz: "Europe/Oslo", lat: 59.9139, lng: 10.7522 },
+  { name: "Copenhagen", country: "Denmark", code: "DK", tz: "Europe/Copenhagen", lat: 55.6761, lng: 12.5683 },
+  { name: "Helsinki", country: "Finland", code: "FI", tz: "Europe/Helsinki", lat: 60.1699, lng: 24.9384 },
+  { name: "Reykjavik", country: "Iceland", code: "IS", tz: "Atlantic/Reykjavik", lat: 64.1466, lng: -21.9426 },
+  { name: "Dublin", country: "Ireland", code: "IE", tz: "Europe/Dublin", lat: 53.3498, lng: -6.2603 },
+  { name: "Lisbon", country: "Portugal", code: "PT", tz: "Europe/Lisbon", lat: 38.7223, lng: -9.1393 },
+  { name: "Athens", country: "Greece", code: "GR", tz: "Europe/Athens", lat: 37.9838, lng: 23.7275 },
+  { name: "Prague", country: "Czech Republic", code: "CZ", tz: "Europe/Prague", lat: 50.0755, lng: 14.4378 },
+  { name: "Warsaw", country: "Poland", code: "PL", tz: "Europe/Warsaw", lat: 52.2297, lng: 21.0122 },
+  { name: "Budapest", country: "Hungary", code: "HU", tz: "Europe/Budapest", lat: 47.4979, lng: 19.0402 },
+  { name: "Bucharest", country: "Romania", code: "RO", tz: "Europe/Bucharest", lat: 44.4268, lng: 26.1025 },
+  { name: "Kyiv", country: "Ukraine", code: "UA", tz: "Europe/Kyiv", lat: 50.4501, lng: 30.5234 },
+  { name: "Moscow", country: "Russia", code: "RU", tz: "Europe/Moscow", lat: 55.7558, lng: 37.6173 },
+  { name: "Istanbul", country: "Turkey", code: "TR", tz: "Europe/Istanbul", lat: 41.0082, lng: 28.9784 },
 
   // Nigeria & African Towns/Cities
-  { name: "Lagos", country: "Nigeria", code: "NG", flag: "ðŸ‡³ðŸ‡¬", tz: "Africa/Lagos", lat: 6.5244, lng: 3.3792 },
-  { name: "Abuja", country: "Nigeria", code: "NG", flag: "ðŸ‡³ðŸ‡¬", tz: "Africa/Lagos", lat: 9.0765, lng: 7.3986 },
-  { name: "Ibadan", country: "Nigeria", code: "NG", flag: "ðŸ‡³ðŸ‡¬", tz: "Africa/Lagos", lat: 7.3775, lng: 3.9470 },
-  { name: "Kano", country: "Nigeria", code: "NG", flag: "ðŸ‡³ðŸ‡¬", tz: "Africa/Lagos", lat: 12.0022, lng: 8.5920 },
-  { name: "Port Harcourt", country: "Nigeria", code: "NG", flag: "ðŸ‡³ðŸ‡¬", tz: "Africa/Lagos", lat: 4.8156, lng: 7.0498 },
-  { name: "Benin City", country: "Nigeria", code: "NG", flag: "ðŸ‡³ðŸ‡¬", tz: "Africa/Lagos", lat: 6.3350, lng: 5.6037 },
-  { name: "Enugu", country: "Nigeria", code: "NG", flag: "ðŸ‡³ðŸ‡¬", tz: "Africa/Lagos", lat: 6.4584, lng: 7.5464 },
-  { name: "Cairo", country: "Egypt", code: "EG", flag: "ðŸ‡ªðŸ‡¬", tz: "Africa/Cairo", lat: 30.0444, lng: 31.2357 },
-  { name: "Johannesburg", country: "South Africa", code: "ZA", flag: "ðŸ‡¿ðŸ‡¦", tz: "Africa/Johannesburg", lat: -26.2041, lng: 28.0473 },
-  { name: "Cape Town", country: "South Africa", code: "ZA", flag: "ðŸ‡¿ðŸ‡¦", tz: "Africa/Johannesburg", lat: -33.9249, lng: 18.4241 },
-  { name: "Nairobi", country: "Kenya", code: "KE", flag: "ðŸ‡°ðŸ‡ª", tz: "Africa/Nairobi", lat: -1.2921, lng: 36.8219 },
-  { name: "Mombasa", country: "Kenya", code: "KE", flag: "ðŸ‡°ðŸ‡ª", tz: "Africa/Nairobi", lat: -4.0435, lng: 39.6682 },
-  { name: "Accra", country: "Ghana", code: "GH", flag: "ðŸ‡¬ðŸ‡­", tz: "Africa/Accra", lat: 5.6037, lng: -0.1870 },
-  { name: "Kumasi", country: "Ghana", code: "GH", flag: "ðŸ‡¬ðŸ‡­", tz: "Africa/Accra", lat: 6.6885, lng: -1.6244 },
-  { name: "Casablanca", country: "Morocco", code: "MA", flag: "ðŸ‡²ðŸ‡¦", tz: "Africa/Casablanca", lat: 33.5731, lng: -7.5898 },
-  { name: "Marrakech", country: "Morocco", code: "MA", flag: "ðŸ‡²ðŸ‡¦", tz: "Africa/Casablanca", lat: 31.6295, lng: -7.9811 },
-  { name: "Tunis", country: "Tunisia", code: "TN", flag: "ðŸ‡¹ðŸ‡³", tz: "Africa/Tunis", lat: 36.8065, lng: 10.1815 },
-  { name: "Addis Ababa", country: "Ethiopia", code: "ET", flag: "ðŸ‡ªðŸ‡¹", tz: "Africa/Addis_Ababa", lat: 9.0300, lng: 38.7400 },
-  { name: "Dakar", country: "Senegal", code: "SN", flag: "ðŸ‡¸ðŸ‡³", tz: "Africa/Dakar", lat: 14.7167, lng: -17.4677 },
-  { name: "Dar es Salaam", country: "Tanzania", code: "TZ", flag: "ðŸ‡¹ðŸ‡¿", tz: "Africa/Dar_es_Salaam", lat: -6.7924, lng: 39.2083 },
+  { name: "Lagos", country: "Nigeria", code: "NG", tz: "Africa/Lagos", lat: 6.5244, lng: 3.3792 },
+  { name: "Abuja", country: "Nigeria", code: "NG", tz: "Africa/Lagos", lat: 9.0765, lng: 7.3986 },
+  { name: "Ibadan", country: "Nigeria", code: "NG", tz: "Africa/Lagos", lat: 7.3775, lng: 3.9470 },
+  { name: "Kano", country: "Nigeria", code: "NG", tz: "Africa/Lagos", lat: 12.0022, lng: 8.5920 },
+  { name: "Port Harcourt", country: "Nigeria", code: "NG", tz: "Africa/Lagos", lat: 4.8156, lng: 7.0498 },
+  { name: "Benin City", country: "Nigeria", code: "NG", tz: "Africa/Lagos", lat: 6.3350, lng: 5.6037 },
+  { name: "Enugu", country: "Nigeria", code: "NG", tz: "Africa/Lagos", lat: 6.4584, lng: 7.5464 },
+  { name: "Cairo", country: "Egypt", code: "EG", tz: "Africa/Cairo", lat: 30.0444, lng: 31.2357 },
+  { name: "Johannesburg", country: "South Africa", code: "ZA", tz: "Africa/Johannesburg", lat: -26.2041, lng: 28.0473 },
+  { name: "Cape Town", country: "South Africa", code: "ZA", tz: "Africa/Johannesburg", lat: -33.9249, lng: 18.4241 },
+  { name: "Nairobi", country: "Kenya", code: "KE", tz: "Africa/Nairobi", lat: -1.2921, lng: 36.8219 },
+  { name: "Mombasa", country: "Kenya", code: "KE", tz: "Africa/Nairobi", lat: -4.0435, lng: 39.6682 },
+  { name: "Accra", country: "Ghana", code: "GH", tz: "Africa/Accra", lat: 5.6037, lng: -0.1870 },
+  { name: "Kumasi", country: "Ghana", code: "GH", tz: "Africa/Accra", lat: 6.6885, lng: -1.6244 },
+  { name: "Casablanca", country: "Morocco", code: "MA", tz: "Africa/Casablanca", lat: 33.5731, lng: -7.5898 },
+  { name: "Marrakech", country: "Morocco", code: "MA", tz: "Africa/Casablanca", lat: 31.6295, lng: -7.9811 },
+  { name: "Tunis", country: "Tunisia", code: "TN", tz: "Africa/Tunis", lat: 36.8065, lng: 10.1815 },
+  { name: "Addis Ababa", country: "Ethiopia", code: "ET", tz: "Africa/Addis_Ababa", lat: 9.0300, lng: 38.7400 },
+  { name: "Dakar", country: "Senegal", code: "SN", tz: "Africa/Dakar", lat: 14.7167, lng: -17.4677 },
+  { name: "Dar es Salaam", country: "Tanzania", code: "TZ", tz: "Africa/Dar_es_Salaam", lat: -6.7924, lng: 39.2083 },
 
   // North America
-  { name: "New York", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/New_York", lat: 40.7128, lng: -74.0060 },
-  { name: "Los Angeles", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/Los_Angeles", lat: 34.0522, lng: -118.2437 },
-  { name: "Chicago", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/Chicago", lat: 41.8781, lng: -87.6298 },
-  { name: "San Francisco", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/Los_Angeles", lat: 37.7749, lng: -122.4194 },
-  { name: "Miami", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/New_York", lat: 25.7617, lng: -80.1918 },
-  { name: "Seattle", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/Los_Angeles", lat: 47.6062, lng: -122.3321 },
-  { name: "Boston", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/New_York", lat: 42.3601, lng: -71.0589 },
-  { name: "Washington, D.C.", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/New_York", lat: 38.9072, lng: -77.0369 },
-  { name: "Houston", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/Chicago", lat: 29.7604, lng: -95.3698 },
-  { name: "Dallas", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/Chicago", lat: 32.7767, lng: -96.7970 },
-  { name: "Austin", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/Chicago", lat: 30.2672, lng: -97.7431 },
-  { name: "Denver", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/Denver", lat: 39.7392, lng: -104.9903 },
-  { name: "Phoenix", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/Phoenix", lat: 33.4484, lng: -112.0740 },
-  { name: "Las Vegas", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/Los_Angeles", lat: 36.1699, lng: -115.1398 },
-  { name: "Honolulu", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "Pacific/Honolulu", lat: 21.3069, lng: -157.8583 },
-  { name: "Anchorage", country: "United States", code: "US", flag: "ðŸ‡ºðŸ‡¸", tz: "America/Anchorage", lat: 61.2181, lng: -149.9003 },
-  { name: "Toronto", country: "Canada", code: "CA", flag: "ðŸ‡¨ðŸ‡¦", tz: "America/Toronto", lat: 43.6532, lng: -79.3832 },
-  { name: "Vancouver", country: "Canada", code: "CA", flag: "ðŸ‡¨ðŸ‡¦", tz: "America/Vancouver", lat: 49.2827, lng: -123.1207 },
-  { name: "Montreal", country: "Canada", code: "CA", flag: "ðŸ‡¨ðŸ‡¦", tz: "America/Toronto", lat: 45.5017, lng: -73.5673 },
-  { name: "Mexico City", country: "Mexico", code: "MX", flag: "ðŸ‡²ðŸ‡½", tz: "America/Mexico_City", lat: 19.4326, lng: -99.1332 },
-  { name: "Cancun", country: "Mexico", code: "MX", flag: "ðŸ‡²ðŸ‡½", tz: "America/Cancun", lat: 21.1619, lng: -86.8515 },
-  { name: "Havana", country: "Cuba", code: "CU", flag: "ðŸ‡¨ðŸ‡º", tz: "America/Havana", lat: 23.1136, lng: -82.3666 },
-  { name: "Panama City", country: "Panama", code: "PA", flag: "ðŸ‡µðŸ‡¦", tz: "America/Panama", lat: 8.9824, lng: -79.5199 },
+  { name: "New York", country: "United States", code: "US", tz: "America/New_York", lat: 40.7128, lng: -74.0060 },
+  { name: "Los Angeles", country: "United States", code: "US", tz: "America/Los_Angeles", lat: 34.0522, lng: -118.2437 },
+  { name: "Chicago", country: "United States", code: "US", tz: "America/Chicago", lat: 41.8781, lng: -87.6298 },
+  { name: "San Francisco", country: "United States", code: "US", tz: "America/Los_Angeles", lat: 37.7749, lng: -122.4194 },
+  { name: "Miami", country: "United States", code: "US", tz: "America/New_York", lat: 25.7617, lng: -80.1918 },
+  { name: "Seattle", country: "United States", code: "US", tz: "America/Los_Angeles", lat: 47.6062, lng: -122.3321 },
+  { name: "Boston", country: "United States", code: "US", tz: "America/New_York", lat: 42.3601, lng: -71.0589 },
+  { name: "Washington, D.C.", country: "United States", code: "US", tz: "America/New_York", lat: 38.9072, lng: -77.0369 },
+  { name: "Houston", country: "United States", code: "US", tz: "America/Chicago", lat: 29.7604, lng: -95.3698 },
+  { name: "Dallas", country: "United States", code: "US", tz: "America/Chicago", lat: 32.7767, lng: -96.7970 },
+  { name: "Austin", country: "United States", code: "US", tz: "America/Chicago", lat: 30.2672, lng: -97.7431 },
+  { name: "Denver", country: "United States", code: "US", tz: "America/Denver", lat: 39.7392, lng: -104.9903 },
+  { name: "Phoenix", country: "United States", code: "US", tz: "America/Phoenix", lat: 33.4484, lng: -112.0740 },
+  { name: "Las Vegas", country: "United States", code: "US", tz: "America/Los_Angeles", lat: 36.1699, lng: -115.1398 },
+  { name: "Honolulu", country: "United States", code: "US", tz: "Pacific/Honolulu", lat: 21.3069, lng: -157.8583 },
+  { name: "Anchorage", country: "United States", code: "US", tz: "America/Anchorage", lat: 61.2181, lng: -149.9003 },
+  { name: "Toronto", country: "Canada", code: "CA", tz: "America/Toronto", lat: 43.6532, lng: -79.3832 },
+  { name: "Vancouver", country: "Canada", code: "CA", tz: "America/Vancouver", lat: 49.2827, lng: -123.1207 },
+  { name: "Montreal", country: "Canada", code: "CA", tz: "America/Toronto", lat: 45.5017, lng: -73.5673 },
+  { name: "Mexico City", country: "Mexico", code: "MX", tz: "America/Mexico_City", lat: 19.4326, lng: -99.1332 },
+  { name: "Cancun", country: "Mexico", code: "MX", tz: "America/Cancun", lat: 21.1619, lng: -86.8515 },
+  { name: "Havana", country: "Cuba", code: "CU", tz: "America/Havana", lat: 23.1136, lng: -82.3666 },
+  { name: "Panama City", country: "Panama", code: "PA", tz: "America/Panama", lat: 8.9824, lng: -79.5199 },
 
   // South America
-  { name: "SÃ£o Paulo", country: "Brazil", code: "BR", flag: "ðŸ‡§ðŸ‡·", tz: "America/Sao_Paulo", lat: -23.5505, lng: -46.6333 },
-  { name: "Rio de Janeiro", country: "Brazil", code: "BR", flag: "ðŸ‡§ðŸ‡·", tz: "America/Sao_Paulo", lat: -22.9068, lng: -43.1729 },
-  { name: "Buenos Aires", country: "Argentina", code: "AR", flag: "ðŸ‡¦ðŸ‡·", tz: "America/Argentina/Buenos_Aires", lat: -34.6037, lng: -58.3816 },
-  { name: "Santiago", country: "Chile", code: "CL", flag: "ðŸ‡¨ðŸ‡±", tz: "America/Santiago", lat: -33.4489, lng: -70.6693 },
-  { name: "BogotÃ¡", country: "Colombia", code: "CO", flag: "ðŸ‡¨ðŸ‡´", tz: "America/Bogota", lat: 4.7110, lng: -74.0721 },
-  { name: "Lima", country: "Peru", code: "PE", flag: "ðŸ‡µðŸ‡ª", tz: "America/Lima", lat: -12.0464, lng: -77.0428 },
-  { name: "Caracas", country: "Venezuela", code: "VE", flag: "ðŸ‡»ðŸ‡ª", tz: "America/Caracas", lat: 10.4806, lng: -66.9036 },
-  { name: "Montevideo", country: "Uruguay", code: "UY", flag: "ðŸ‡ºðŸ‡¾", tz: "America/Montevideo", lat: -34.9011, lng: -56.1645 },
+  { name: "Sao Paulo", country: "Brazil", code: "BR", tz: "America/Sao_Paulo", lat: -23.5505, lng: -46.6333 },
+  { name: "Rio de Janeiro", country: "Brazil", code: "BR", tz: "America/Sao_Paulo", lat: -22.9068, lng: -43.1729 },
+  { name: "Buenos Aires", country: "Argentina", code: "AR", tz: "America/Argentina/Buenos_Aires", lat: -34.6037, lng: -58.3816 },
+  { name: "Santiago", country: "Chile", code: "CL", tz: "America/Santiago", lat: -33.4489, lng: -70.6693 },
+  { name: "Bogota", country: "Colombia", code: "CO", tz: "America/Bogota", lat: 4.7110, lng: -74.0721 },
+  { name: "Lima", country: "Peru", code: "PE", tz: "America/Lima", lat: -12.0464, lng: -77.0428 },
+  { name: "Caracas", country: "Venezuela", code: "VE", tz: "America/Caracas", lat: 10.4806, lng: -66.9036 },
+  { name: "Montevideo", country: "Uruguay", code: "UY", tz: "America/Montevideo", lat: -34.9011, lng: -56.1645 },
 
   // Asia
-  { name: "Tokyo", country: "Japan", code: "JP", flag: "ðŸ‡¯ðŸ‡µ", tz: "Asia/Tokyo", lat: 35.6762, lng: 139.6503 },
-  { name: "Kyoto", country: "Japan", code: "JP", flag: "ðŸ‡¯ðŸ‡µ", tz: "Asia/Tokyo", lat: 35.0116, lng: 135.7681 },
-  { name: "Osaka", country: "Japan", code: "JP", flag: "ðŸ‡¯ðŸ‡µ", tz: "Asia/Tokyo", lat: 34.6937, lng: 135.5023 },
-  { name: "Seoul", country: "South Korea", code: "KR", flag: "ðŸ‡°ðŸ‡·", tz: "Asia/Seoul", lat: 37.5665, lng: 126.9780 },
-  { name: "Beijing", country: "China", code: "CN", flag: "ðŸ‡¨ðŸ‡³", tz: "Asia/Shanghai", lat: 39.9042, lng: 116.4074 },
-  { name: "Shanghai", country: "China", code: "CN", flag: "ðŸ‡¨ðŸ‡³", tz: "Asia/Shanghai", lat: 31.2304, lng: 121.4737 },
-  { name: "Hong Kong", country: "Hong Kong", code: "HK", flag: "ðŸ‡­ðŸ‡°", tz: "Asia/Hong_Kong", lat: 22.3193, lng: 114.1694 },
-  { name: "Taipei", country: "Taiwan", code: "TW", flag: "ðŸ‡¹ðŸ‡¼", tz: "Asia/Taipei", lat: 25.0330, lng: 121.5654 },
-  { name: "Singapore", country: "Singapore", code: "SG", flag: "ðŸ‡¸ðŸ‡¬", tz: "Asia/Singapore", lat: 1.3521, lng: 103.8198 },
-  { name: "Bangkok", country: "Thailand", code: "TH", flag: "ðŸ‡¹ðŸ‡­", tz: "Asia/Bangkok", lat: 13.7563, lng: 100.5018 },
-  { name: "Kuala Lumpur", country: "Malaysia", code: "MY", flag: "ðŸ‡²ðŸ‡¾", tz: "Asia/Kuala_Lumpur", lat: 3.1390, lng: 101.6869 },
-  { name: "Jakarta", country: "Indonesia", code: "ID", flag: "ðŸ‡®ðŸ‡©", tz: "Asia/Jakarta", lat: -6.2088, lng: 106.8456 },
-  { name: "Bali", country: "Indonesia", code: "ID", flag: "ðŸ‡®ðŸ‡©", tz: "Asia/Makassar", lat: -8.3405, lng: 115.0920 },
-  { name: "Manila", country: "Philippines", code: "PH", flag: "ðŸ‡µðŸ‡­", tz: "Asia/Manila", lat: 14.5995, lng: 120.9842 },
-  { name: "Hanoi", country: "Vietnam", code: "VN", flag: "ðŸ‡»ðŸ‡³", tz: "Asia/Ho_Chi_Minh", lat: 21.0285, lng: 105.8542 },
-  { name: "New Delhi", country: "India", code: "IN", flag: "ðŸ‡®ðŸ‡³", tz: "Asia/Kolkata", lat: 28.6139, lng: 77.2090 },
-  { name: "Mumbai", country: "India", code: "IN", flag: "ðŸ‡®ðŸ‡³", tz: "Asia/Kolkata", lat: 19.0760, lng: 72.8777 },
-  { name: "Bengaluru", country: "India", code: "IN", flag: "ðŸ‡®ðŸ‡³", tz: "Asia/Kolkata", lat: 12.9716, lng: 77.5946 },
-  { name: "Karachi", country: "Pakistan", code: "PK", flag: "ðŸ‡µðŸ‡°", tz: "Asia/Karachi", lat: 24.8607, lng: 67.0011 },
-  { name: "Dhaka", country: "Bangladesh", code: "BD", flag: "ðŸ‡§ðŸ‡©", tz: "Asia/Dhaka", lat: 23.8103, lng: 90.4125 },
-  { name: "Dubai", country: "United Arab Emirates", code: "AE", flag: "ðŸ‡¦ðŸ‡ª", tz: "Asia/Dubai", lat: 25.2048, lng: 55.2708 },
-  { name: "Abu Dhabi", country: "United Arab Emirates", code: "AE", flag: "ðŸ‡¦ðŸ‡ª", tz: "Asia/Dubai", lat: 24.4539, lng: 54.3773 },
-  { name: "Doha", country: "Qatar", code: "QA", flag: "ðŸ‡¶ðŸ‡¦", tz: "Asia/Qatar", lat: 25.2854, lng: 51.5310 },
-  { name: "Riyadh", country: "Saudi Arabia", code: "SA", flag: "ðŸ‡¸ðŸ‡¦", tz: "Asia/Riyadh", lat: 24.7136, lng: 46.6753 },
-  { name: "Tehran", country: "Iran", code: "IR", flag: "ðŸ‡®ðŸ‡·", tz: "Asia/Tehran", lat: 35.6892, lng: 51.3890 },
-  { name: "Tel Aviv", country: "Israel", code: "IL", flag: "ðŸ‡®ðŸ‡±", tz: "Asia/Jerusalem", lat: 32.0853, lng: 34.7818 },
-  { name: "Jerusalem", country: "Israel", code: "IL", flag: "ðŸ‡®ðŸ‡±", tz: "Asia/Jerusalem", lat: 31.7683, lng: 35.2137 },
-  { name: "Beirut", country: "Lebanon", code: "LB", flag: "ðŸ‡±ðŸ‡§", tz: "Asia/Beirut", lat: 33.8938, lng: 35.5018 },
+  { name: "Tokyo", country: "Japan", code: "JP", tz: "Asia/Tokyo", lat: 35.6762, lng: 139.6503 },
+  { name: "Kyoto", country: "Japan", code: "JP", tz: "Asia/Tokyo", lat: 35.0116, lng: 135.7681 },
+  { name: "Osaka", country: "Japan", code: "JP", tz: "Asia/Tokyo", lat: 34.6937, lng: 135.5023 },
+  { name: "Seoul", country: "South Korea", code: "KR", tz: "Asia/Seoul", lat: 37.5665, lng: 126.9780 },
+  { name: "Beijing", country: "China", code: "CN", tz: "Asia/Shanghai", lat: 39.9042, lng: 116.4074 },
+  { name: "Shanghai", country: "China", code: "CN", tz: "Asia/Shanghai", lat: 31.2304, lng: 121.4737 },
+  { name: "Hong Kong", country: "Hong Kong", code: "HK", tz: "Asia/Hong_Kong", lat: 22.3193, lng: 114.1694 },
+  { name: "Taipei", country: "Taiwan", code: "TW", tz: "Asia/Taipei", lat: 25.0330, lng: 121.5654 },
+  { name: "Singapore", country: "Singapore", code: "SG", tz: "Asia/Singapore", lat: 1.3521, lng: 103.8198 },
+  { name: "Bangkok", country: "Thailand", code: "TH", tz: "Asia/Bangkok", lat: 13.7563, lng: 100.5018 },
+  { name: "Kuala Lumpur", country: "Malaysia", code: "MY", tz: "Asia/Kuala_Lumpur", lat: 3.1390, lng: 101.6869 },
+  { name: "Jakarta", country: "Indonesia", code: "ID", tz: "Asia/Jakarta", lat: -6.2088, lng: 106.8456 },
+  { name: "Bali", country: "Indonesia", code: "ID", tz: "Asia/Makassar", lat: -8.3405, lng: 115.0920 },
+  { name: "Manila", country: "Philippines", code: "PH", tz: "Asia/Manila", lat: 14.5995, lng: 120.9842 },
+  { name: "Hanoi", country: "Vietnam", code: "VN", tz: "Asia/Ho_Chi_Minh", lat: 21.0285, lng: 105.8542 },
+  { name: "New Delhi", country: "India", code: "IN", tz: "Asia/Kolkata", lat: 28.6139, lng: 77.2090 },
+  { name: "Mumbai", country: "India", code: "IN", tz: "Asia/Kolkata", lat: 19.0760, lng: 72.8777 },
+  { name: "Bengaluru", country: "India", code: "IN", tz: "Asia/Kolkata", lat: 12.9716, lng: 77.5946 },
+  { name: "Karachi", country: "Pakistan", code: "PK", tz: "Asia/Karachi", lat: 24.8607, lng: 67.0011 },
+  { name: "Dhaka", country: "Bangladesh", code: "BD", tz: "Asia/Dhaka", lat: 23.8103, lng: 90.4125 },
+  { name: "Dubai", country: "United Arab Emirates", code: "AE", tz: "Asia/Dubai", lat: 25.2048, lng: 55.2708 },
+  { name: "Abu Dhabi", country: "United Arab Emirates", code: "AE", tz: "Asia/Dubai", lat: 24.4539, lng: 54.3773 },
+  { name: "Doha", country: "Qatar", code: "QA", tz: "Asia/Qatar", lat: 25.2854, lng: 51.5310 },
+  { name: "Riyadh", country: "Saudi Arabia", code: "SA", tz: "Asia/Riyadh", lat: 24.7136, lng: 46.6753 },
+  { name: "Tehran", country: "Iran", code: "IR", tz: "Asia/Tehran", lat: 35.6892, lng: 51.3890 },
+  { name: "Tel Aviv", country: "Israel", code: "IL", tz: "Asia/Jerusalem", lat: 32.0853, lng: 34.7818 },
+  { name: "Jerusalem", country: "Israel", code: "IL", tz: "Asia/Jerusalem", lat: 31.7683, lng: 35.2137 },
+  { name: "Beirut", country: "Lebanon", code: "LB", tz: "Asia/Beirut", lat: 33.8938, lng: 35.5018 },
 
   // Oceania & Pacific
-  { name: "Sydney", country: "Australia", code: "AU", flag: "ðŸ‡¦ðŸ‡º", tz: "Australia/Sydney", lat: -33.8688, lng: 151.2093 },
-  { name: "Melbourne", country: "Australia", code: "AU", flag: "ðŸ‡¦ðŸ‡º", tz: "Australia/Melbourne", lat: -37.8136, lng: 144.9631 },
-  { name: "Brisbane", country: "Australia", code: "AU", flag: "ðŸ‡¦ðŸ‡º", tz: "Australia/Brisbane", lat: -27.4698, lng: 153.0251 },
-  { name: "Perth", country: "Australia", code: "AU", flag: "ðŸ‡¦ðŸ‡º", tz: "Australia/Perth", lat: -31.9505, lng: 115.8605 },
-  { name: "Auckland", country: "New Zealand", code: "NZ", flag: "ðŸ‡³ðŸ‡¿", tz: "Pacific/Auckland", lat: -36.8485, lng: 174.7633 },
-  { name: "Fiji (Suva)", country: "Fiji", code: "FJ", flag: "ðŸ‡«ðŸ‡¯", tz: "Pacific/Fiji", lat: -18.1248, lng: 178.4501 },
-  { name: "Tahiti (Papeete)", country: "French Polynesia", code: "PF", flag: "ðŸ‡µðŸ‡«", tz: "Pacific/Tahiti", lat: -17.5516, lng: -149.5584 }
+  { name: "Sydney", country: "Australia", code: "AU", tz: "Australia/Sydney", lat: -33.8688, lng: 151.2093 },
+  { name: "Melbourne", country: "Australia", code: "AU", tz: "Australia/Melbourne", lat: -37.8136, lng: 144.9631 },
+  { name: "Brisbane", country: "Australia", code: "AU", tz: "Australia/Brisbane", lat: -27.4698, lng: 153.0251 },
+  { name: "Perth", country: "Australia", code: "AU", tz: "Australia/Perth", lat: -31.9505, lng: 115.8605 },
+  { name: "Auckland", country: "New Zealand", code: "NZ", tz: "Pacific/Auckland", lat: -36.8485, lng: 174.7633 },
+  { name: "Fiji (Suva)", country: "Fiji", code: "FJ", tz: "Pacific/Fiji", lat: -18.1248, lng: 178.4501 },
+  { name: "Tahiti (Papeete)", country: "French Polynesia", code: "PF", tz: "Pacific/Tahiti", lat: -17.5516, lng: -149.5584 }
 ];
 function getDistanceKm(lat1, lon1, lat2, lon2) {
   const R = 6371;
@@ -247,7 +247,7 @@ function searchCities(query) {
       results.push({
         name: country.name,
         country: country.name,
-        flag: country.flag,
+        code: country.code,
         tz: country.tz,
         lat: country.lat,
         lng: country.lng,
@@ -316,10 +316,7 @@ async function resolveAnyLocation(query) {
         const code = (address.country_code || "").toUpperCase();
 
         // Determine country flag if code available
-        let flag = "ðŸ“";
-        if (code && code.length === 2) {
-          flag = String.fromCodePoint(...[...code].map(c => 127397 + c.charCodeAt(0)));
-        }
+        // No flags - clean English location code
 
         // Find nearest city in our database to inherit standard IANA timezone!
         const { city: nearestCity } = findNearestCity(lat, lng);
@@ -328,7 +325,7 @@ async function resolveAnyLocation(query) {
         return {
           name,
           country,
-          flag,
+          code,
           tz,
           lat,
           lng,
@@ -590,7 +587,7 @@ const soundEngine = new WatchSoundEngine();
   // 3. 2D Swiss Watch Dial Engine (PHILL)
   // =========================================================================
 /**
- * Luxury 2D Mechanical Wrist Watch Engine â€” PHILL
+ * Luxury 2D Mechanical Wrist Watch Engine - PHILL
  * Faithfully re-creates the Swiss luxury dress watch (Rolex 1908 aesthetic):
  * - Double Bezel: Outer fine coin-edge fluted bezel & inner mirror-polished ring
  * - Pure porcelain white/ivory dial with delicate railroad minute track
@@ -847,7 +844,7 @@ class WatchEngine {
     // 7. Applied Faceted Gold Numerals (12, 3, 9) and Dagger Markers
     this.drawHourMarkers(ctx, r);
 
-    // 8. Brand Emblem (Crown, "PHILL", "GENÃˆVE")
+    // 8. Brand Emblem (Crown, "PHILL", "GENEVE")
     this.drawBrand(ctx, r);
 
     // 9. Small Seconds Subdial at 6 o'clock (Azurage, Track, "SUPERLATIVE CHRONOMETER")
@@ -1447,11 +1444,11 @@ class WatchEngine {
     ctx.letterSpacing = "5px";
     ctx.fillText("PHILL", 0, -dialR * 0.31);
 
-    // C. Subtitle: "GENÃˆVE"
+    // C. Subtitle: "GENEVE"
     ctx.font = `500 ${r * 0.022}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
     ctx.fillStyle = "#333945";
     ctx.letterSpacing = "3px";
-    ctx.fillText("GENÃˆVE", 0, -dialR * 0.22);
+    ctx.fillText("GENEVE", 0, -dialR * 0.22);
 
     ctx.restore();
   }
@@ -1790,7 +1787,7 @@ class WatchEngine {
   // 4. 3D Buckled Wristwatch WebGL Engine (PHILL)
   // =========================================================================
 /**
- * 3D Wristwatch WebGL Engine â€” PHILL
+ * 3D Wristwatch WebGL Engine - PHILL
  * Renders an ultra-luxurious, fully buckled 3D mechanical timepiece in real-time.
  * 
  * Features:
@@ -1803,7 +1800,7 @@ class WatchEngine {
  * - Live Dial Projection: Active 2D Swiss dial texture projected onto the 3D dial face
  *   (hands spin, settle, and tick dead-beat in real-time 3D!)
  * - Dome Sapphire Crystal: Dynamic specular sheen and Fresnel lighting
- * - Interactive 3D Orbit Controls: Drag to inspect full 360Â° (front, sides, back buckle), scroll to zoom
+ * - Interactive 3D Orbit Controls: Drag to inspect full 360-degree rotation (front, sides, back buckle), scroll to zoom
  * - Cinematic Spin & Settling Animation on location search
  */
 class Watch3DEngine {
@@ -2428,7 +2425,7 @@ class Watch3DEngine {
     const points = [];
     const segments = 24;
 
-    // Cubic BÃ©zier control points
+    // Cubic Bezier control points
     const p0 = { y: 1.18, z: -0.05 };
     const p1 = { y: 1.82, z: -0.16 };
     const p2 = { y: 1.88, z: -1.34 };
@@ -2451,7 +2448,7 @@ class Watch3DEngine {
     const points = [];
     const segments = 24;
 
-    // Cubic BÃ©zier control points
+    // Cubic Bezier control points
     const p0 = { y: -1.18, z: -0.05 };
     const p1 = { y: -1.82, z: -0.16 };
     const p2 = { y: -1.88, z: -1.32 };
@@ -3043,7 +3040,7 @@ class Watch3DEngine {
   // 5. Horizon & Vector Character Scenery Engine
   // =========================================================================
 /**
- * 2D Vector Animated Horizon & Living Human Activity Scenery â€” PHILL
+ * 2D Vector Animated Horizon & Living Human Activity Scenery - PHILL
  * Depicts a vibrant, authentic sky & living horizon that unmistakably reflects the
  * exact time of day (Dawn, Broad Daylight, Golden Hour Sunset, Twilight Dusk, Midnight).
  * Populates the promenade with animated 2D vector humans engaging in rich, authentic activities
@@ -3211,7 +3208,7 @@ class HorizonScenery {
     this.characters = [];
 
     if (time === "dawn") {
-      // ðŸŒ… DAWN: Morning Jogger, Dog Walker, Commuter with Coffee, Sunrise Cyclist, Stretcher, Early Walker
+      // DAWN: Morning Jogger, Dog Walker, Commuter with Coffee, Sunrise Cyclist, Stretcher, Early Walker
       this.characters.push(
         { type: "jogger", x: w * 0.12, y: groundY, vx: 75, scale: 0.92, facing: 1 },
         { type: "dog_walker", x: w * 0.38, y: groundY, vx: 34, scale: 0.90, facing: 1 },
@@ -3222,7 +3219,7 @@ class HorizonScenery {
         { type: "stretcher", x: w * 0.60, y: groundY, scale: 0.90, facing: 1 }
       );
     } else if (time === "day") {
-      // â˜€ï¸ BROAD DAYLIGHT: Bustling park promenade with readers, skaters, strollers, cyclists, tourists
+      // BROAD DAYLIGHT: Bustling park promenade with readers, skaters, strollers, cyclists, tourists
       this.characters.push(
         { type: "bench_reader", x: this.benches[0].x, y: groundY, scale: 0.90, facing: 1 },
         { type: "bench_laptop", x: this.benches[1].x, y: groundY, scale: 0.90, facing: 1 },
@@ -3235,7 +3232,7 @@ class HorizonScenery {
         { type: "walker_phone", x: w * 0.05, y: groundY, vx: 30, scale: 0.90, facing: 1 }
       );
     } else if (time === "sunset") {
-      // ðŸŒ‡ SUNSET / GOLDEN HOUR: Romantic couple, Sunset watcher, Evening jogger, Dog walker, Cyclist, Railing photographer
+      // SUNSET / GOLDEN HOUR: Romantic couple, Sunset watcher, Evening jogger, Dog walker, Cyclist, Railing photographer
       this.characters.push(
         { type: "couple", x: w * 0.28, y: groundY, vx: 26, scale: 0.92, facing: 1 },
         { type: "bench_watcher", x: this.benches[1].x, y: groundY, scale: 0.90, facing: 1 },
@@ -3246,7 +3243,7 @@ class HorizonScenery {
         { type: "photographer", x: w * 0.50, y: groundY, vx: 0, scale: 0.90, facing: 1 }
       );
     } else if (time === "dusk") {
-      // ðŸŒ† DUSK: Acoustic guitarist on bench, evening stroll in coats, phone texter under streetlamp, couple
+      // DUSK: Acoustic guitarist on bench, evening stroll in coats, phone texter under streetlamp, couple
       this.characters.push(
         { type: "bench_guitarist", x: this.benches[0].x, y: groundY, scale: 0.92, facing: 1 },
         { type: "bench_watcher", x: this.benches[1].x, y: groundY, scale: 0.90, facing: 1 },
@@ -3257,7 +3254,7 @@ class HorizonScenery {
         { type: "jogger", x: w * 0.88, y: groundY, vx: -70, scale: 0.88, facing: -1 }
       );
     } else {
-      // ðŸŒ™ NIGHT: Stargazer at telescope, solitary nocturnal walker, late night runner, bench thinker
+      // NIGHT: Stargazer at telescope, solitary nocturnal walker, late night runner, bench thinker
       this.characters.push(
         { type: "stargazer", x: w * 0.26, y: groundY, scale: 0.92, facing: 1 },
         { type: "walker_coat", x: w * 0.54, y: groundY, vx: 28, scale: 0.90, facing: 1 },
@@ -5326,7 +5323,7 @@ class WatchWorldApp {
       this.soundToggleBtn.setAttribute("aria-label", isSoundOn ? "Mute audio" : "Unmute audio");
       const icon = this.soundToggleBtn.querySelector(".sound-icon");
       if (icon) {
-        icon.textContent = isSoundOn ? "ðŸ”Š" : "ðŸ”‡";
+        icon.textContent = isSoundOn ? "ON" : "OFF";
       }
     });
 
@@ -5373,7 +5370,7 @@ class WatchWorldApp {
 
     this.suggestionsDropdown.innerHTML = matches.map((item, idx) => `
       <div class="suggestion-item" data-index="${idx}">
-        <span class="city-flag">${item.flag}</span>
+        <span class="city-badge">${item.code || "LOC"}</span>
         <div class="city-details">
           <span class="city-title">${item.name}</span>
           <span class="city-country">${item.isCountry ? (item.capital ? `Capital: ${item.capital}` : "Country") : item.country}</span>
@@ -5408,7 +5405,7 @@ class WatchWorldApp {
     this.selectLocation(matchedCity || {
       name: "London",
       country: "United Kingdom",
-      flag: "ðŸ‡¬ðŸ‡§",
+      code: "GB",
       lat: 51.5074,
       lng: -0.1278,
       tz: "Europe/London"
@@ -5438,7 +5435,7 @@ class WatchWorldApp {
         this.watch3D.setFinish(this.watch.finish);
       }
       this.applyBackgroundTheme(timeInfo);
-      this.setTelemetry(`âœ¦ ${city.flag} ${city.name.toUpperCase()} â€¢ SYNCHRONIZED`, false);
+      this.setTelemetry(`${city.name.toUpperCase()} - SYNCHRONIZED`, false);
       this.startLiveClock();
       return;
     }
@@ -5446,7 +5443,7 @@ class WatchWorldApp {
     this.isTransitioning = true;
 
     // --- Fast Hand Spin & Deceleration Animation ---
-    this.setTelemetry(`âœ¦ TARGETING ${city.flag} ${city.name.toUpperCase()} â€¢ SPINNING HANDS...`, true);
+    this.setTelemetry(`TARGETING ${city.name.toUpperCase()} - SPINNING HANDS...`, true);
 
     // Background theme starts morphing as the hands spin
     this.applyBackgroundTheme(timeInfo);
@@ -5457,7 +5454,7 @@ class WatchWorldApp {
 
     this.watch.setTime(timeInfo, true, () => {
       // When hands finish spinning and lock onto time
-      this.setTelemetry(`âœ¦ ${city.flag} ${city.name.toUpperCase()} â€¢ SYNCHRONIZED`, false);
+      this.setTelemetry(`${city.name.toUpperCase()} - SYNCHRONIZED`, false);
       this.isTransitioning = false;
       this.startLiveClock();
     });
@@ -5500,7 +5497,7 @@ class WatchWorldApp {
     }
     if (this.timePeriodEl) this.timePeriodEl.textContent = ampm;
 
-    if (this.timezoneBadgeEl) this.timezoneBadgeEl.textContent = `${timeInfo.offsetStr} â€¢ ${city.tz.split("/")[1] || city.tz}`;
+    if (this.timezoneBadgeEl) this.timezoneBadgeEl.textContent = `${timeInfo.offsetStr} | ${city.tz.split("/")[1] || city.tz}`;
 
     // Relative difference vs user's home timezone
     const homeNow = new Date();
@@ -5520,19 +5517,19 @@ class WatchWorldApp {
 
     // Solar Status Badge
     if (this.solarStatusEl) {
-      const solarIcons = {
-        dawn: "ðŸŒ… Dawn / Sunrise",
-        day: "â˜€ï¸ Broad Daylight",
-        sunset: "ðŸŒ‡ Golden Hour Sunset",
-        dusk: "ðŸŒ† Twilight / Dusk",
-        night: "ðŸŒ™ Starlit Night"
+      const solarStatusNames = {
+        dawn: "Dawn / Sunrise",
+        day: "Broad Daylight",
+        sunset: "Golden Hour Sunset",
+        dusk: "Twilight / Dusk",
+        night: "Starlit Night"
       };
-      this.solarStatusEl.textContent = solarIcons[timeInfo.timeOfDay] || "â˜€ï¸ Day";
+      this.solarStatusEl.textContent = solarStatusNames[timeInfo.timeOfDay] || "Daytime";
     }
 
     if (this.coordsBadgeEl) {
-      const latStr = `${Math.abs(city.lat).toFixed(2)}Â° ${city.lat >= 0 ? "N" : "S"}`;
-      const lngStr = `${Math.abs(city.lng).toFixed(2)}Â° ${city.lng >= 0 ? "E" : "W"}`;
+      const latStr = `${Math.abs(city.lat).toFixed(2)} ${city.lat >= 0 ? "N" : "S"}`;
+      const lngStr = `${Math.abs(city.lng).toFixed(2)} ${city.lng >= 0 ? "E" : "W"}`;
       this.coordsBadgeEl.textContent = `${latStr}, ${lngStr}`;
     }
   }

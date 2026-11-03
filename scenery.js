@@ -1,40 +1,21 @@
 /**
- * 2D Vector Animated Horizon & Human Activity Scenery — PHILL
- * Depicts the sky, horizon, and animated 2D vector characters engaging in
- * real human activities corresponding to the searched location's local time:
+ * 2D Vector Animated Horizon & Living Human Activity Scenery — PHILL
+ * Depicts a vibrant, authentic sky & living horizon that unmistakably reflects the
+ * exact time of day (Dawn, Broad Daylight, Golden Hour Sunset, Twilight Dusk, Midnight).
+ * Populates the promenade with animated 2D vector humans engaging in rich, authentic activities
+ * with anatomically correct forward walk cycles (no moonwalking or backward limbs):
  *
- * 🌅 DAWN (05:00 - 08:59):
- *    - Morning joggers with dynamic stride and high knee lifts
- *    - Dog walkers with trotting puppy and wagging tail
- *    - Morning commuters with steaming coffee cups
- *    - Cyclists pedaling through the sunrise mist
- *    - Sunrise horizon with morning birds gliding across the sky
- *
- * ☀️ BROAD DAYLIGHT (09:00 - 16:59):
- *    - People strolling, conversing, and walking briskly
- *    - Park bench readers reading books / turning pages
- *    - Skateboarders / commuters coasting by
- *    - Flocks of birds and soft drifting cumulus clouds
- *    - High daylight sun over a lush park promenade & city skyline
- *
- * 🌇 SUNSET / GOLDEN HOUR (17:00 - 19:29):
- *    - Couples walking arm in arm bathed in golden sunset light
- *    - Evening runners finishing workouts
- *    - Sunset watchers leaning on the promenade railing
- *    - Warm golden orb resting on the horizon
- *    - Streetlamps beginning to glow as twilight approaches
- *
- * 🌆 DUSK / TWILIGHT (19:30 - 21:59):
- *    - Cozy evening pedestrians in coats heading to cafes/diners
- *    - Street musician / acoustic guitarist strumming on a park bench
- *    - Illuminated Victorian streetlamps casting warm pools of light on pavement
- *    - Distant city apartments with glowing warm golden windows
- *
- * 🌙 MIDNIGHT / NIGHT (22:00 - 04:59):
- *    - Stargazer looking through a standing brass telescope at the moon
- *    - Solitary nocturnal walker strolling under the glowing streetlamps
- *    - Night runner with glowing reflective armband
- *    - Luminous crescent moon, starlit sky, and occasional shooting stars
+ * - Joggers & Runners with high knee lift & rhythmic arm pump
+ * - Dog Walkers with trotting 4-legged puppies & wagging tails
+ * - Cyclists with spinning wheels & pedal-articulating knees
+ * - Skateboarders pushing with rear foot & cruising
+ * - Parents pushing modern baby strollers
+ * - Commuters with steaming takeaway coffee cups
+ * - Smartphone text walkers with glowing screens
+ * - Tourists/Photographers pausing to take photos with camera flashes
+ * - Park bench figures: book readers, acoustic guitarists, laptop workers, coffee drinkers
+ * - Stargazers observing the moon through standing brass telescopes
+ * - Flying birds, drifting clouds, glowing sun with lens rays, crescent moon, and shooting stars
  */
 
 export class HorizonScenery {
@@ -42,20 +23,17 @@ export class HorizonScenery {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
 
-    // Timeframe state: 'dawn' | 'day' | 'sunset' | 'dusk' | 'night'
+    // Time frame state: 'dawn' | 'day' | 'sunset' | 'dusk' | 'night'
     this.timeOfDay = "day";
     this.targetTimeOfDay = "day";
     this.decimalHour = 12.0;
-
-    // Transition blend (0 = current, 1 = target)
-    this.transitionProgress = 1.0;
 
     // Viewport dimensions
     this.w = 0;
     this.h = 0;
     this.groundY = 0;
 
-    // Scenery entities
+    // Entities
     this.clouds = [];
     this.birds = [];
     this.shootingStars = [];
@@ -84,9 +62,8 @@ export class HorizonScenery {
     this.canvas.width = Math.round(width * dpr);
     this.canvas.height = Math.round(height * dpr);
 
-    // Keep ground line placed along the lower section of the screen
-    // so it frames beneath the center watch
-    this.groundY = Math.round(this.h * 0.84);
+    // Ground line placed across lower area (frames beautifully beneath hero watch)
+    this.groundY = Math.round(this.h * 0.83);
 
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
@@ -98,16 +75,12 @@ export class HorizonScenery {
     });
   }
 
-  /**
-   * Sets the scenery to match the destination's local time.
-   */
   setTime(timeOfDay, decimalHour = 12.0) {
+    this.decimalHour = decimalHour;
     if (this.timeOfDay !== timeOfDay) {
+      this.timeOfDay = timeOfDay;
       this.targetTimeOfDay = timeOfDay;
-      this.decimalHour = decimalHour;
-      this.transitionProgress = 0.0;
-    } else {
-      this.decimalHour = decimalHour;
+      this.spawnCharacters();
     }
   }
 
@@ -115,40 +88,54 @@ export class HorizonScenery {
     const w = this.w;
     const groundY = this.groundY;
 
-    // 1. Streetlamps positioned along the promenade
+    // Twinkling stars for dusk and night sky
+    this.stars = [];
+    for (let i = 0; i < 75; i++) {
+      this.stars.push({
+        x: Math.random() * w,
+        y: Math.random() * (groundY * 0.72),
+        radius: 0.5 + Math.random() * 1.5,
+        twinkleSpeed: 1.2 + Math.random() * 2.8,
+        twinkleOffset: Math.random() * Math.PI * 2
+      });
+    }
+
+    // 1. Streetlamps along the promenade
     this.streetlamps = [
-      { x: w * 0.12, y: groundY, height: 110 },
-      { x: w * 0.38, y: groundY, height: 110 },
-      { x: w * 0.64, y: groundY, height: 110 },
-      { x: w * 0.88, y: groundY, height: 110 }
+      { x: w * 0.10, y: groundY, height: 115 },
+      { x: w * 0.35, y: groundY, height: 115 },
+      { x: w * 0.65, y: groundY, height: 115 },
+      { x: w * 0.90, y: groundY, height: 115 }
     ];
 
-    // 2. Park Benches positioned between lamps
+    // 2. Park Benches
     this.benches = [
-      { x: w * 0.25, y: groundY, width: 44, height: 20 },
-      { x: w * 0.76, y: groundY, width: 44, height: 20 }
+      { x: w * 0.22, y: groundY, width: 48, height: 22 },
+      { x: w * 0.52, y: groundY, width: 48, height: 22 },
+      { x: w * 0.78, y: groundY, width: 48, height: 22 }
     ];
 
-    // 3. Park Trees (Silhouettes)
+    // 3. Park Trees (Silhouettes & Foliage)
     this.trees = [
-      { x: w * 0.05, y: groundY, radius: 55, trunkH: 60, type: "deciduous" },
-      { x: w * 0.30, y: groundY, radius: 45, trunkH: 50, type: "pine" },
-      { x: w * 0.70, y: groundY, radius: 48, trunkH: 55, type: "deciduous" },
-      { x: w * 0.95, y: groundY, radius: 60, trunkH: 65, type: "elm" }
+      { x: w * 0.04, y: groundY, radius: 52, trunkH: 60, type: "deciduous" },
+      { x: w * 0.18, y: groundY, radius: 42, trunkH: 50, type: "pine" },
+      { x: w * 0.44, y: groundY, radius: 46, trunkH: 55, type: "elm" },
+      { x: w * 0.72, y: groundY, radius: 48, trunkH: 52, type: "deciduous" },
+      { x: w * 0.96, y: groundY, radius: 58, trunkH: 64, type: "elm" }
     ];
 
     // 4. Distant City Skyline Towers
     this.skylineBuildings = [];
-    const count = Math.ceil(w / 45);
+    const count = Math.ceil(w / 42);
     for (let i = 0; i < count; i++) {
       const bW = 28 + (i % 4) * 12;
-      const bH = 50 + ((i * 37) % 90);
-      const isTower = (i % 7 === 2);
+      const bH = 55 + ((i * 37) % 95);
+      const isTower = (i % 6 === 2);
       this.skylineBuildings.push({
-        x: i * 42,
+        x: i * 40,
         y: groundY,
         width: bW,
-        height: isTower ? bH + 45 : bH,
+        height: isTower ? bH + 48 : bH,
         hasSpire: isTower,
         windows: (i % 2 === 0)
       });
@@ -156,186 +143,84 @@ export class HorizonScenery {
 
     // 5. Drifting Clouds
     this.clouds = [
-      { x: w * 0.15, y: this.h * 0.22, scale: 0.9, speed: 6 },
-      { x: w * 0.55, y: this.h * 0.16, scale: 1.2, speed: 4.5 },
-      { x: w * 0.85, y: this.h * 0.28, scale: 0.75, speed: 7 }
+      { x: w * 0.12, y: this.h * 0.20, scale: 1.0, speed: 7 },
+      { x: w * 0.48, y: this.h * 0.14, scale: 1.3, speed: 5 },
+      { x: w * 0.82, y: this.h * 0.24, scale: 0.85, speed: 8 }
     ];
 
     // 6. Flying Birds
     this.birds = [
-      { x: w * 0.2, y: this.h * 0.32, speed: 38, wingPhase: 0, scale: 0.9 },
-      { x: w * 0.24, y: this.h * 0.30, speed: 38, wingPhase: 0.4, scale: 0.85 },
-      { x: w * 0.28, y: this.h * 0.34, speed: 38, wingPhase: 0.8, scale: 0.8 },
-      { x: w * 0.65, y: this.h * 0.25, speed: 44, wingPhase: 1.2, scale: 1.0 },
-      { x: w * 0.70, y: this.h * 0.28, speed: 44, wingPhase: 1.6, scale: 0.9 }
+      { x: w * 0.18, y: this.h * 0.28, speed: 42, wingPhase: 0, scale: 0.9 },
+      { x: w * 0.22, y: this.h * 0.26, speed: 42, wingPhase: 0.4, scale: 0.85 },
+      { x: w * 0.26, y: this.h * 0.30, speed: 42, wingPhase: 0.8, scale: 0.8 },
+      { x: w * 0.62, y: this.h * 0.22, speed: 48, wingPhase: 1.2, scale: 1.0 },
+      { x: w * 0.66, y: this.h * 0.25, speed: 48, wingPhase: 1.6, scale: 0.9 }
     ];
 
-    // 7. Dynamic Human Characters Spawned for Time of Day
     this.spawnCharacters();
   }
 
   spawnCharacters() {
     const w = this.w;
     const groundY = this.groundY;
-    const time = this.targetTimeOfDay;
+    const time = this.timeOfDay;
 
     this.characters = [];
 
     if (time === "dawn") {
-      // 🌅 DAWN: Morning Jogger, Dog Walker, Cyclist, Steaming Coffee Commuter
-      this.characters.push({
-        type: "jogger",
-        x: w * 0.18,
-        y: groundY,
-        vx: 85, // fast jogging pace
-        scale: 0.92,
-        facing: 1
-      });
-      this.characters.push({
-        type: "dog_walker",
-        x: w * 0.55,
-        y: groundY,
-        vx: 38,
-        scale: 0.9,
-        facing: 1
-      });
-      this.characters.push({
-        type: "cyclist",
-        x: w * 0.82,
-        y: groundY,
-        vx: -95, // cycling from right to left
-        scale: 0.88,
-        facing: -1
-      });
-      this.characters.push({
-        type: "walker",
-        x: w * 0.35,
-        y: groundY,
-        vx: 32,
-        hasCoffee: true,
-        scale: 0.9,
-        facing: 1
-      });
+      // 🌅 DAWN: Morning Jogger, Dog Walker, Commuter with Coffee, Sunrise Cyclist, Stretcher, Early Walker
+      this.characters.push(
+        { type: "jogger", x: w * 0.12, y: groundY, vx: 85, scale: 0.92, facing: 1 },
+        { type: "dog_walker", x: w * 0.38, y: groundY, vx: 38, scale: 0.90, facing: 1 },
+        { type: "cyclist", x: w * 0.85, y: groundY, vx: -95, scale: 0.88, facing: -1 },
+        { type: "walker_coffee", x: w * 0.28, y: groundY, vx: 34, scale: 0.90, facing: 1 },
+        { type: "bench_coffee", x: this.benches[0].x + 24, y: groundY, scale: 0.90, facing: 1 },
+        { type: "jogger", x: w * 0.68, y: groundY, vx: -82, scale: 0.88, facing: -1 },
+        { type: "stretcher", x: w * 0.60, y: groundY, scale: 0.90, facing: 1 }
+      );
     } else if (time === "day") {
-      // ☀️ DAY: Strollers, Bench Reader, Cyclist, Friends chatting
-      this.characters.push({
-        type: "bench_reader",
-        x: this.benches[0].x + 22,
-        y: groundY,
-        scale: 0.9,
-        facing: 1
-      });
-      this.characters.push({
-        type: "walker",
-        x: w * 0.15,
-        y: groundY,
-        vx: 42,
-        hasBag: true,
-        scale: 0.92,
-        facing: 1
-      });
-      this.characters.push({
-        type: "couple",
-        x: w * 0.45,
-        y: groundY,
-        vx: 35,
-        scale: 0.9,
-        facing: 1
-      });
-      this.characters.push({
-        type: "cyclist",
-        x: w * 0.88,
-        y: groundY,
-        vx: -80,
-        scale: 0.88,
-        facing: -1
-      });
+      // ☀️ BROAD DAYLIGHT: Bustling park promenade with readers, skaters, strollers, cyclists, tourists
+      this.characters.push(
+        { type: "bench_reader", x: this.benches[0].x + 24, y: groundY, scale: 0.90, facing: 1 },
+        { type: "bench_laptop", x: this.benches[1].x + 24, y: groundY, scale: 0.90, facing: 1 },
+        { type: "skateboarder", x: w * 0.18, y: groundY, vx: 78, scale: 0.90, facing: 1 },
+        { type: "stroller_parent", x: w * 0.32, y: groundY, vx: 36, scale: 0.90, facing: 1 },
+        { type: "couple", x: w * 0.46, y: groundY, vx: 32, scale: 0.90, facing: 1 },
+        { type: "cyclist", x: w * 0.88, y: groundY, vx: -90, scale: 0.88, facing: -1 },
+        { type: "dog_walker", x: w * 0.64, y: groundY, vx: -36, scale: 0.88, facing: -1 },
+        { type: "photographer", x: w * 0.74, y: groundY, vx: 26, scale: 0.90, facing: 1 },
+        { type: "walker_phone", x: w * 0.05, y: groundY, vx: 35, scale: 0.90, facing: 1 }
+      );
     } else if (time === "sunset") {
-      // 🌇 SUNSET: Romantic Couple strolling, Sunset watcher on railing, Evening Runner
-      this.characters.push({
-        type: "couple",
-        x: w * 0.32,
-        y: groundY,
-        vx: 28, // gentle sunset stroll
-        scale: 0.92,
-        facing: 1
-      });
-      this.characters.push({
-        type: "bench_watcher",
-        x: this.benches[1].x + 22,
-        y: groundY,
-        scale: 0.9,
-        facing: -1
-      });
-      this.characters.push({
-        type: "jogger",
-        x: w * 0.75,
-        y: groundY,
-        vx: 80,
-        scale: 0.9,
-        facing: 1
-      });
-      this.characters.push({
-        type: "dog_walker",
-        x: w * 0.12,
-        y: groundY,
-        vx: 34,
-        scale: 0.88,
-        facing: 1
-      });
+      // 🌇 SUNSET / GOLDEN HOUR: Romantic couple, Sunset watcher, Evening jogger, Dog walker, Skater
+      this.characters.push(
+        { type: "couple", x: w * 0.30, y: groundY, vx: 28, scale: 0.92, facing: 1 },
+        { type: "bench_watcher", x: this.benches[1].x + 24, y: groundY, scale: 0.90, facing: -1 },
+        { type: "bench_guitarist", x: this.benches[0].x + 24, y: groundY, scale: 0.90, facing: 1 },
+        { type: "jogger", x: w * 0.76, y: groundY, vx: 82, scale: 0.90, facing: 1 },
+        { type: "dog_walker", x: w * 0.14, y: groundY, vx: 34, scale: 0.88, facing: 1 },
+        { type: "cyclist", x: w * 0.92, y: groundY, vx: -85, scale: 0.88, facing: -1 },
+        { type: "photographer", x: w * 0.44, y: groundY, vx: 22, scale: 0.90, facing: 1 }
+      );
     } else if (time === "dusk") {
-      // 🌆 DUSK: Acoustic Guitarist on Bench, Evening Pedestrians under Streetlamps
-      this.characters.push({
-        type: "bench_guitarist",
-        x: this.benches[0].x + 22,
-        y: groundY,
-        scale: 0.92,
-        facing: 1
-      });
-      this.characters.push({
-        type: "walker",
-        x: w * 0.48,
-        y: groundY,
-        vx: 36,
-        hasCoat: true,
-        scale: 0.9,
-        facing: 1
-      });
-      this.characters.push({
-        type: "dog_walker",
-        x: w * 0.80,
-        y: groundY,
-        vx: -35,
-        scale: 0.88,
-        facing: -1
-      });
+      // 🌆 DUSK: Acoustic guitarist on bench, evening stroll in coats, phone texter under streetlamp
+      this.characters.push(
+        { type: "bench_guitarist", x: this.benches[0].x + 24, y: groundY, scale: 0.92, facing: 1 },
+        { type: "walker_coat", x: w * 0.42, y: groundY, vx: 35, scale: 0.90, facing: 1 },
+        { type: "dog_walker", x: w * 0.78, y: groundY, vx: -34, scale: 0.88, facing: -1 },
+        { type: "walker_phone", x: w * 0.62, y: groundY, vx: 30, scale: 0.90, facing: 1 },
+        { type: "couple", x: w * 0.20, y: groundY, vx: 28, scale: 0.90, facing: 1 },
+        { type: "jogger", x: w * 0.90, y: groundY, vx: -78, scale: 0.88, facing: -1 }
+      );
     } else {
-      // 🌙 NIGHT: Stargazer with Telescope, Solitary Night Walker under Streetlamp, Late Runner
-      this.characters.push({
-        type: "stargazer",
-        x: w * 0.28,
-        y: groundY,
-        scale: 0.92,
-        facing: 1
-      });
-      this.characters.push({
-        type: "walker",
-        x: w * 0.58,
-        y: groundY,
-        vx: 30, // slow reflective night walk
-        hasCoat: true,
-        scale: 0.9,
-        facing: 1
-      });
-      this.characters.push({
-        type: "jogger",
-        x: w * 0.85,
-        y: groundY,
-        vx: -75,
-        hasReflector: true,
-        scale: 0.88,
-        facing: -1
-      });
+      // 🌙 NIGHT: Stargazer at telescope, solitary nocturnal walker, late night runner, bench thinker
+      this.characters.push(
+        { type: "stargazer", x: w * 0.26, y: groundY, scale: 0.92, facing: 1 },
+        { type: "walker_coat", x: w * 0.54, y: groundY, vx: 30, scale: 0.90, facing: 1 },
+        { type: "bench_watcher", x: this.benches[1].x + 24, y: groundY, scale: 0.90, facing: 1 },
+        { type: "jogger_night", x: w * 0.86, y: groundY, vx: -76, scale: 0.88, facing: -1 },
+        { type: "walker_phone", x: w * 0.70, y: groundY, vx: -28, scale: 0.88, facing: -1 }
+      );
     }
   }
 
@@ -355,39 +240,26 @@ export class HorizonScenery {
   update(dt, timeSec) {
     const w = this.w;
 
-    // Smooth transition to target timeframe
-    if (this.transitionProgress < 1.0) {
-      this.transitionProgress = Math.min(1.0, this.transitionProgress + dt * 1.5);
-      if (this.transitionProgress >= 1.0) {
-        this.timeOfDay = this.targetTimeOfDay;
-        this.spawnCharacters();
-      }
-    }
-
-    // Update Drifting Clouds
+    // Clouds
     this.clouds.forEach(c => {
       c.x += c.speed * dt;
-      if (c.x > w + 120) {
-        c.x = -120;
-      }
+      if (c.x > w + 140) c.x = -140;
     });
 
-    // Update Birds
+    // Birds
     this.birds.forEach(b => {
       b.x += b.speed * dt;
       b.wingPhase += dt * 9;
-      if (b.x > w + 60) {
-        b.x = -60;
-      }
+      if (b.x > w + 60) b.x = -60;
     });
 
-    // Periodically spawn shooting star during night
-    if (this.timeOfDay === "night" && Math.random() < 0.004 && this.shootingStars.length === 0) {
+    // Shooting Stars (Night)
+    if (this.timeOfDay === "night" && Math.random() < 0.005 && this.shootingStars.length === 0) {
       this.shootingStars.push({
         x: Math.random() * w * 0.8,
         y: Math.random() * this.h * 0.35,
-        vx: 240 + Math.random() * 120,
-        vy: 110 + Math.random() * 60,
+        vx: 260 + Math.random() * 140,
+        vy: 120 + Math.random() * 60,
         life: 0.8,
         maxLife: 0.8
       });
@@ -398,67 +270,74 @@ export class HorizonScenery {
       star.x += star.vx * dt;
       star.y += star.vy * dt;
       star.life -= dt;
-      if (star.life <= 0) {
-        this.shootingStars.splice(i, 1);
-      }
+      if (star.life <= 0) this.shootingStars.splice(i, 1);
     }
 
-    // Update Animated Characters
+    // Characters movement & boundary wrap
     this.characters.forEach(char => {
       if (char.vx) {
         char.x += char.vx * dt;
-        // Wrap around screen boundaries
-        if (char.vx > 0 && char.x > w + 80) {
-          char.x = -80;
-        } else if (char.vx < 0 && char.x < -80) {
-          char.x = w + 80;
+        // Direction must always match vx sign so character faces where they walk!
+        char.facing = char.vx >= 0 ? 1 : -1;
+
+        if (char.vx > 0 && char.x > w + 90) {
+          char.x = -90;
+        } else if (char.vx < 0 && char.x < -90) {
+          char.x = w + 90;
         }
       }
     });
   }
 
-  // --- Rendering ---
+  // --- Rendering Architecture ---
 
   draw(timeSec) {
     const ctx = this.ctx;
     const w = this.w;
     const h = this.h;
-    const groundY = this.groundY;
 
     ctx.clearRect(0, 0, w, h);
 
     const colors = this.getThemeColors();
 
-    // 1. Celestial Orb in Sky (Sun / Moon on Horizon)
+    // 1. Vivid Full-Canvas Sky Gradient (unmistakably conveys time of day!)
+    this.drawSky(ctx, colors);
+
+    // 1b. Celestial Twinkling Stars (Night & Dusk)
+    if (this.timeOfDay === "night" || this.timeOfDay === "dusk") {
+      this.drawStars(ctx, timeSec);
+    }
+
+    // 2. Celestial Orb: Brilliant Sun / Luminous Crescent Moon
     this.drawCelestialBody(ctx, colors);
 
-    // 2. Drifting Soft Clouds
+    // 3. Clouds & Sunbeams
     this.drawClouds(ctx, colors);
 
-    // 3. Flocks of Flying Birds
-    this.drawBirds(ctx, colors, timeSec);
+    // 4. Flying Birds
+    this.drawBirds(ctx, colors);
 
-    // 4. Shooting Stars (Night)
+    // 5. Shooting Stars (Night)
     if (this.shootingStars.length > 0) {
       this.drawShootingStars(ctx);
     }
 
-    // 5. Distant City Skyline & Rolling Hills
+    // 6. Distant City Skyline & Rolling Hills
     this.drawSkyline(ctx, colors);
 
-    // 6. Promenade Ground Line & Waterfront Railing
+    // 7. Ground Line, Promenade Path & Railing
     this.drawGround(ctx, colors);
 
-    // 7. Park Trees
+    // 8. Park Trees
     this.drawTrees(ctx, colors, timeSec);
 
-    // 8. Park Benches
+    // 9. Park Benches
     this.drawBenches(ctx, colors);
 
-    // 9. Streetlamps & Light Beams
-    this.drawStreetlamps(ctx, colors, timeSec);
+    // 10. Streetlamps & Glowing Volumetric Light Cones
+    this.drawStreetlamps(ctx, colors);
 
-    // 10. Animated 2D Vector Characters (Human Activities)
+    // 11. Animated 2D Vector Characters (Real Human Activities)
     this.drawCharacters(ctx, colors, timeSec);
   }
 
@@ -467,123 +346,222 @@ export class HorizonScenery {
     switch (t) {
       case "dawn":
         return {
-          skyGlow: "rgba(255, 175, 120, 0.4)",
+          skyTop: "#1c1936",
+          skyMid: "#6a345e",
+          skyBottom: "#ff9253",
+          skyHorizon: "#ffd68a",
           sunColor: "#ffbe88",
-          sunGlow: "rgba(255, 160, 100, 0.5)",
-          sunGlowMid: "rgba(255, 160, 100, 0.15)",
+          sunGlow: "rgba(255, 170, 100, 0.6)",
+          sunGlowMid: "rgba(255, 170, 100, 0.15)",
           isSun: true,
           sunYRatio: 0.68,
-          skyline: "#37243c",
-          hills: "#28192e",
-          ground: "#1b1122",
-          pavement: "#25172d",
-          tree: "#221326",
-          silhouette: "#26152a",
-          rimLight: "rgba(255, 195, 150, 0.65)",
+          hillsBack: "#462947",
+          hillsFront: "#331c34",
+          skyline: "#422340",
+          ground: "#1f1221",
+          pavement: "#2c1a2e",
+          railing: "rgba(255, 200, 160, 0.25)",
+          tree: "#221323",
+          silhouette: "#261528",
+          charAccent: "#ffbe88",
+          shadowColor: "rgba(30, 15, 30, 0.45)",
           lampLight: "rgba(255, 215, 140, 0)",
           lampLightMid: "rgba(255, 215, 140, 0)",
-          lampGlow: 0
+          lampGlow: 0,
+          isDaylight: false
         };
       case "day":
         return {
-          skyGlow: "rgba(255, 255, 255, 0.3)",
-          sunColor: "#fff7dc",
-          sunGlow: "rgba(255, 235, 160, 0.45)",
-          sunGlowMid: "rgba(255, 235, 160, 0.12)",
+          skyTop: "#1976d2",
+          skyMid: "#42a5f5",
+          skyBottom: "#90caf9",
+          skyHorizon: "#e3f2fd",
+          sunColor: "#fff8e1",
+          sunGlow: "rgba(255, 245, 180, 0.75)",
+          sunGlowMid: "rgba(255, 245, 180, 0.20)",
           isSun: true,
-          sunYRatio: 0.28,
-          skyline: "#2b405d",
-          hills: "#1d3049",
-          ground: "#111f32",
-          pavement: "#17273e",
-          tree: "#152438",
-          silhouette: "#182333",
-          rimLight: "rgba(255, 255, 255, 0.45)",
+          sunYRatio: 0.24,
+          hillsBack: "#5c9470",
+          hillsFront: "#3f7a55",
+          skyline: "#547596",
+          ground: "#475569",
+          pavement: "#64748b",
+          railing: "rgba(255, 255, 255, 0.65)",
+          tree: "#265437",
+          silhouette: "#1e293b",
+          charAccent: "#38bdf8",
+          shadowColor: "rgba(15, 23, 42, 0.35)",
           lampLight: "rgba(255, 220, 140, 0)",
           lampLightMid: "rgba(255, 220, 140, 0)",
-          lampGlow: 0
+          lampGlow: 0,
+          isDaylight: true
         };
       case "sunset":
         return {
-          skyGlow: "rgba(255, 110, 40, 0.5)",
-          sunColor: "#ff7638",
-          sunGlow: "rgba(255, 90, 40, 0.65)",
-          sunGlowMid: "rgba(255, 90, 40, 0.18)",
+          skyTop: "#180a2b",
+          skyMid: "#641544",
+          skyBottom: "#cb3728",
+          skyHorizon: "#ff982b",
+          sunColor: "#ff6324",
+          sunGlow: "rgba(255, 100, 40, 0.75)",
+          sunGlowMid: "rgba(255, 100, 40, 0.22)",
           isSun: true,
           sunYRatio: 0.72,
-          skyline: "#381830",
-          hills: "#280f24",
-          ground: "#190817",
-          pavement: "#240d22",
-          tree: "#20091d",
-          silhouette: "#20091c",
-          rimLight: "rgba(255, 160, 70, 0.75)",
-          lampLight: "rgba(255, 195, 90, 0.35)",
-          lampLightMid: "rgba(255, 195, 90, 0.12)",
-          lampGlow: 0.4
+          hillsBack: "#421832",
+          hillsFront: "#2b0d20",
+          skyline: "#3e122e",
+          ground: "#1a0814",
+          pavement: "#250d1e",
+          railing: "rgba(255, 150, 80, 0.35)",
+          tree: "#1f0917",
+          silhouette: "#210918",
+          charAccent: "#fb923c",
+          shadowColor: "rgba(20, 5, 15, 0.55)",
+          lampLight: "rgba(255, 195, 90, 0.45)",
+          lampLightMid: "rgba(255, 195, 90, 0.15)",
+          lampGlow: 0.5,
+          isDaylight: false
         };
       case "dusk":
         return {
-          skyGlow: "rgba(160, 90, 220, 0.35)",
-          sunColor: "#eedeff",
-          sunGlow: "rgba(180, 110, 240, 0.4)",
-          sunGlowMid: "rgba(180, 110, 240, 0.12)",
+          skyTop: "#090918",
+          skyMid: "#1e1840",
+          skyBottom: "#451f5c",
+          skyHorizon: "#782d6b",
+          sunColor: "#f3e8ff",
+          sunGlow: "rgba(190, 120, 255, 0.45)",
+          sunGlowMid: "rgba(190, 120, 255, 0.12)",
           isSun: false, // Crescent moon
-          sunYRatio: 0.35,
-          skyline: "#221334",
-          hills: "#170c24",
-          ground: "#0d0615",
-          pavement: "#150b21",
-          tree: "#11071a",
-          silhouette: "#12081d",
-          rimLight: "rgba(200, 150, 255, 0.45)",
-          lampLight: "rgba(255, 215, 120, 0.75)",
-          lampLightMid: "rgba(255, 215, 120, 0.18)",
-          lampGlow: 0.85
+          sunYRatio: 0.32,
+          hillsBack: "#211433",
+          hillsFront: "#150b23",
+          skyline: "#201131",
+          ground: "#0d0616",
+          pavement: "#140a20",
+          railing: "rgba(180, 130, 240, 0.25)",
+          tree: "#100719",
+          silhouette: "#13081e",
+          charAccent: "#c084fc",
+          shadowColor: "rgba(10, 5, 15, 0.6)",
+          lampLight: "rgba(255, 215, 120, 0.80)",
+          lampLightMid: "rgba(255, 215, 120, 0.22)",
+          lampGlow: 0.85,
+          isDaylight: false
         };
       case "night":
       default:
         return {
-          skyGlow: "rgba(60, 100, 180, 0.25)",
+          skyTop: "#020409",
+          skyMid: "#060c18",
+          skyBottom: "#0b152a",
+          skyHorizon: "#0e1b36",
           sunColor: "#f0f5ff",
-          sunGlow: "rgba(180, 215, 255, 0.35)",
-          sunGlowMid: "rgba(180, 215, 255, 0.12)",
+          sunGlow: "rgba(180, 220, 255, 0.40)",
+          sunGlowMid: "rgba(180, 220, 255, 0.12)",
           isSun: false, // Glowing crescent moon
-          sunYRatio: 0.30,
-          skyline: "#121926",
-          hills: "#0b1019",
+          sunYRatio: 0.28,
+          hillsBack: "#121a28",
+          hillsFront: "#0a101b",
+          skyline: "#111824",
           ground: "#05070d",
-          pavement: "#0a0e16",
+          pavement: "#0a0e17",
+          railing: "rgba(255, 255, 255, 0.12)",
           tree: "#070a10",
           silhouette: "#090d16",
-          rimLight: "rgba(180, 210, 255, 0.35)",
-          lampLight: "rgba(255, 225, 140, 0.85)",
-          lampLightMid: "rgba(255, 225, 140, 0.22)",
-          lampGlow: 1.0
+          charAccent: "#38bdf8",
+          shadowColor: "rgba(2, 4, 8, 0.7)",
+          lampLight: "rgba(255, 225, 140, 0.90)",
+          lampLightMid: "rgba(255, 225, 140, 0.26)",
+          lampGlow: 1.0,
+          isDaylight: false
         };
     }
   }
 
-  // --- 1. Celestial Orb (Sun or Crescent Moon) ---
+  getOrbX(w, colors) {
+    if (this.decimalHour !== undefined && !isNaN(this.decimalHour)) {
+      if (colors.isSun) {
+        // Daytime: 5:00 to 19:45
+        const progress = Math.max(0, Math.min(1, (this.decimalHour - 5) / 14.75));
+        return w * (0.15 + 0.70 * progress);
+      } else {
+        // Nighttime: 19:46 to 5:00
+        const nightHour = this.decimalHour >= 19.75 ? this.decimalHour - 19.75 : this.decimalHour + 4.25;
+        const progress = Math.max(0, Math.min(1, nightHour / 9.25));
+        return w * (0.15 + 0.70 * progress);
+      }
+    }
+    return w * 0.75;
+  }
+
+  // --- 1. Full-Canvas Sky Gradient ---
+
+  drawSky(ctx, colors) {
+    const w = this.w;
+    const groundY = this.groundY;
+
+    ctx.save();
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, groundY);
+    skyGrad.addColorStop(0.0, colors.skyTop);
+    skyGrad.addColorStop(0.35, colors.skyMid);
+    skyGrad.addColorStop(0.75, colors.skyBottom);
+    skyGrad.addColorStop(1.0, colors.skyHorizon);
+
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, w, groundY);
+
+    // Radiant Sunbeams / Horizon Haze in Daylight
+    if (colors.isDaylight) {
+      const sunX = this.getOrbX(w, colors);
+      const sunY = this.h * colors.sunYRatio;
+      const rayGrad = ctx.createRadialGradient(sunX, sunY, 20, sunX, sunY, w * 0.6);
+      rayGrad.addColorStop(0, "rgba(255, 255, 220, 0.35)");
+      rayGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.10)");
+      rayGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+      ctx.fillStyle = rayGrad;
+      ctx.fillRect(0, 0, w, groundY);
+    }
+    ctx.restore();
+  }
+
+  // --- 1b. Celestial Twinkling Stars (Night & Dusk) ---
+
+  drawStars(ctx, timeSec) {
+    if (!this.stars || this.stars.length === 0) return;
+    const baseAlpha = this.timeOfDay === "night" ? 0.95 : 0.40;
+    ctx.save();
+    this.stars.forEach(st => {
+      const alpha = baseAlpha * (0.3 + 0.7 * Math.sin(timeSec * st.twinkleSpeed + st.twinkleOffset));
+      ctx.fillStyle = `rgba(255, 255, 255, ${alpha.toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(st.x, st.y, st.radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  // --- 2. Celestial Body (Sun or Crescent Moon) ---
 
   drawCelestialBody(ctx, colors) {
     const w = this.w;
-    const orbX = w * 0.78;
+    const orbX = this.getOrbX(w, colors);
     const orbY = this.h * colors.sunYRatio;
 
     ctx.save();
 
     if (colors.isSun) {
-      // Radiant Sun Orb
-      const sunR = 36;
-      const glowGrad = ctx.createRadialGradient(orbX, orbY, 1, orbX, orbY, sunR * 3);
+      const sunR = colors.isDaylight ? 38 : 46;
+
+      // Outer Corona Glow
+      const glowGrad = ctx.createRadialGradient(orbX, orbY, sunR * 0.5, orbX, orbY, sunR * 3.5);
       glowGrad.addColorStop(0, colors.sunGlow);
       glowGrad.addColorStop(0.5, colors.sunGlowMid);
       glowGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
 
       ctx.fillStyle = glowGrad;
       ctx.beginPath();
-      ctx.arc(orbX, orbY, sunR * 3, 0, Math.PI * 2);
+      ctx.arc(orbX, orbY, sunR * 3.5, 0, Math.PI * 2);
       ctx.fill();
 
       // Solid Sun Disc
@@ -592,27 +570,28 @@ export class HorizonScenery {
       ctx.arc(orbX, orbY, sunR, 0, Math.PI * 2);
       ctx.fill();
     } else {
-      // Luminous Crescent Moon
+      // Crescent Moon
       const moonR = 26;
-      const moonGlow = ctx.createRadialGradient(orbX, orbY, 1, orbX, orbY, moonR * 3);
+
+      const moonGlow = ctx.createRadialGradient(orbX, orbY, 5, orbX, orbY, moonR * 3.2);
       moonGlow.addColorStop(0, colors.sunGlow);
+      moonGlow.addColorStop(0.5, colors.sunGlowMid);
       moonGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
 
       ctx.fillStyle = moonGlow;
       ctx.beginPath();
-      ctx.arc(orbX, orbY, moonR * 3, 0, Math.PI * 2);
+      ctx.arc(orbX, orbY, moonR * 3.2, 0, Math.PI * 2);
       ctx.fill();
 
-      // Crescent Moon Shape
       ctx.fillStyle = colors.sunColor;
       ctx.beginPath();
       ctx.arc(orbX, orbY, moonR, 0, Math.PI * 2);
       ctx.fill();
 
-      // Subtractive mask for crescent
+      // Mask out to create crescent
       ctx.globalCompositeOperation = "destination-out";
       ctx.beginPath();
-      ctx.arc(orbX + moonR * 0.55, orbY - moonR * 0.2, moonR * 0.85, 0, Math.PI * 2);
+      ctx.arc(orbX + moonR * 0.55, orbY - moonR * 0.15, moonR * 0.85, 0, Math.PI * 2);
       ctx.fill();
       ctx.globalCompositeOperation = "source-over";
     }
@@ -620,15 +599,15 @@ export class HorizonScenery {
     ctx.restore();
   }
 
-  // --- 2. Drifting Clouds ---
+  // --- 3. Clouds ---
 
   drawClouds(ctx, colors) {
     if (this.timeOfDay === "night") return;
 
     ctx.save();
-    ctx.fillStyle = (this.timeOfDay === "sunset" || this.timeOfDay === "dawn")
-      ? "rgba(255, 200, 180, 0.12)"
-      : "rgba(255, 255, 255, 0.16)";
+    ctx.fillStyle = colors.isDaylight
+      ? "rgba(255, 255, 255, 0.45)"
+      : (this.timeOfDay === "sunset" ? "rgba(255, 180, 140, 0.35)" : "rgba(255, 210, 190, 0.25)");
 
     this.clouds.forEach(c => {
       ctx.save();
@@ -636,9 +615,9 @@ export class HorizonScenery {
       ctx.scale(c.scale, c.scale);
 
       ctx.beginPath();
-      ctx.arc(0, 0, 30, 0, Math.PI * 2);
-      ctx.arc(28, -8, 24, 0, Math.PI * 2);
-      ctx.arc(52, 0, 26, 0, Math.PI * 2);
+      ctx.arc(0, 0, 28, 0, Math.PI * 2);
+      ctx.arc(26, -10, 24, 0, Math.PI * 2);
+      ctx.arc(54, 0, 28, 0, Math.PI * 2);
       ctx.arc(26, 12, 22, 0, Math.PI * 2);
       ctx.closePath();
       ctx.fill();
@@ -649,14 +628,14 @@ export class HorizonScenery {
     ctx.restore();
   }
 
-  // --- 3. Flying Birds ---
+  // --- 4. Birds ---
 
-  drawBirds(ctx, colors, timeSec) {
+  drawBirds(ctx, colors) {
     if (this.timeOfDay === "night") return;
 
     ctx.save();
-    ctx.strokeStyle = colors.silhouette;
-    ctx.lineWidth = 1.8;
+    ctx.strokeStyle = colors.isDaylight ? "#334155" : colors.silhouette;
+    ctx.lineWidth = 2.0;
     ctx.lineCap = "round";
 
     this.birds.forEach(b => {
@@ -664,8 +643,7 @@ export class HorizonScenery {
       ctx.translate(b.x, b.y);
       ctx.scale(b.scale, b.scale);
 
-      // Flapping wing motion
-      const wing = Math.sin(b.wingPhase) * 6;
+      const wing = Math.sin(b.wingPhase) * 6.5;
 
       ctx.beginPath();
       ctx.moveTo(-10, wing);
@@ -679,7 +657,7 @@ export class HorizonScenery {
     ctx.restore();
   }
 
-  // --- 4. Shooting Stars (Night) ---
+  // --- 5. Shooting Stars (Night) ---
 
   drawShootingStars(ctx) {
     ctx.save();
@@ -693,7 +671,7 @@ export class HorizonScenery {
       grad.addColorStop(1, `rgba(255, 255, 255, ${alpha})`);
 
       ctx.strokeStyle = grad;
-      ctx.lineWidth = 1.6;
+      ctx.lineWidth = 2.0;
       ctx.beginPath();
       ctx.moveTo(tailX, tailY);
       ctx.lineTo(s.x, s.y);
@@ -702,7 +680,7 @@ export class HorizonScenery {
     ctx.restore();
   }
 
-  // --- 5. Distant City Skyline & Rolling Hills ---
+  // --- 6. Skyline & Rolling Hills ---
 
   drawSkyline(ctx, colors) {
     const w = this.w;
@@ -710,7 +688,7 @@ export class HorizonScenery {
 
     ctx.save();
 
-    // A. Distant architectural skyline
+    // A. Architectural city towers
     ctx.fillStyle = colors.skyline;
     this.skylineBuildings.forEach(b => {
       ctx.fillRect(b.x, groundY - b.height, b.width, b.height);
@@ -723,25 +701,33 @@ export class HorizonScenery {
         ctx.fill();
       }
 
-      // Cozy illuminated square windows (Dusk & Night)
+      // Windows (Dusk & Night)
       if (b.windows && (this.timeOfDay === "dusk" || this.timeOfDay === "night")) {
-        ctx.fillStyle = "rgba(255, 220, 130, 0.4)";
+        ctx.fillStyle = "rgba(255, 220, 130, 0.45)";
         for (let wy = groundY - b.height + 12; wy < groundY - 14; wy += 14) {
           ctx.fillRect(b.x + 6, wy, 4, 4);
-          if (b.width > 34) {
-            ctx.fillRect(b.x + 18, wy, 4, 4);
-          }
+          if (b.width > 34) ctx.fillRect(b.x + 18, wy, 4, 4);
         }
         ctx.fillStyle = colors.skyline;
       }
     });
 
-    // B. Mid-ground rolling hill silhouetted line
-    ctx.fillStyle = colors.hills;
+    // B. Distant rolling hill layer
+    ctx.fillStyle = colors.hillsBack;
     ctx.beginPath();
     ctx.moveTo(0, groundY);
-    ctx.quadraticCurveTo(w * 0.25, groundY - 32, w * 0.55, groundY - 18);
-    ctx.quadraticCurveTo(w * 0.82, groundY - 42, w, groundY - 20);
+    ctx.quadraticCurveTo(w * 0.3, groundY - 45, w * 0.6, groundY - 25);
+    ctx.quadraticCurveTo(w * 0.85, groundY - 55, w, groundY - 25);
+    ctx.lineTo(w, groundY);
+    ctx.closePath();
+    ctx.fill();
+
+    // C. Near rolling hill layer
+    ctx.fillStyle = colors.hillsFront;
+    ctx.beginPath();
+    ctx.moveTo(0, groundY);
+    ctx.quadraticCurveTo(w * 0.22, groundY - 30, w * 0.5, groundY - 16);
+    ctx.quadraticCurveTo(w * 0.78, groundY - 35, w, groundY - 18);
     ctx.lineTo(w, groundY);
     ctx.closePath();
     ctx.fill();
@@ -749,7 +735,7 @@ export class HorizonScenery {
     ctx.restore();
   }
 
-  // --- 6. Promenade Ground Line & Railing ---
+  // --- 7. Ground Line, Promenade Path & Railing ---
 
   drawGround(ctx, colors) {
     const w = this.w;
@@ -757,26 +743,25 @@ export class HorizonScenery {
 
     ctx.save();
 
-    // Pavement base
+    // Promenade Pavement
     ctx.fillStyle = colors.ground;
     ctx.fillRect(0, groundY, w, this.h - groundY);
 
-    // Stone promenade edge strip
+    // Stone curbing strip
     ctx.fillStyle = colors.pavement;
-    ctx.fillRect(0, groundY, w, 8);
+    ctx.fillRect(0, groundY, w, 10);
 
-    // Promenade Balustrade / Railing line
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
-    ctx.lineWidth = 1.2;
+    // Stone balustrade railing
+    ctx.strokeStyle = colors.railing;
+    ctx.lineWidth = 1.6;
     ctx.beginPath();
-    ctx.moveTo(0, groundY - 14);
-    ctx.lineTo(w, groundY - 14);
+    ctx.moveTo(0, groundY - 16);
+    ctx.lineTo(w, groundY - 16);
     ctx.stroke();
 
-    // Small railing baluster uprights
-    for (let x = 8; x < w; x += 18) {
+    for (let x = 6; x < w; x += 18) {
       ctx.beginPath();
-      ctx.moveTo(x, groundY - 14);
+      ctx.moveTo(x, groundY - 16);
       ctx.lineTo(x, groundY);
       ctx.stroke();
     }
@@ -784,23 +769,24 @@ export class HorizonScenery {
     ctx.restore();
   }
 
-  // --- 7. Park Trees ---
+  // --- 8. Trees ---
 
   drawTrees(ctx, colors, timeSec) {
     ctx.save();
     ctx.fillStyle = colors.tree;
 
     this.trees.forEach((t, idx) => {
-      // Subtle gentle breeze sway
       const sway = Math.sin(timeSec * 1.2 + idx) * 2.5;
 
       ctx.save();
       ctx.translate(t.x, t.y);
 
       // Trunk
+      ctx.fillStyle = colors.isDaylight ? "#332418" : colors.tree;
       ctx.fillRect(-3, -t.trunkH, 6, t.trunkH);
 
-      // Canopy
+      // Foliage
+      ctx.fillStyle = colors.tree;
       ctx.beginPath();
       ctx.arc(sway, -t.trunkH - t.radius * 0.7, t.radius, 0, Math.PI * 2);
       ctx.arc(sway - t.radius * 0.4, -t.trunkH - t.radius * 0.4, t.radius * 0.7, 0, Math.PI * 2);
@@ -813,11 +799,11 @@ export class HorizonScenery {
     ctx.restore();
   }
 
-  // --- 8. Park Benches ---
+  // --- 9. Benches ---
 
   drawBenches(ctx, colors) {
     ctx.save();
-    ctx.fillStyle = colors.silhouette;
+    ctx.fillStyle = colors.isDaylight ? "#475569" : colors.silhouette;
 
     this.benches.forEach(b => {
       ctx.save();
@@ -825,12 +811,12 @@ export class HorizonScenery {
 
       // Bench seat
       ctx.fillRect(-b.width / 2, -b.height, b.width, 3);
-      // Bench backrest
+      // Backrest
       ctx.fillRect(-b.width / 2, -b.height - 12, b.width, 3);
       ctx.fillRect(-b.width / 2, -b.height - 6, b.width, 3);
-      // Backrest supports
-      ctx.fillRect(-b.width / 2 + 3, -b.height - 12, 3, 12);
-      ctx.fillRect(b.width / 2 - 6, -b.height - 12, 3, 12);
+      // Supports
+      ctx.fillRect(-b.width / 2 + 4, -b.height - 12, 3, 12);
+      ctx.fillRect(b.width / 2 - 7, -b.height - 12, 3, 12);
       // Legs
       ctx.fillRect(-b.width / 2 + 4, -b.height, 3, b.height);
       ctx.fillRect(b.width / 2 - 7, -b.height, 3, b.height);
@@ -841,9 +827,9 @@ export class HorizonScenery {
     ctx.restore();
   }
 
-  // --- 9. Streetlamps & Volumetric Light Cones ---
+  // --- 10. Streetlamps & Volumetric Light Cones ---
 
-  drawStreetlamps(ctx, colors, timeSec) {
+  drawStreetlamps(ctx, colors) {
     ctx.save();
 
     this.streetlamps.forEach(lamp => {
@@ -852,10 +838,10 @@ export class HorizonScenery {
 
       const lampH = lamp.height;
 
-      // Volumetric Light Cone on Ground (Dusk & Night)
+      // Volumetric Light Cone on Ground (Sunset, Dusk, Night)
       if (colors.lampGlow > 0.05) {
         ctx.save();
-        const beamGrad = ctx.createRadialGradient(0, -lampH + 10, 5, 0, 0, 110);
+        const beamGrad = ctx.createRadialGradient(0, -lampH + 10, 5, 0, 0, 115);
         beamGrad.addColorStop(0, colors.lampLight);
         beamGrad.addColorStop(0.6, colors.lampLightMid);
         beamGrad.addColorStop(1, "rgba(255, 230, 140, 0)");
@@ -863,16 +849,16 @@ export class HorizonScenery {
         ctx.fillStyle = beamGrad;
         ctx.beginPath();
         ctx.moveTo(-12, -lampH + 8);
-        ctx.lineTo(-90, 0);
-        ctx.lineTo(90, 0);
+        ctx.lineTo(-95, 0);
+        ctx.lineTo(95, 0);
         ctx.lineTo(12, -lampH + 8);
         ctx.closePath();
         ctx.fill();
         ctx.restore();
       }
 
-      // Victorian Cast-Iron Lamp Post Silhouette
-      ctx.fillStyle = colors.silhouette;
+      // Lamp Post
+      ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
 
       // Base
       ctx.beginPath();
@@ -883,10 +869,10 @@ export class HorizonScenery {
       ctx.closePath();
       ctx.fill();
 
-      // Slender Post
+      // Post
       ctx.fillRect(-2, -lampH + 16, 4, lampH - 30);
 
-      // Ornate bracket & lantern housing
+      // Bracket
       ctx.beginPath();
       ctx.arc(0, -lampH + 16, 5, 0, Math.PI * 2);
       ctx.fill();
@@ -894,20 +880,20 @@ export class HorizonScenery {
       // Lantern frame
       ctx.strokeRect(-7, -lampH, 14, 16);
 
-      // Glowing Lantern Glass
+      // Lantern Glass
       if (colors.lampGlow > 0.05) {
         ctx.fillStyle = `rgba(255, 235, 160, ${0.4 + colors.lampGlow * 0.6})`;
         ctx.fillRect(-6, -lampH + 1, 12, 14);
 
-        // Filament glare dot
+        // Core glare
         ctx.fillStyle = "#ffffff";
         ctx.beginPath();
         ctx.arc(0, -lampH + 8, 2.5, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Top cap & finial
-      ctx.fillStyle = colors.silhouette;
+      // Finial
+      ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
       ctx.beginPath();
       ctx.moveTo(-9, -lampH);
       ctx.lineTo(0, -lampH - 8);
@@ -921,16 +907,29 @@ export class HorizonScenery {
     ctx.restore();
   }
 
-  // --- 10. Animated 2D Vector Characters (Human Activities) ---
+  // --- 11. Animated 2D Vector Characters (Real Human Activities) ---
 
   drawCharacters(ctx, colors, timeSec) {
     this.characters.forEach(char => {
       ctx.save();
+      // Translate to character ground position
       ctx.translate(char.x, char.y);
-      ctx.scale(char.scale * char.facing, char.scale);
+
+      // Soft drop shadow under feet
+      ctx.save();
+      ctx.fillStyle = colors.shadowColor;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 12 * char.scale, 3.5 * char.scale, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Scale and apply facing direction (+1 = right, -1 = left)
+      const facing = char.facing || 1;
+      ctx.scale(char.scale * facing, char.scale);
 
       switch (char.type) {
         case "jogger":
+        case "jogger_night":
           this.renderJogger(ctx, colors, timeSec, char);
           break;
         case "dog_walker":
@@ -939,8 +938,23 @@ export class HorizonScenery {
         case "cyclist":
           this.renderCyclist(ctx, colors, timeSec, char);
           break;
-        case "walker":
-          this.renderWalker(ctx, colors, timeSec, char);
+        case "skateboarder":
+          this.renderSkateboarder(ctx, colors, timeSec, char);
+          break;
+        case "stroller_parent":
+          this.renderStrollerParent(ctx, colors, timeSec, char);
+          break;
+        case "walker_coffee":
+          this.renderWalker(ctx, colors, timeSec, char, { hasCoffee: true });
+          break;
+        case "walker_phone":
+          this.renderWalker(ctx, colors, timeSec, char, { hasPhone: true });
+          break;
+        case "walker_coat":
+          this.renderWalker(ctx, colors, timeSec, char, { hasCoat: true });
+          break;
+        case "photographer":
+          this.renderPhotographer(ctx, colors, timeSec, char);
           break;
         case "couple":
           this.renderCouple(ctx, colors, timeSec, char);
@@ -948,17 +962,26 @@ export class HorizonScenery {
         case "bench_reader":
           this.renderBenchReader(ctx, colors, timeSec, char);
           break;
+        case "bench_laptop":
+          this.renderBenchLaptop(ctx, colors, timeSec, char);
+          break;
+        case "bench_coffee":
+          this.renderBenchCoffee(ctx, colors, timeSec, char);
+          break;
         case "bench_guitarist":
           this.renderBenchGuitarist(ctx, colors, timeSec, char);
           break;
         case "bench_watcher":
           this.renderBenchWatcher(ctx, colors, timeSec, char);
           break;
+        case "stretcher":
+          this.renderStretcher(ctx, colors, timeSec, char);
+          break;
         case "stargazer":
           this.renderStargazer(ctx, colors, timeSec, char);
           break;
         default:
-          this.renderWalker(ctx, colors, timeSec, char);
+          this.renderWalker(ctx, colors, timeSec, char, {});
           break;
       }
 
@@ -966,20 +989,53 @@ export class HorizonScenery {
     });
   }
 
-  // --- Character Archetype Renderers ---
+  // =========================================================================
+  // ANATOMICALLY SOUND FORWARD INVERSE KINEMATICS (Zero Backward Leg Bending)
+  // =========================================================================
 
-  // A. Jogger / Runner
+  /**
+   * Calculates human walking leg angles where knees strictly bend backward.
+   * phase: 0..2PI
+   */
+  calcWalkLeg(phase) {
+    const swing = Math.sin(phase) * 0.48; // Thigh swing (-back, +front)
+    // Knee flexes backward ONLY during forward swing recovery
+    const kneeFlex = Math.max(0, -Math.cos(phase)) * 0.75;
+    return {
+      thighAngle: swing,
+      calfAngle: swing - kneeFlex // Minus sign guarantees backward bend!
+    };
+  }
+
+  drawArticulatedLeg(ctx, hipX, hipY, thighAngle, calfAngle, thighLen = 14, calfLen = 14) {
+    const kX = hipX + Math.sin(thighAngle) * thighLen;
+    const kY = hipY + Math.cos(thighAngle) * thighLen;
+    const aX = kX + Math.sin(calfAngle) * calfLen;
+    const aY = kY + Math.cos(calfAngle) * calfLen;
+
+    ctx.beginPath();
+    ctx.moveTo(hipX, hipY);
+    ctx.lineTo(kX, kY);
+    ctx.lineTo(aX, aY);
+    // Foot shoe pointing forward (+X)
+    ctx.lineTo(aX + 5, aY);
+    ctx.stroke();
+  }
+
+  // --- Character Archetypes ---
+
+  // A. Jogger (Athletic forward lean, high knees, rhythmic arms)
   renderJogger(ctx, colors, timeSec, char) {
     const pace = timeSec * 11;
-    const bounce = Math.abs(Math.sin(pace)) * 4.5;
+    const bounce = Math.abs(Math.sin(pace)) * 4;
     const baseY = -bounce;
 
-    ctx.fillStyle = colors.silhouette;
-    ctx.strokeStyle = colors.silhouette;
+    ctx.fillStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
+    ctx.strokeStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
     ctx.lineWidth = 3.2;
     ctx.lineCap = "round";
 
-    // Head with visor/hair
+    // Head
     ctx.beginPath();
     ctx.arc(6, baseY - 58, 6.5, 0, Math.PI * 2);
     ctx.fill();
@@ -991,67 +1047,54 @@ export class HorizonScenery {
     ctx.fillRect(-4, -52, 9, 24);
     ctx.restore();
 
-    // Legs (High knee lift jog cycle)
-    const leg1Angle = Math.sin(pace) * 0.85;
-    const leg2Angle = Math.sin(pace + Math.PI) * 0.85;
+    // Legs (Running gait)
+    const leg1 = Math.sin(pace) * 0.85;
+    const leg2 = Math.sin(pace + Math.PI) * 0.85;
+    const kneeFlex1 = Math.max(0, -Math.cos(pace)) * 1.2;
+    const kneeFlex2 = Math.max(0, -Math.cos(pace + Math.PI)) * 1.2;
 
-    // Leg 1
-    ctx.beginPath();
-    ctx.moveTo(-2, baseY - 28);
-    const knee1X = -2 + Math.sin(leg1Angle) * 16;
-    const knee1Y = baseY - 28 + Math.cos(leg1Angle) * 16;
-    ctx.lineTo(knee1X, knee1Y);
-    ctx.lineTo(knee1X + Math.sin(leg1Angle + 0.6) * 16, knee1Y + Math.cos(leg1Angle + 0.6) * 14);
-    ctx.stroke();
+    this.drawArticulatedLeg(ctx, -2, baseY - 28, leg1, leg1 - kneeFlex1, 15, 14);
+    this.drawArticulatedLeg(ctx, 3, baseY - 28, leg2, leg2 - kneeFlex2, 15, 14);
 
-    // Leg 2
-    ctx.beginPath();
-    ctx.moveTo(3, baseY - 28);
-    const knee2X = 3 + Math.sin(leg2Angle) * 16;
-    const knee2Y = baseY - 28 + Math.cos(leg2Angle) * 16;
-    ctx.lineTo(knee2X, knee2Y);
-    ctx.lineTo(knee2X + Math.sin(leg2Angle + 0.6) * 16, knee2Y + Math.cos(leg2Angle + 0.6) * 14);
-    ctx.stroke();
-
-    // Arms (Bent 90 degrees, pumping)
-    const arm1Angle = -Math.sin(pace) * 0.9;
-    const arm2Angle = -Math.sin(pace + Math.PI) * 0.9;
+    // Pumping Arms
+    const arm1 = -Math.sin(pace) * 0.85;
+    const arm2 = -Math.sin(pace + Math.PI) * 0.85;
 
     ctx.beginPath();
     ctx.moveTo(2, baseY - 48);
-    const elbow1X = 2 + Math.sin(arm1Angle) * 12;
-    const elbow1Y = baseY - 48 + Math.cos(arm1Angle) * 12;
-    ctx.lineTo(elbow1X, elbow1Y);
-    ctx.lineTo(elbow1X + 8, elbow1Y - 4);
+    const e1X = 2 + Math.sin(arm1) * 12;
+    const e1Y = baseY - 48 + Math.cos(arm1) * 12;
+    ctx.lineTo(e1X, e1Y);
+    ctx.lineTo(e1X + 8, e1Y - 4);
     ctx.stroke();
 
     ctx.beginPath();
     ctx.moveTo(2, baseY - 48);
-    const elbow2X = 2 + Math.sin(arm2Angle) * 12;
-    const elbow2Y = baseY - 48 + Math.cos(arm2Angle) * 12;
-    ctx.lineTo(elbow2X, elbow2Y);
-    ctx.lineTo(elbow2X + 8, elbow2Y - 4);
+    const e2X = 2 + Math.sin(arm2) * 12;
+    const e2Y = baseY - 48 + Math.cos(arm2) * 12;
+    ctx.lineTo(e2X, e2Y);
+    ctx.lineTo(e2X + 8, e2Y - 4);
     ctx.stroke();
 
-    // Glowing Reflector Armband (Night runner)
-    if (char.hasReflector) {
-      ctx.fillStyle = "#39ffb4";
-      ctx.fillRect(elbow1X - 2, elbow1Y - 4, 4, 3);
+    if (char.type === "jogger_night") {
+      // Glowing green night armband
+      ctx.fillStyle = "#34d399";
+      ctx.fillRect(e1X - 2, e1Y - 4, 4, 3);
     }
   }
 
   // B. Dog Walker & Playful Trotting Dog
   renderDogWalker(ctx, colors, timeSec, char) {
-    const pace = timeSec * 5;
-    const bounce = Math.abs(Math.sin(pace)) * 2;
+    const pace = timeSec * 4.8;
+    const bounce = Math.abs(Math.sin(pace)) * 1.8;
     const baseY = -bounce;
 
-    ctx.fillStyle = colors.silhouette;
-    ctx.strokeStyle = colors.silhouette;
+    ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
+    ctx.strokeStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
     ctx.lineWidth = 3.0;
     ctx.lineCap = "round";
 
-    // Human Head
+    // Head
     ctx.beginPath();
     ctx.arc(0, baseY - 56, 6.5, 0, Math.PI * 2);
     ctx.fill();
@@ -1059,29 +1102,19 @@ export class HorizonScenery {
     // Torso / Jacket
     ctx.fillRect(-5, baseY - 50, 10, 24);
 
-    // Legs (Smooth walking cycle)
-    const leg1 = Math.sin(pace) * 0.55;
-    const leg2 = Math.sin(pace + Math.PI) * 0.55;
+    // Anatomical Walking Legs
+    const l1 = this.calcWalkLeg(pace);
+    const l2 = this.calcWalkLeg(pace + Math.PI);
+    this.drawArticulatedLeg(ctx, -3, baseY - 26, l1.thighAngle, l1.calfAngle);
+    this.drawArticulatedLeg(ctx, 3, baseY - 26, l2.thighAngle, l2.calfAngle);
 
-    ctx.beginPath();
-    ctx.moveTo(-3, baseY - 26);
-    ctx.lineTo(-3 + Math.sin(leg1) * 14, baseY - 12);
-    ctx.lineTo(-3 + Math.sin(leg1) * 14 + Math.sin(leg1 + 0.3) * 14, 0);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(3, baseY - 26);
-    ctx.lineTo(3 + Math.sin(leg2) * 14, baseY - 12);
-    ctx.lineTo(3 + Math.sin(leg2) * 14 + Math.sin(leg2 + 0.3) * 14, 0);
-    ctx.stroke();
-
-    // Left Arm swinging naturally
+    // Left Arm swinging back
     ctx.beginPath();
     ctx.moveTo(-4, baseY - 46);
     ctx.lineTo(-4 - Math.sin(pace) * 10, baseY - 28);
     ctx.stroke();
 
-    // Right Arm holding leash (extended forward)
+    // Right Arm holding leash
     const handX = 14;
     const handY = baseY - 32;
     ctx.beginPath();
@@ -1090,15 +1123,15 @@ export class HorizonScenery {
     ctx.lineTo(handX, handY);
     ctx.stroke();
 
-    // Dog trotting ahead
+    // Dog trotting in front
     const dogX = 36;
     const dogPace = timeSec * 10;
     const dogBounce = Math.abs(Math.sin(dogPace)) * 1.8;
     const dogY = -dogBounce;
 
-    // Leash (Curved flexible line from hand to dog's collar)
+    // Leash
     ctx.save();
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
     ctx.lineWidth = 1.0;
     ctx.beginPath();
     ctx.moveTo(handX, handY);
@@ -1109,21 +1142,19 @@ export class HorizonScenery {
     // Dog Body
     ctx.save();
     ctx.translate(dogX, dogY);
-
-    ctx.fillStyle = colors.silhouette;
+    ctx.fillStyle = colors.isDaylight ? "#78350f" : colors.silhouette;
     ctx.beginPath();
-    // Torso
     ctx.ellipse(0, -12, 11, 7, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Dog Head & Snout
+    // Head & Snout
     ctx.beginPath();
     ctx.arc(10, -17, 5, 0, Math.PI * 2);
     ctx.lineTo(17, -15);
     ctx.lineTo(14, -12);
     ctx.fill();
 
-    // Perky Ear
+    // Ear
     ctx.beginPath();
     ctx.moveTo(8, -21);
     ctx.lineTo(12, -23);
@@ -1131,37 +1162,27 @@ export class HorizonScenery {
     ctx.fill();
 
     // 4 Trotting Legs
+    ctx.strokeStyle = colors.isDaylight ? "#78350f" : colors.silhouette;
     ctx.lineWidth = 2.0;
-    const dLeg1 = Math.sin(dogPace) * 0.6;
-    const dLeg2 = Math.sin(dogPace + Math.PI) * 0.6;
+    const d1 = Math.sin(dogPace) * 0.55;
+    const d2 = Math.sin(dogPace + Math.PI) * 0.55;
 
-    // Front legs
     ctx.beginPath();
     ctx.moveTo(7, -8);
-    ctx.lineTo(7 + Math.sin(dLeg1) * 8, 0);
-    ctx.stroke();
-
-    ctx.beginPath();
+    ctx.lineTo(7 + Math.sin(d1) * 8, 0);
     ctx.moveTo(9, -8);
-    ctx.lineTo(9 + Math.sin(dLeg2) * 8, 0);
-    ctx.stroke();
-
-    // Back legs
-    ctx.beginPath();
+    ctx.lineTo(9 + Math.sin(d2) * 8, 0);
     ctx.moveTo(-7, -8);
-    ctx.lineTo(-7 + Math.sin(dLeg2) * 8, 0);
-    ctx.stroke();
-
-    ctx.beginPath();
+    ctx.lineTo(-7 + Math.sin(d2) * 8, 0);
     ctx.moveTo(-5, -8);
-    ctx.lineTo(-5 + Math.sin(dLeg1) * 8, 0);
+    ctx.lineTo(-5 + Math.sin(d1) * 8, 0);
     ctx.stroke();
 
-    // Wagging Tail
-    const tailWag = Math.sin(timeSec * 16) * 4;
+    // Wagging tail
+    const wag = Math.sin(timeSec * 16) * 4;
     ctx.beginPath();
     ctx.moveTo(-10, -14);
-    ctx.quadraticCurveTo(-16, -20 + tailWag, -14, -24 + tailWag);
+    ctx.quadraticCurveTo(-16, -20 + wag, -14, -24 + wag);
     ctx.stroke();
 
     ctx.restore();
@@ -1173,112 +1194,76 @@ export class HorizonScenery {
     const pedalAngle = timeSec * 6;
 
     ctx.save();
-    ctx.fillStyle = colors.silhouette;
-    ctx.strokeStyle = colors.silhouette;
+    ctx.fillStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
+    ctx.strokeStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
 
-    // Bicycle Wheels (Front & Rear)
     const rearX = -26;
     const frontX = 26;
     const wheelR = 15;
     const axleY = -wheelR;
 
+    // Wheels
     ctx.lineWidth = 1.8;
-    // Rear Wheel
     ctx.beginPath();
     ctx.arc(rearX, axleY, wheelR, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // Front Wheel
-    ctx.beginPath();
     ctx.arc(frontX, axleY, wheelR, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Wheel Spokes (Turning)
-    [-rearX, frontX].forEach(wx => {
+    // Rotating Spokes
+    [rearX, frontX].forEach(wx => {
       ctx.save();
       ctx.translate(wx, axleY);
       ctx.rotate(wheelAngle);
       ctx.lineWidth = 0.8;
       ctx.beginPath();
-      ctx.moveTo(-wheelR, 0);
-      ctx.lineTo(wheelR, 0);
-      ctx.moveTo(0, -wheelR);
-      ctx.lineTo(0, wheelR);
+      ctx.moveTo(-wheelR, 0); ctx.lineTo(wheelR, 0);
+      ctx.moveTo(0, -wheelR); ctx.lineTo(0, wheelR);
       ctx.stroke();
       ctx.restore();
     });
 
-    // Bicycle Diamond Frame
+    // Frame
     ctx.lineWidth = 2.2;
-    const bottomBracketX = 0;
-    const bottomBracketY = axleY + 3;
-    const seatPostX = -8;
-    const seatPostY = -34;
-    const headTubeX = 18;
-    const headTubeY = -36;
+    const bbX = 0, bbY = axleY + 3;
+    const spX = -8, spY = -34;
+    const htX = 18, htY = -36;
 
     ctx.beginPath();
-    // Rear triangle
-    ctx.moveTo(rearX, axleY);
-    ctx.lineTo(seatPostX, seatPostY);
-    ctx.lineTo(bottomBracketX, bottomBracketY);
-    ctx.closePath();
-    ctx.stroke();
-
-    // Main diamond
-    ctx.beginPath();
-    ctx.moveTo(bottomBracketX, bottomBracketY);
-    ctx.lineTo(headTubeX, headTubeY);
-    ctx.lineTo(seatPostX, seatPostY);
-    ctx.stroke();
-
-    // Fork to front wheel
-    ctx.beginPath();
-    ctx.moveTo(headTubeX, headTubeY);
-    ctx.lineTo(frontX, axleY);
-    ctx.stroke();
-
-    // Handlebars
-    ctx.beginPath();
-    ctx.moveTo(headTubeX, headTubeY);
-    ctx.lineTo(headTubeX + 4, headTubeY - 6);
-    ctx.lineTo(headTubeX + 8, headTubeY - 4);
+    ctx.moveTo(rearX, axleY); ctx.lineTo(spX, spY); ctx.lineTo(bbX, bbY); ctx.closePath();
+    ctx.moveTo(bbX, bbY); ctx.lineTo(htX, htY); ctx.lineTo(spX, spY);
+    ctx.moveTo(htX, htY); ctx.lineTo(frontX, axleY);
+    ctx.moveTo(htX, htY); ctx.lineTo(htX + 6, htY - 6);
     ctx.stroke();
 
     // Saddle
-    ctx.fillRect(seatPostX - 5, seatPostY - 2, 12, 3);
+    ctx.fillRect(spX - 5, spY - 2, 12, 3);
 
-    // Cyclist Body
-    // Head with helmet
+    // Cyclist
     ctx.beginPath();
     ctx.arc(8, -58, 6.5, 0, Math.PI * 2);
     ctx.fill();
-    // Helmet visor
-    ctx.fillRect(11, -61, 5, 3);
+    ctx.fillRect(11, -61, 5, 3); // visor
 
-    // Torso (leaning forward)
     ctx.save();
-    ctx.translate(seatPostX + 4, seatPostY - 4);
+    ctx.translate(spX + 4, spY - 4);
     ctx.rotate(35 * Math.PI / 180);
     ctx.fillRect(-3, -24, 7, 24);
     ctx.restore();
 
-    // Arms to handlebars
+    // Arms
     ctx.lineWidth = 2.4;
     ctx.beginPath();
     ctx.moveTo(4, -50);
-    ctx.lineTo(12, -42);
-    ctx.lineTo(headTubeX + 6, headTubeY - 5);
+    ctx.lineTo(htX + 5, htY - 5);
     ctx.stroke();
 
-    // Legs (Rotating around pedals)
+    // Legs rotating with pedals
     const pedalR = 6;
-    const pX = bottomBracketX + Math.cos(pedalAngle) * pedalR;
-    const pY = bottomBracketY + Math.sin(pedalAngle) * pedalR;
+    const pX = bbX + Math.cos(pedalAngle) * pedalR;
+    const pY = bbY + Math.sin(pedalAngle) * pedalR;
 
     ctx.beginPath();
-    ctx.moveTo(seatPostX + 2, seatPostY);
-    // Knee articulates with pedal rotation
+    ctx.moveTo(spX + 2, spY);
     const kneeX = 2 + Math.cos(pedalAngle) * 5;
     const kneeY = -22 + Math.sin(pedalAngle) * 3;
     ctx.lineTo(kneeX, kneeY);
@@ -1288,14 +1273,157 @@ export class HorizonScenery {
     ctx.restore();
   }
 
-  // D. Stroller / Pedestrian (with Coffee or Bag)
-  renderWalker(ctx, colors, timeSec, char) {
-    const pace = timeSec * 4.5;
-    const bounce = Math.abs(Math.sin(pace)) * 2;
+  // D. Skateboarder (Pushes with back foot, then cruises)
+  renderSkateboarder(ctx, colors, timeSec, char) {
+    const cycle = (timeSec * 2.5) % 3; // 0..3 cycle: 0..1 push, 1..3 cruise
+    const isPushing = cycle < 1.0;
+
+    ctx.save();
+    ctx.fillStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
+    ctx.strokeStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
+
+    // Skateboard Deck & Wheels
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(-16, -6);
+    ctx.lineTo(-12, -4);
+    ctx.lineTo(12, -4);
+    ctx.lineTo(16, -6);
+    ctx.stroke();
+
+    // Wheels
+    ctx.beginPath();
+    ctx.arc(-10, -2, 2.5, 0, Math.PI * 2);
+    ctx.arc(10, -2, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Skater Body
+    ctx.lineWidth = 3.0;
+    // Head with beanie
+    ctx.beginPath();
+    ctx.arc(0, -56, 6.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Torso
+    ctx.fillRect(-5, -50, 10, 24);
+
+    // Front Leg (Planted on board)
+    ctx.beginPath();
+    ctx.moveTo(3, -26);
+    ctx.lineTo(6, -14);
+    ctx.lineTo(6, -4);
+    ctx.stroke();
+
+    // Rear Leg (Pushing or Riding)
+    if (isPushing) {
+      const pushPhase = cycle / 1.0;
+      const footX = -6 - Math.sin(pushPhase * Math.PI) * 12;
+      const footY = -4 + Math.sin(pushPhase * Math.PI) * 4;
+
+      ctx.beginPath();
+      ctx.moveTo(-3, -26);
+      ctx.lineTo(footX + 4, -14);
+      ctx.lineTo(footX, footY);
+      ctx.stroke();
+    } else {
+      // Cruising on back of board
+      ctx.beginPath();
+      ctx.moveTo(-3, -26);
+      ctx.lineTo(-6, -14);
+      ctx.lineTo(-8, -4);
+      ctx.stroke();
+    }
+
+    // Arms balancing
+    ctx.beginPath();
+    ctx.moveTo(-4, -46);
+    ctx.lineTo(-14, -36);
+    ctx.moveTo(4, -46);
+    ctx.lineTo(14, -38);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  // E. Parent Pushing Modern Baby Stroller
+  renderStrollerParent(ctx, colors, timeSec, char) {
+    const pace = timeSec * 4.6;
+    const bounce = Math.abs(Math.sin(pace)) * 1.8;
     const baseY = -bounce;
 
-    ctx.fillStyle = colors.silhouette;
-    ctx.strokeStyle = colors.silhouette;
+    ctx.save();
+    ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
+    ctx.strokeStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
+    ctx.lineWidth = 3.0;
+    ctx.lineCap = "round";
+
+    // Parent Head
+    ctx.beginPath();
+    ctx.arc(0, baseY - 56, 6.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Parent Torso
+    ctx.fillRect(-5, baseY - 50, 10, 24);
+
+    // Legs
+    const l1 = this.calcWalkLeg(pace);
+    const l2 = this.calcWalkLeg(pace + Math.PI);
+    this.drawArticulatedLeg(ctx, -3, baseY - 26, l1.thighAngle, l1.calfAngle);
+    this.drawArticulatedLeg(ctx, 3, baseY - 26, l2.thighAngle, l2.calfAngle);
+
+    // Arms extending to stroller handle
+    const handleX = 22;
+    const handleY = -34;
+    ctx.beginPath();
+    ctx.moveTo(3, baseY - 46);
+    ctx.lineTo(12, -38);
+    ctx.lineTo(handleX, handleY);
+    ctx.stroke();
+
+    // Stroller / Pram
+    const sX = 32;
+    ctx.lineWidth = 2.0;
+
+    // Wheels
+    ctx.beginPath();
+    ctx.arc(sX - 10, -5, 5, 0, Math.PI * 2);
+    ctx.arc(sX + 12, -5, 5, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Chassis & Bassinet
+    ctx.beginPath();
+    ctx.moveTo(handleX, handleY);
+    ctx.lineTo(sX - 10, -5);
+    ctx.moveTo(handleX + 2, handleY);
+    ctx.lineTo(sX + 12, -5);
+    ctx.stroke();
+
+    // Bassinet with canopy
+    ctx.beginPath();
+    ctx.moveTo(sX - 12, -18);
+    ctx.lineTo(sX + 16, -18);
+    ctx.lineTo(sX + 12, -8);
+    ctx.lineTo(sX - 10, -8);
+    ctx.closePath();
+    ctx.fill();
+
+    // Canopy
+    ctx.beginPath();
+    ctx.arc(sX - 2, -18, 10, Math.PI, Math.PI * 1.7, false);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  // F. Walker with Coffee, Phone, or Coat
+  renderWalker(ctx, colors, timeSec, char, opts) {
+    const pace = timeSec * 4.6;
+    const bounce = Math.abs(Math.sin(pace)) * 1.8;
+    const baseY = -bounce;
+
+    ctx.save();
+    ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
+    ctx.strokeStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
     ctx.lineWidth = 3.0;
     ctx.lineCap = "round";
 
@@ -1305,77 +1433,145 @@ export class HorizonScenery {
     ctx.fill();
 
     // Torso
-    ctx.fillRect(-5, baseY - 50, 10, char.hasCoat ? 28 : 24);
+    ctx.fillRect(-5, baseY - 50, 10, opts.hasCoat ? 28 : 24);
 
-    // Legs
-    const leg1 = Math.sin(pace) * 0.52;
-    const leg2 = Math.sin(pace + Math.PI) * 0.52;
+    // Anatomical Walking Legs
+    const l1 = this.calcWalkLeg(pace);
+    const l2 = this.calcWalkLeg(pace + Math.PI);
+    this.drawArticulatedLeg(ctx, -3, baseY - 26, l1.thighAngle, l1.calfAngle);
+    this.drawArticulatedLeg(ctx, 3, baseY - 26, l2.thighAngle, l2.calfAngle);
 
-    ctx.beginPath();
-    ctx.moveTo(-3, baseY - 26);
-    ctx.lineTo(-3 + Math.sin(leg1) * 14, baseY - 12);
-    ctx.lineTo(-3 + Math.sin(leg1) * 14 + Math.sin(leg1 + 0.3) * 14, 0);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(3, baseY - 26);
-    ctx.lineTo(3 + Math.sin(leg2) * 14, baseY - 12);
-    ctx.lineTo(3 + Math.sin(leg2) * 14 + Math.sin(leg2 + 0.3) * 14, 0);
-    ctx.stroke();
-
-    // Arms
-    if (char.hasCoffee) {
-      // Steaming coffee cup in hand!
+    if (opts.hasCoffee) {
+      // Steaming coffee cup
       ctx.beginPath();
       ctx.moveTo(-4, baseY - 46);
       ctx.lineTo(-4 - Math.sin(pace) * 8, baseY - 28);
-      ctx.stroke();
-
-      ctx.beginPath();
       ctx.moveTo(4, baseY - 46);
       ctx.lineTo(9, baseY - 36);
       ctx.lineTo(12, baseY - 34);
       ctx.stroke();
 
-      // Coffee Cup
       ctx.fillRect(11, baseY - 36, 5, 7);
 
-      // Steam wisps rising
+      // Steam
       ctx.save();
       ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
       ctx.lineWidth = 1;
-      const steamY = baseY - 38 - ((timeSec * 16) % 18);
+      const sY = baseY - 38 - ((timeSec * 16) % 18);
       ctx.beginPath();
       ctx.moveTo(13, baseY - 38);
-      ctx.quadraticCurveTo(15, steamY + 4, 13, steamY);
+      ctx.quadraticCurveTo(15, sY + 4, 13, sY);
       ctx.stroke();
       ctx.restore();
+    } else if (opts.hasPhone) {
+      // Looking down at smartphone
+      ctx.beginPath();
+      ctx.moveTo(4, baseY - 46);
+      ctx.lineTo(8, baseY - 36);
+      ctx.lineTo(10, baseY - 38);
+      ctx.stroke();
+
+      // Phone
+      ctx.fillRect(9, baseY - 41, 3, 6);
+
+      // Screen glow at dusk/night
+      if (this.timeOfDay === "dusk" || this.timeOfDay === "night") {
+        ctx.fillStyle = "#38bdf8";
+        ctx.beginPath();
+        ctx.arc(10, baseY - 39, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(-4, baseY - 46);
+      ctx.lineTo(-4 - Math.sin(pace) * 8, baseY - 28);
+      ctx.stroke();
     } else {
-      // Normal swing or holding bag
+      // Standard natural arm swing
       ctx.beginPath();
       ctx.moveTo(-4, baseY - 46);
       ctx.lineTo(-4 - Math.sin(pace) * 10, baseY - 28);
-      ctx.stroke();
-
-      ctx.beginPath();
       ctx.moveTo(4, baseY - 46);
       ctx.lineTo(4 + Math.sin(pace) * 10, baseY - 28);
       ctx.stroke();
-
-      if (char.hasBag) {
-        ctx.fillRect(6 + Math.sin(pace) * 10, baseY - 26, 7, 10);
-      }
     }
+
+    ctx.restore();
   }
 
-  // E. Romantic Couple Strolling Together
+  // G. Photographer / Tourist (Pauses to take a picture with camera flash!)
+  renderPhotographer(ctx, colors, timeSec, char) {
+    const cycle = (timeSec * 0.4) % 1.0;
+    const isShooting = cycle > 0.4 && cycle < 0.8;
+    const isFlashing = cycle > 0.65 && cycle < 0.68;
+
+    ctx.save();
+    ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
+    ctx.strokeStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
+    ctx.lineWidth = 3.0;
+    ctx.lineCap = "round";
+
+    // Head
+    ctx.beginPath();
+    ctx.arc(0, -56, 6.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Torso
+    ctx.fillRect(-5, -50, 10, 24);
+
+    // Legs
+    if (isShooting) {
+      // Standing planted
+      ctx.beginPath();
+      ctx.moveTo(-3, -26); ctx.lineTo(-6, 0);
+      ctx.moveTo(3, -26); ctx.lineTo(6, 0);
+      ctx.stroke();
+
+      // Arms raised holding camera to eyes
+      ctx.beginPath();
+      ctx.moveTo(-4, -46); ctx.lineTo(3, -54);
+      ctx.moveTo(4, -46); ctx.lineTo(3, -54);
+      ctx.stroke();
+
+      // Camera
+      ctx.fillRect(4, -57, 7, 5);
+
+      // Camera Flash
+      if (isFlashing) {
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(14, -55, 12, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else {
+      // Walking with camera around neck
+      const pace = timeSec * 4;
+      const l1 = this.calcWalkLeg(pace);
+      const l2 = this.calcWalkLeg(pace + Math.PI);
+      this.drawArticulatedLeg(ctx, -3, -26, l1.thighAngle, l1.calfAngle);
+      this.drawArticulatedLeg(ctx, 3, -26, l2.thighAngle, l2.calfAngle);
+
+      ctx.beginPath();
+      ctx.moveTo(-4, -46); ctx.lineTo(-4 - Math.sin(pace) * 8, -28);
+      ctx.moveTo(4, -46); ctx.lineTo(4 + Math.sin(pace) * 8, -28);
+      ctx.stroke();
+
+      // Camera on chest
+      ctx.fillRect(1, -42, 6, 5);
+    }
+
+    ctx.restore();
+  }
+
+  // H. Couple Strolling
   renderCouple(ctx, colors, timeSec, char) {
-    const pace = timeSec * 4;
+    const pace = timeSec * 4.2;
     const bounce = Math.abs(Math.sin(pace)) * 1.8;
     const baseY = -bounce;
 
-    ctx.fillStyle = colors.silhouette;
-    ctx.strokeStyle = colors.silhouette;
+    ctx.save();
+    ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
+    ctx.strokeStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
     ctx.lineWidth = 2.8;
     ctx.lineCap = "round";
 
@@ -1391,7 +1587,7 @@ export class HorizonScenery {
     ctx.fill();
     ctx.fillRect(4, baseY - 48, 8, 24);
 
-    // Joined Hands in the middle
+    // Joined Hands
     ctx.beginPath();
     ctx.moveTo(-6, baseY - 46);
     ctx.lineTo(0, baseY - 32);
@@ -1399,205 +1595,248 @@ export class HorizonScenery {
     ctx.stroke();
 
     // Outer walking legs
-    const leg1 = Math.sin(pace) * 0.48;
-    const leg2 = Math.sin(pace + Math.PI) * 0.48;
+    const l1 = this.calcWalkLeg(pace);
+    const l2 = this.calcWalkLeg(pace + Math.PI * 0.8);
+    this.drawArticulatedLeg(ctx, -10, baseY - 26, l1.thighAngle, l1.calfAngle);
+    this.drawArticulatedLeg(ctx, 8, baseY - 24, l2.thighAngle, l2.calfAngle);
 
-    ctx.beginPath();
-    ctx.moveTo(-10, baseY - 26);
-    ctx.lineTo(-10 + Math.sin(leg1) * 14, baseY - 12);
-    ctx.lineTo(-10 + Math.sin(leg1) * 14, 0);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(8, baseY - 24);
-    ctx.lineTo(8 + Math.sin(leg2) * 14, baseY - 11);
-    ctx.lineTo(8 + Math.sin(leg2) * 14, 0);
-    ctx.stroke();
+    ctx.restore();
   }
 
-  // F. Bench Reader (Day)
+  // I. Bench Reader (Day)
   renderBenchReader(ctx, colors, timeSec, char) {
     ctx.save();
-    ctx.fillStyle = colors.silhouette;
-    ctx.strokeStyle = colors.silhouette;
+    ctx.fillStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
+    ctx.strokeStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
     ctx.lineWidth = 2.8;
-    ctx.lineCap = "round";
 
-    // Seated Figure
-    // Head looking down at book
+    // Head tilted down
     ctx.beginPath();
     ctx.arc(2, -32, 6.0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Torso (leaning slightly forward)
-    ctx.beginPath();
-    ctx.moveTo(0, -26);
-    ctx.lineTo(-4, -12);
-    ctx.lineTo(6, -12);
-    ctx.lineTo(6, -24);
-    ctx.closePath();
-    ctx.fill();
+    // Torso
+    ctx.fillRect(-3, -26, 8, 14);
 
-    // Bent legs at bench height
+    // Seated bent legs
     ctx.beginPath();
-    ctx.moveTo(6, -12);
-    ctx.lineTo(14, -12);
-    ctx.lineTo(14, 0);
+    ctx.moveTo(5, -12); ctx.lineTo(13, -12); ctx.lineTo(13, 0);
     ctx.stroke();
 
-    // Arms holding open book
+    // Arms & Open Book
     ctx.beginPath();
-    ctx.moveTo(2, -22);
-    ctx.lineTo(10, -18);
+    ctx.moveTo(2, -22); ctx.lineTo(10, -18);
     ctx.stroke();
 
-    // Open Book
     ctx.fillStyle = "#ffffff";
     ctx.beginPath();
-    ctx.moveTo(8, -20);
-    ctx.lineTo(14, -22);
-    ctx.lineTo(16, -16);
-    ctx.lineTo(10, -15);
+    ctx.moveTo(8, -20); ctx.lineTo(14, -22); ctx.lineTo(16, -16); ctx.lineTo(10, -15);
     ctx.closePath();
     ctx.fill();
 
     ctx.restore();
   }
 
-  // G. Bench Guitarist (Dusk)
+  // J. Bench Laptop Worker (Day)
+  renderBenchLaptop(ctx, colors, timeSec, char) {
+    ctx.save();
+    ctx.fillStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
+    ctx.strokeStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
+    ctx.lineWidth = 2.8;
+
+    ctx.beginPath();
+    ctx.arc(2, -32, 6.0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillRect(-3, -26, 8, 14);
+
+    // Legs
+    ctx.beginPath();
+    ctx.moveTo(5, -12); ctx.lineTo(13, -12); ctx.lineTo(13, 0);
+    ctx.stroke();
+
+    // Laptop
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 2.0;
+    ctx.beginPath();
+    ctx.moveTo(8, -14); ctx.lineTo(16, -14); // base
+    ctx.lineTo(14, -22); // screen
+    ctx.stroke();
+
+    // Hands typing
+    ctx.strokeStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
+    ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    ctx.moveTo(2, -22); ctx.lineTo(10, -15);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  // K. Bench Coffee Drinker
+  renderBenchCoffee(ctx, colors, timeSec, char) {
+    ctx.save();
+    ctx.fillStyle = colors.silhouette;
+    ctx.strokeStyle = colors.silhouette;
+    ctx.lineWidth = 2.8;
+
+    ctx.beginPath();
+    ctx.arc(-2, -33, 6.0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillRect(-4, -26, 8, 14);
+
+    // Legs
+    ctx.beginPath();
+    ctx.moveTo(4, -12); ctx.lineTo(12, -12); ctx.lineTo(12, 0);
+    ctx.stroke();
+
+    // Hand holding cup
+    ctx.fillRect(8, -20, 4, 6);
+
+    ctx.restore();
+  }
+
+  // L. Bench Guitarist (Dusk)
   renderBenchGuitarist(ctx, colors, timeSec, char) {
     ctx.save();
     ctx.fillStyle = colors.silhouette;
     ctx.strokeStyle = colors.silhouette;
     ctx.lineWidth = 2.8;
 
-    // Seated Musician
-    // Head tilted listening to music
     ctx.beginPath();
     ctx.arc(-2, -33, 6.2, 0, Math.PI * 2);
     ctx.fill();
 
-    // Torso
     ctx.fillRect(-6, -26, 10, 16);
 
     // Legs
     ctx.beginPath();
-    ctx.moveTo(2, -12);
-    ctx.lineTo(12, -12);
-    ctx.lineTo(12, 0);
+    ctx.moveTo(2, -12); ctx.lineTo(12, -12); ctx.lineTo(12, 0);
     ctx.stroke();
 
-    // Acoustic Guitar Body in lap
-    ctx.fillStyle = "#d28242";
+    // Acoustic Guitar
+    ctx.fillStyle = "#d97706";
     ctx.beginPath();
     ctx.ellipse(4, -16, 9, 6, 25 * Math.PI / 180, 0, Math.PI * 2);
     ctx.fill();
 
-    // Guitar Neck
     ctx.strokeStyle = colors.silhouette;
     ctx.lineWidth = 2.0;
     ctx.beginPath();
-    ctx.moveTo(4, -16);
-    ctx.lineTo(-10, -26);
+    ctx.moveTo(4, -16); ctx.lineTo(-10, -26);
     ctx.stroke();
 
-    // Strumming arm
     const strum = Math.sin(timeSec * 7) * 2;
     ctx.beginPath();
-    ctx.moveTo(2, -24);
-    ctx.lineTo(6, -16 + strum);
+    ctx.moveTo(2, -24); ctx.lineTo(6, -16 + strum);
     ctx.stroke();
 
     ctx.restore();
   }
 
-  // H. Bench Sunset Watcher (Sunset)
+  // M. Bench Sunset Watcher
   renderBenchWatcher(ctx, colors, timeSec, char) {
     ctx.save();
     ctx.fillStyle = colors.silhouette;
     ctx.strokeStyle = colors.silhouette;
     ctx.lineWidth = 2.8;
 
-    // Head looking out at sunset
     ctx.beginPath();
     ctx.arc(-4, -32, 6.2, 0, Math.PI * 2);
     ctx.fill();
 
-    // Torso relaxed against backrest
     ctx.fillRect(-7, -26, 9, 16);
 
-    // Legs crossed relaxed
     ctx.beginPath();
-    ctx.moveTo(0, -12);
-    ctx.lineTo(12, -12);
-    ctx.lineTo(10, 0);
+    ctx.moveTo(0, -12); ctx.lineTo(12, -12); ctx.lineTo(10, 0);
     ctx.stroke();
 
-    // Arm resting along bench back
     ctx.beginPath();
-    ctx.moveTo(-5, -24);
-    ctx.lineTo(-12, -22);
+    ctx.moveTo(-5, -24); ctx.lineTo(-12, -22);
     ctx.stroke();
 
     ctx.restore();
   }
 
-  // I. Stargazer with Telescope (Night)
+  // N. Stargazer with Telescope (Night)
   renderStargazer(ctx, colors, timeSec, char) {
     ctx.save();
     ctx.fillStyle = colors.silhouette;
     ctx.strokeStyle = colors.silhouette;
 
-    // Brass Telescope on Tripod
     const tripodX = 14;
     const tripodTopY = -34;
 
+    // Tripod
     ctx.lineWidth = 1.8;
-    // Tripod Legs
     ctx.beginPath();
-    ctx.moveTo(tripodX, tripodTopY);
-    ctx.lineTo(tripodX - 12, 0);
-    ctx.moveTo(tripodX, tripodTopY);
-    ctx.lineTo(tripodX, 0);
-    ctx.moveTo(tripodX, tripodTopY);
-    ctx.lineTo(tripodX + 12, 0);
+    ctx.moveTo(tripodX, tripodTopY); ctx.lineTo(tripodX - 12, 0);
+    ctx.moveTo(tripodX, tripodTopY); ctx.lineTo(tripodX, 0);
+    ctx.moveTo(tripodX, tripodTopY); ctx.lineTo(tripodX + 12, 0);
     ctx.stroke();
 
-    // Telescope Tube angled at 40 degrees toward moon
+    // Telescope
     ctx.save();
     ctx.translate(tripodX, tripodTopY);
     ctx.rotate(-42 * Math.PI / 180);
-    ctx.fillStyle = "#c59b27"; // polished brass sheen
+    ctx.fillStyle = "#c59b27";
     ctx.fillRect(-10, -3, 28, 6);
     ctx.restore();
 
-    // Stargazer Figure standing, bent slightly looking into eyepiece
+    // Stargazer Figure
     ctx.fillStyle = colors.silhouette;
-    // Head at eyepiece
     ctx.beginPath();
     ctx.arc(6, -37, 6.2, 0, Math.PI * 2);
     ctx.fill();
 
-    // Torso
     ctx.save();
     ctx.translate(2, -34);
     ctx.rotate(18 * Math.PI / 180);
     ctx.fillRect(-4, 0, 8, 20);
     ctx.restore();
 
-    // Legs
     ctx.lineWidth = 2.8;
     ctx.beginPath();
-    ctx.moveTo(0, -14);
-    ctx.lineTo(-4, 0);
-    ctx.moveTo(4, -14);
-    ctx.lineTo(6, 0);
+    ctx.moveTo(0, -14); ctx.lineTo(-4, 0);
+    ctx.moveTo(4, -14); ctx.lineTo(6, 0);
     ctx.stroke();
 
-    // Hands steadying the mount
     ctx.beginPath();
-    ctx.moveTo(6, -30);
-    ctx.lineTo(12, -34);
+    ctx.moveTo(6, -30); ctx.lineTo(12, -34);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  // O. Morning Stretcher / Yoga on Lawn
+  renderStretcher(ctx, colors, timeSec, char) {
+    const yogaCycle = Math.sin(timeSec * 1.5);
+
+    ctx.save();
+    ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
+    ctx.strokeStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
+    ctx.lineWidth = 2.8;
+    ctx.lineCap = "round";
+
+    // Head
+    ctx.beginPath();
+    ctx.arc(0, -52 - yogaCycle * 3, 6.0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Torso stretching up
+    ctx.fillRect(-4, -46 - yogaCycle * 2, 8, 22);
+
+    // Legs in warrior/stretch stance
+    ctx.beginPath();
+    ctx.moveTo(-2, -24); ctx.lineTo(-10, 0);
+    ctx.moveTo(2, -24); ctx.lineTo(10, 0);
+    ctx.stroke();
+
+    // Arms reaching up to greet morning sun
+    ctx.beginPath();
+    ctx.moveTo(-3, -44); ctx.lineTo(-10, -58 - yogaCycle * 4);
+    ctx.moveTo(3, -44); ctx.lineTo(10, -58 - yogaCycle * 4);
     ctx.stroke();
 
     ctx.restore();

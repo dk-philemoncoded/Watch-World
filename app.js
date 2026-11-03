@@ -379,6 +379,10 @@ class WatchWorldApp {
       const updatedInfo = getTimeInfoForZone(this.selectedCity.tz);
       this.updateInfoCards(this.selectedCity, updatedInfo);
       this.watch.currentTime = { ...updatedInfo };
+      if (this.currentTheme !== updatedInfo.timeOfDay) {
+        this.currentTheme = updatedInfo.timeOfDay;
+        this.applyBackgroundTheme(updatedInfo);
+      }
     }, 1000);
   }
 

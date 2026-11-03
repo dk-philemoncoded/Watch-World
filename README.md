@@ -5,35 +5,50 @@ An interactive, Swiss luxury dress watch experience by **PHILL** (inspired by th
 ## ✨ Features
 
 - **Animated 2D Vector Characters & Living Horizon**:
-  - The background depicts the sky and horizon of the searched location's exact local time, brought to life with procedural 2D vector characters engaged in authentic human activities:
-    - 🌅 **Dawn / Early Morning (05:00 - 08:59)**:
-      - Morning joggers with high-knee strides and athletic gait.
+  - The background unmistakably depicts the sky and horizon of the searched location's exact local time, brought to life with procedural 2D vector characters with **anatomically correct forward walk cycles** (strictly backward-bending knees, zero moonwalking) and authentic human activities:
+    - 🌅 **Dawn / Early Morning (05:00 - 07:29)**:
+      - Soft apricot, peach, and lavender sunrise sky with rising morning sun and radiant dawn haze.
+      - Morning joggers with high-knee strides and athletic forward lean.
       - Dog walkers with a trotting puppy, floppy ears, and wagging tail.
-      - Commuters walking with steaming cups of takeaway coffee.
-      - Cyclists pedaling through the sunrise mist with turning spoked wheels.
-      - Golden-orange rising sun with morning birds soaring across the sky.
-    - ☀️ **Broad Daylight / Afternoon (09:00 - 16:59)**:
-      - People strolling along the promenade with backpacks and tote bags.
-      - A relaxed reader sitting on a park bench reading a book.
-      - Friends walking together and waving hello.
-      - Cyclists gliding across the promenade path.
-      - High radiant sun, drifting cumulus clouds, and birds in flight.
-    - 🌇 **Sunset / Golden Hour (17:00 - 19:29)**:
-      - Romantic couples strolling arm in arm bathed in golden-crimson twilight.
-      - Evening runner finishing a workout.
-      - Park bench sunset watcher taking in the golden view.
-      - Glowing amber sun resting directly on the horizon line.
+      - Commuters walking briskly with steaming cups of takeaway coffee.
+      - Cyclists pedaling through the sunrise mist with turning spoked wheels and pedal-articulating knees.
+      - Morning stretchers / yoga practitioners greeting the morning sun in warrior stance.
+      - Early riser sipping warm coffee on a park bench.
+    - ☀️ **Broad Daylight / Afternoon (07:30 - 17:29)**:
+      - Crisp azure sky with brilliant sun high in the heavens, golden sunbeams, and soaring birds.
+      - Skateboarder pushing off the pavement with back foot and cruising smoothly.
+      - Parent pushing a modern baby stroller/pram with rolling spoked wheels and sun canopy.
+      - Tourist / Photographer walking, pausing to raise camera, and snapping photos with bright camera flashes.
+      - Commuter checking smartphone messages.
+      - Romantic couple strolling along the promenade.
+      - Dog walker with energetic trotting dog.
+      - Cyclist cruising past the waterfront railing.
+      - Book reader relaxing on a park bench reading a novel.
+      - Remote professional typing on a laptop on the park bench.
+    - 🌇 **Sunset / Golden Hour (17:30 - 19:45)**:
+      - Blazing crimson, amber, and deep magenta sky with glowing sun resting on the horizon.
+      - Romantic couple strolling arm in arm bathed in warm golden twilight.
+      - Sunset watcher sitting on a park bench gazing at the horizon.
+      - Acoustic guitarist softly strumming melodies on a wooden bench.
+      - Evening joggers finishing their run.
+      - Evening dog walker enjoying the cool breeze.
+      - Photographer capturing the golden hour glow.
       - Victorian streetlamps beginning to warm up with golden filaments.
-    - 🌆 **Twilight / Dusk (19:30 - 21:59)**:
-      - Pedestrians in cozy jackets heading toward cafes and dinner spots.
-      - Acoustic guitarist sitting on a park bench gently strumming.
-      - Illuminated streetlamps casting warm pools of volumetric light onto the pavement.
-      - Distant city apartment towers with glowing warm windows.
-    - 🌙 **Midnight / Night (22:00 - 04:59)**:
-      - Stargazer standing beside a brass telescope observing the moon and constellations.
-      - Nocturnal walker strolling leisurely under the streetlamps with hands in coat pockets.
-      - Night jogger with a glowing reflective armband.
-      - Luminous crescent moon, deep starfield, and periodic shooting stars.
+    - 🌆 **Twilight / Dusk (19:46 - 21:59)**:
+      - Deep purple-indigo evening sky with radiant crescent moon and first evening stars.
+      - Illuminated streetlamps casting warm pools of volumetric light onto the promenade.
+      - Acoustic guitarist playing gentle evening chords.
+      - Pedestrian in cozy autumn coat heading home or to dinner.
+      - Smartphone user illuminated by the soft cyan glow of their phone screen.
+      - Evening jogger and strolling couples under the streetlights.
+      - Distant skyline apartment windows glowing with warm interior lights.
+    - 🌙 **Deep Starry Night (22:00 - 04:59)**:
+      - Velvet midnight starfield with glowing crescent moon and field of twinkling stars.
+      - Stargazer standing beside a brass standing telescope observing celestial constellations.
+      - Nocturnal walker in heavy coat strolling peacefully beneath glowing streetlamps.
+      - Late-night runner equipped with glowing green reflective armbands.
+      - Night thinker resting on a park bench under the lantern light.
+      - Periodic shooting stars streaking across the upper stratosphere with radiant trails.
 
 - **Hero 2D Mechanical Wrist Watch by PHILL**:
   - **Double Bezel**: Outer delicate coin-edge fluted bezel with microscopic golden notches, inner mirror-polished domed gold ring.

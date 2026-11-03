@@ -1,14 +1,13 @@
 /**
  * Antigravity "PHILL" World Time Application Controller
  * Orchestrates global search (countries, cities, towns),
- * 3D wristwatch spinning animation, horological hand transitions,
+ * high-speed horological hand spinning & mechanical deceleration,
  * and dynamic atmospheric background themes.
  */
 
 import { WORLD_CITIES, WORLD_COUNTRIES, searchCities, resolveAnyLocation, getTimeInfoForZone } from "./world-cities.js";
 import { soundEngine } from "./sound.js";
 import { WatchEngine } from "./watch.js";
-import { Watch3DEngine } from "./watch3d.js";
 
 class WatchWorldApp {
   constructor() {
@@ -20,8 +19,7 @@ class WatchWorldApp {
 
     this.heroStage = document.getElementById("hero-stage");
     this.watchWrapper = document.getElementById("watch-wrapper");
-    this.watch3DCanvas = document.getElementById("watch-3d-canvas");
-    this.watch2DCanvas = document.getElementById("watch-2d-canvas");
+    this.watchCanvas = document.getElementById("watch-canvas");
     this.watchTelemetryEl = document.getElementById("watch-telemetry");
 
     // Info Display Elements
@@ -58,10 +56,8 @@ class WatchWorldApp {
   }
 
   initEngines() {
-    // 2D engine renders the Swiss horological dial with active ticking hands
-    this.watch2D = new WatchEngine(this.watch2DCanvas, soundEngine, true);
-    // 3D engine renders the case, bezel, lugs, crown, straps, and maps 2D dial
-    this.watch3D = new Watch3DEngine(this.watch3DCanvas, this.watch2D, soundEngine);
+    // 2D Swiss luxury dress watch engine
+    this.watch = new WatchEngine(this.watchCanvas, soundEngine);
   }
 
   generateStarfield() {
@@ -148,15 +144,14 @@ class WatchWorldApp {
       }
     });
 
-    // Watch Finish Selection (Steel, Rose Gold, Obsidian, Bronze)
+    // Watch Finish Selection (Yellow Gold, Rose Gold, White Gold, Platinum)
     this.finishButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         soundEngine.init();
         this.finishButtons.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         const finish = btn.dataset.finish;
-        this.watch2D.setFinish(finish);
-        this.watch3D.setFinish(finish);
+        this.watch.setFinish(finish);
       });
     });
 
@@ -233,11 +228,10 @@ class WatchWorldApp {
 
   /**
    * The Central Climax Sequence:
-   * 1. Telemetry HUD activates with location coordinates.
-   * 2. 3D Wrist Watch performs cinematic tumble & spin animation with mechanical winding sound.
-   * 3. Settle on arrival with crystal chime.
-   * 4. Horological hands sweep rapidly forward to the destination time.
-   * 5. Background sky theme seamlessly morphs to reflect destination local time.
+   * 1. Telemetry HUD activates with destination name.
+   * 2. The watch hands spin rapidly forward with mechanical gear whirl.
+   * 3. Hands gradually decelerate and smoothly lock onto the destination time with crystal chime.
+   * 4. Background sky atmosphere seamlessly morphs to match the local solar time.
    */
   selectLocation(city, isUserTriggered = true) {
     this.selectedCity = city;
@@ -249,29 +243,25 @@ class WatchWorldApp {
     this.updateInfoCards(city, timeInfo);
 
     if (!isUserTriggered) {
-      // Direct set without spin
-      this.watch2D.setTime(timeInfo, false);
+      // Direct set without fast spin animation
+      this.watch.setTime(timeInfo, false);
       this.applyBackgroundTheme(timeInfo);
       this.setTelemetry(`✦ ${city.flag} ${city.name.toUpperCase()} • SYNCHRONIZED`, false);
       this.startLiveClock();
       return;
     }
 
-    if (this.isTransitioning) return;
     this.isTransitioning = true;
 
-    // --- 3D Wristwatch Spin Animation ---
-    this.setTelemetry(`✦ TARGETING ${city.flag} ${city.name.toUpperCase()} • SPINNING TIMEPIECE...`, true);
+    // --- Fast Hand Spin & Deceleration Animation ---
+    this.setTelemetry(`✦ TARGETING ${city.flag} ${city.name.toUpperCase()} • SPINNING HANDS...`, true);
 
-    this.watch3D.spinToLocation(timeInfo, () => {
-      // When spin completes: hands sweep rapidly to destination time
-      this.watch2D.setTime(timeInfo, true);
+    // Background theme starts morphing as the hands spin
+    this.applyBackgroundTheme(timeInfo);
 
-      // Background theme updates to reflect destination's time of day
-      this.applyBackgroundTheme(timeInfo);
-
+    this.watch.setTime(timeInfo, true, () => {
+      // When hands finish spinning and lock onto time
       this.setTelemetry(`✦ ${city.flag} ${city.name.toUpperCase()} • SYNCHRONIZED`, false);
-
       this.isTransitioning = false;
       this.startLiveClock();
     });
@@ -379,7 +369,7 @@ class WatchWorldApp {
       if (!this.selectedCity || this.isTransitioning) return;
       const updatedInfo = getTimeInfoForZone(this.selectedCity.tz);
       this.updateInfoCards(this.selectedCity, updatedInfo);
-      this.watch2D.currentTime = { ...updatedInfo };
+      this.watch.currentTime = { ...updatedInfo };
     }, 1000);
   }
 

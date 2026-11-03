@@ -1,7 +1,7 @@
 ﻿/**
  * PHILL - World Watch & Planetary Timepiece
  * Unified Production Bundle (Self-Contained, Zero External Dependencies)
- * Procedural 3D Wristwatch Engine, World Time Resolver, & Web Audio
+ * 2D Swiss Luxury Dress Watch Engine, World Time Resolver, & Web Audio
  */
 
 (function() {
@@ -590,55 +590,30 @@ class WatchSoundEngine {
 const soundEngine = new WatchSoundEngine();
 
   // =========================================================================
-  // 3. 2D Luxury Swiss Watch Engine (Dial, Hands, Celestial Complication)
+  // 3. 2D Luxury Swiss Watch Engine (Dial, Hands, Small Seconds)
   // =========================================================================
 /**
- * Luxury Mechanical Analog Wrist Watch Engine
- * Renders an ultra-high definition Swiss horological timepiece with:
- * - Brushed and fluted metallic bezel (Steel, Rose Gold, Obsidian, Bronze)
- * - Sunburst guilloché dial with applied faceted diamond-cut indices
- * - 24-Hour Sun & Moon celestial complication disc
- * - Magnified cyclops date aperture
- * - High-beat sweeping second hand (28,800 vph / smooth 60fps)
- * - High-speed mechanical gear winding animation when changing timezones
- * - Super-LumiNova phosphorescent night glow in dark hours
- * - Anti-reflective sapphire crystal specular light sheen
+ * Luxury 2D Mechanical Wrist Watch Engine — PHILL
+ * Faithfully re-creates the Swiss luxury dress watch (Rolex 1908 aesthetic):
+ * - Double Bezel: Outer fine coin-edge fluted bezel & inner mirror-polished ring
+ * - Pure porcelain white/ivory dial with delicate railroad minute track
+ * - Applied faceted gold numerals (12, 3, 9) and faceted dagger hour markers
+ * - Small seconds subdial at 6 o'clock with concentric circular snailing (azurage)
+ * - Arched "SUPERLATIVE CHRONOMETER" inscription above the subdial
+ * - Signature Observatory/Breguet-ring hour hand & double-edged sword minute hand
+ * - Beautiful alligator-grain stitched leather strap and sculpted case lugs
+ * - High-speed hand spin animation with mechanical deceleration to target time
+ * - Monotonic dead-beat seconds ticking (crisp 75ms step, 925ms solid hold)
  */
 
-// Canvas roundRect compatibility polyfill
-if (typeof CanvasRenderingContext2D !== "undefined" && !CanvasRenderingContext2D.prototype.roundRect) {
-  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
-    if (!radii) radii = 0;
-    if (typeof radii === "number") radii = [radii, radii, radii, radii];
-    if (!Array.isArray(radii)) radii = [0, 0, 0, 0];
-    const r1 = radii[0] || 0;
-    const r2 = radii[1] || r1;
-    const r3 = radii[2] || r1;
-    const r4 = radii[3] || r2;
-    this.beginPath();
-    this.moveTo(x + r1, y);
-    this.lineTo(x + w - r2, y);
-    this.quadraticCurveTo(x + w, y, x + w, y + r2);
-    this.lineTo(x + w, y + h - r3);
-    this.quadraticCurveTo(x + w, y + h, x + w - r3, y + h);
-    this.lineTo(x + r4, y + h);
-    this.quadraticCurveTo(x, y + h, x, y + h - r4);
-    this.lineTo(x, y + r1);
-    this.quadraticCurveTo(x, y, x + r1, y);
-    this.closePath();
-    return this;
-  };
-}
-
 class WatchEngine {
-  constructor(canvas, soundEngine, isDialTexture = true) {
+  constructor(canvas, soundEngine) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.sound = soundEngine;
-    this.isDialTexture = isDialTexture;
 
-    // Theme finish: 'steel' | 'rose-gold' | 'obsidian' | 'bronze'
-    this.finish = "steel";
+    // Finish palette: 'gold' (18ct Yellow Gold, default) | 'rose-gold' | 'white-gold' | 'platinum'
+    this.finish = "gold";
 
     // Target Time (what the watch is currently displaying or tracking)
     this.currentTime = {
@@ -651,26 +626,26 @@ class WatchEngine {
       year: 2026,
       weekday: "Monday",
       timeOfDay: "day",
-      decimalHour: 10.17
+      decimalHour: 10.17,
+      offsetMinutes: 0
     };
 
-    // Interpolated Hand Angles (in radians)
+    // Current hand angles (in radians)
     this.handAngles = {
       hour: 0,
       minute: 0,
-      second: 0,
-      celestial: 0
+      second: 0
     };
 
-    // Transition Animation State (rapid hand winding)
+    // Transition Animation State (rapid hand spin with gradual deceleration)
     this.isTransitioning = false;
     this.transitionStart = 0;
-    this.transitionDuration = 1800; // ms
-    this.startAngles = { hour: 0, minute: 0, second: 0, celestial: 0 };
-    this.targetAngles = { hour: 0, minute: 0, second: 0, celestial: 0 };
+    this.transitionDuration = 2200; // ms: fast spin that smoothly slows down
+    this.startAngles = { hour: 0, minute: 0, second: 0 };
+    this.targetAngles = { hour: 0, minute: 0, second: 0 };
+    this.onTransitionComplete = null;
 
     this.lastTickSecond = -1;
-    this.lumeAmount = 0; // 0 = day reflection, 1 = full night glow
 
     this.resize();
     this.initAngles();
@@ -681,13 +656,13 @@ class WatchEngine {
   resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const rect = this.canvas.getBoundingClientRect();
-    const size = Math.min(rect.width || 480, rect.height || 480);
+    const size = Math.min(rect.width || 680, rect.height || 680);
 
-    if (this.canvas.width !== size * dpr || this.canvas.height !== size * dpr) {
-      this.canvas.width = size * dpr;
-      this.canvas.height = size * dpr;
+    if (this.canvas.width !== Math.round(size * dpr) || this.canvas.height !== Math.round(size * dpr)) {
+      this.canvas.width = Math.round(size * dpr);
+      this.canvas.height = Math.round(size * dpr);
     }
-    this.size = size * dpr;
+    this.size = this.canvas.width;
     this.radius = this.size / 2;
   }
 
@@ -704,71 +679,66 @@ class WatchEngine {
     const secAngle = (seconds / 60) * Math.PI * 2;
     const minAngle = ((minutes + seconds / 60) / 60) * Math.PI * 2;
     const hrAngle = (((hours % 12) + minutes / 60 + seconds / 3600) / 12) * Math.PI * 2;
-    const celAngle = ((hours + minutes / 60) / 24) * Math.PI * 2;
 
     this.handAngles = {
       hour: hrAngle,
       minute: minAngle,
-      second: secAngle,
-      celestial: celAngle
+      second: secAngle
     };
   }
 
   /**
    * Sets the watch to a new location's time.
-   * If animate is true, triggers high-speed mechanical gear winding animation!
+   * If animate is true, triggers high-speed hand spinning that smoothly decelerates to the new time!
    */
-  setTime(timeInfo, animate = true) {
-    const prevTime = { ...this.currentTime };
+  setTime(timeInfo, animate = true, onComplete = null) {
     this.currentTime = { ...timeInfo };
 
     const targetHr = (((timeInfo.hours % 12) + timeInfo.minutes / 60 + timeInfo.seconds / 3600) / 12) * Math.PI * 2;
     const targetMin = ((timeInfo.minutes + timeInfo.seconds / 60) / 60) * Math.PI * 2;
     const targetSec = (timeInfo.seconds / 60) * Math.PI * 2;
-    const targetCel = ((timeInfo.hours + timeInfo.minutes / 60) / 24) * Math.PI * 2;
 
     if (!animate) {
       this.handAngles.hour = targetHr;
       this.handAngles.minute = targetMin;
       this.handAngles.second = targetSec;
-      this.handAngles.celestial = targetCel;
       this.isTransitioning = false;
+      if (onComplete) onComplete();
       return;
     }
 
-    // Begin rapid mechanical winding transition
+    // Begin rapid hand spinning animation with smooth mechanical deceleration
     this.isTransitioning = true;
     this.transitionStart = performance.now();
-    this.transitionDuration = 1600;
+    this.transitionDuration = 2200; // ms
+    this.onTransitionComplete = onComplete;
 
-    // Play winding audio whirl
     if (this.sound) {
-      this.sound.playWindingEffect(1.4);
+      this.sound.playWindingEffect(1.9);
     }
 
     this.startAngles = { ...this.handAngles };
 
-    // Calculate forward spin: spin minute hand at least 1-2 extra full revolutions
+    // Calculate forward deltas:
+    // Minute hand spins 5 to 6 fast revolutions + forward delta
     let minDelta = targetMin - (this.startAngles.minute % (Math.PI * 2));
-    if (minDelta < 0) minDelta += Math.PI * 2;
-    minDelta += Math.PI * 4; // 2 extra full spins
+    if (minDelta <= 0) minDelta += Math.PI * 2;
+    minDelta += Math.PI * 10; // 5 full extra revolutions
 
+    // Hour hand spins forward proportionally + 1 full revolution
     let hrDelta = targetHr - (this.startAngles.hour % (Math.PI * 2));
-    if (hrDelta < 0) hrDelta += Math.PI * 2;
-    hrDelta += (minDelta / 12); // Proportional hour movement
+    if (hrDelta <= 0) hrDelta += Math.PI * 2;
+    hrDelta += Math.PI * 2; // 1 full extra revolution
 
+    // Small second hand spins fast in its subdial (12 full revolutions)
     let secDelta = targetSec - (this.startAngles.second % (Math.PI * 2));
-    if (secDelta < 0) secDelta += Math.PI * 2;
-    secDelta += Math.PI * 12; // 6 fast revolutions
-
-    let celDelta = targetCel - (this.startAngles.celestial % (Math.PI * 2));
-    if (celDelta < 0) celDelta += Math.PI * 2;
+    if (secDelta <= 0) secDelta += Math.PI * 2;
+    secDelta += Math.PI * 24; // 12 extra revolutions
 
     this.targetAngles = {
       hour: this.startAngles.hour + hrDelta,
       minute: this.startAngles.minute + minDelta,
-      second: this.startAngles.second + secDelta,
-      celestial: this.startAngles.celestial + celDelta
+      second: this.startAngles.second + secDelta
     };
   }
 
@@ -786,30 +756,34 @@ class WatchEngine {
       const elapsed = timestamp - this.transitionStart;
       const progress = Math.min(1.0, elapsed / this.transitionDuration);
 
-      // Mechanical spring overshoot easing (quintic out with slight elasticity)
+      // Fast initial spin, followed by smooth mechanical gear deceleration (quintic ease-out)
       const t = progress;
       const ease = 1 - Math.pow(1 - t, 4);
 
       this.handAngles.hour = this.startAngles.hour + (this.targetAngles.hour - this.startAngles.hour) * ease;
       this.handAngles.minute = this.startAngles.minute + (this.targetAngles.minute - this.startAngles.minute) * ease;
       this.handAngles.second = this.startAngles.second + (this.targetAngles.second - this.startAngles.second) * ease;
-      this.handAngles.celestial = this.startAngles.celestial + (this.targetAngles.celestial - this.startAngles.celestial) * ease;
 
       if (progress >= 1.0) {
         this.isTransitioning = false;
-        // Normalize angles to prevent overflow
+        // Normalize angles to 0..2PI
         this.handAngles.hour = this.targetAngles.hour % (Math.PI * 2);
         this.handAngles.minute = this.targetAngles.minute % (Math.PI * 2);
         this.handAngles.second = this.targetAngles.second % (Math.PI * 2);
-        this.handAngles.celestial = this.targetAngles.celestial % (Math.PI * 2);
 
         if (this.sound) {
           this.sound.playArrivalChime();
         }
+
+        if (this.onTransitionComplete) {
+          const cb = this.onTransitionComplete;
+          this.onTransitionComplete = null;
+          cb();
+        }
       }
     } else {
-      // Normal clock ticking operation
-      // Derive local time from continuous monotonic timestamp + timezone offset
+      // Normal continuous clock operation
+      // Synchronize with target timezone offset
       const now = new Date();
       const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
       const targetOffsetMinutes = (this.currentTime.offsetMinutes !== undefined) ? this.currentTime.offsetMinutes : 0;
@@ -821,18 +795,17 @@ class WatchEngine {
       const min = localDate.getMinutes();
       const hr = localDate.getHours();
 
-      // Normal Clock Tick:
-      // In the first 75ms of each second, the second hand snaps forward with a crisp mechanical step.
-      // For the rest of the second (75ms to 999ms), it stays solidly on the second tick mark!
-      // This is strictly forward-only: it can NEVER reverse or jitter.
-      const stepDuration = 75; // ms for the crisp snap
+      // Dead-Beat Seconds Escapement Tick:
+      // First 75ms: crisp mechanical jump forward
+      // 75ms to 999ms: solidly rests on the tick mark. Strictly monotonic, zero reverse.
+      const stepDuration = 75; // ms
       const snapProgress = Math.min(1.0, ms / stepDuration);
       const snapEase = 1 - Math.pow(1 - snapProgress, 3);
 
       const prevSec = (sec + 59) % 60;
       const visualSecond = prevSec + snapEase;
 
-      // Escapement ticking sound (1 crisp tick per second on step)
+      // Escapement ticking sound (1 crisp tick on every step)
       if (sec !== this.lastTickSecond) {
         this.lastTickSecond = sec;
         if (this.sound) {
@@ -843,13 +816,10 @@ class WatchEngine {
       this.handAngles.second = (visualSecond / 60) * Math.PI * 2;
       this.handAngles.minute = ((min + sec / 60) / 60) * Math.PI * 2;
       this.handAngles.hour = (((hr % 12) + min / 60 + sec / 3600) / 12) * Math.PI * 2;
-      this.handAngles.celestial = ((hr + min / 60) / 24) * Math.PI * 2;
     }
-
-    // Smoothly adjust lume amount based on timeOfDay
-    const targetLume = (this.currentTime.timeOfDay === "night" || this.currentTime.timeOfDay === "dusk") ? 1.0 : 0.0;
-    this.lumeAmount += (targetLume - this.lumeAmount) * 0.05;
   }
+
+  // --- Rendering Architecture ---
 
   draw() {
     const ctx = this.ctx;
@@ -860,558 +830,734 @@ class WatchEngine {
     ctx.save();
     ctx.translate(r, r);
 
-    if (this.isDialTexture) {
-      // Scale dial so it covers the circular face for 3D model mapping
-      const dialScale = 1.34;
-      ctx.scale(dialScale, dialScale);
-      this.drawDial(ctx, r);
-      this.drawCelestialSubdial(ctx, r);
-      this.drawDateAperture(ctx, r);
-      this.drawIndices(ctx, r);
-      this.drawHands(ctx, r);
-    } else {
-      this.drawStraps(ctx, r);
-      this.drawCase(ctx, r);
-      this.drawBezel(ctx, r);
-      this.drawDial(ctx, r);
-      this.drawCelestialSubdial(ctx, r);
-      this.drawDateAperture(ctx, r);
-      this.drawIndices(ctx, r);
-      this.drawHands(ctx, r);
-      this.drawSapphireReflection(ctx, r);
-    }
+    // 1. Alligator-Grain Leather Straps (Top & Bottom)
+    this.drawStraps(ctx, r);
+
+    // 2. Sculpted Metallic Lugs (4 horns)
+    this.drawLugs(ctx, r);
+
+    // 3. Main Case Body & Fluted Winding Crown
+    this.drawCase(ctx, r);
+
+    // 4. Double Bezel: Outer Coin-Edge Fluted Bezel & Inner Polished Mirror Ring
+    this.drawBezel(ctx, r);
+
+    // 5. Intense White / Ivory Lacquer Dial
+    this.drawDial(ctx, r);
+
+    // 6. Railroad Minute Track (Chemin-de-fer)
+    this.drawRailroadTrack(ctx, r);
+
+    // 7. Applied Faceted Gold Numerals (12, 3, 9) and Dagger Markers
+    this.drawHourMarkers(ctx, r);
+
+    // 8. Brand Emblem (Crown, "PHILL", "GENÈVE")
+    this.drawBrand(ctx, r);
+
+    // 9. Small Seconds Subdial at 6 o'clock (Azurage, Track, "SUPERLATIVE CHRONOMETER")
+    this.drawSmallSecondsSubdial(ctx, r);
+
+    // 10. Horological Hands: Breguet-ring Hour Hand & Sword Minute Hand
+    this.drawHands(ctx, r);
+
+    // 11. Sapphire Crystal Fresnel Light Sheen
+    this.drawCrystal(ctx, r);
 
     ctx.restore();
   }
 
+  // --- Theme Color Definitions ---
+
+  getPalette() {
+    switch (this.finish) {
+      case "rose-gold":
+        return {
+          strapBase: "#2b1812",
+          strapMid: "#42261d",
+          strapEdge: "#1e100c",
+          stitch: "rgba(225, 175, 140, 0.45)",
+          metalLight: "#fae2d2",
+          metalBright: "#f5c3a4",
+          metalMid: "#d6936d",
+          metalDark: "#854728",
+          metalShadow: "#4a2412",
+          dialBgCenter: "#fdfbf9",
+          dialBgEdge: "#f3ede6",
+          goldMarkerLight: "#fde2d2",
+          goldMarkerMid: "#dca07d",
+          goldMarkerDark: "#945330"
+        };
+      case "white-gold":
+      case "steel":
+        return {
+          strapBase: "#0e1014",
+          strapMid: "#1a1d24",
+          strapEdge: "#07080a",
+          stitch: "rgba(210, 220, 235, 0.4)",
+          metalLight: "#ffffff",
+          metalBright: "#eef2f7",
+          metalMid: "#c6d0dc",
+          metalDark: "#788596",
+          metalShadow: "#373e48",
+          dialBgCenter: "#ffffff",
+          dialBgEdge: "#f0f2f5",
+          goldMarkerLight: "#ffffff",
+          goldMarkerMid: "#cbd5e1",
+          goldMarkerDark: "#64748b"
+        };
+      case "platinum":
+        return {
+          strapBase: "#0a0c10",
+          strapMid: "#161b24",
+          strapEdge: "#050608",
+          stitch: "rgba(180, 210, 240, 0.45)",
+          metalLight: "#f4f8ff",
+          metalBright: "#dbe5f2",
+          metalMid: "#b2c4dc",
+          metalDark: "#667a94",
+          metalShadow: "#2e3b4a",
+          dialBgCenter: "#fbfdff",
+          dialBgEdge: "#e8eff7",
+          goldMarkerLight: "#f0f6ff",
+          goldMarkerMid: "#b8cce6",
+          goldMarkerDark: "#526c8a"
+        };
+      case "gold":
+      default:
+        // 18ct Yellow Gold (Exact Rolex 1908 Reference)
+        return {
+          strapBase: "#1f140e",
+          strapMid: "#332117",
+          strapEdge: "#150d09",
+          stitch: "rgba(205, 165, 120, 0.5)",
+          metalLight: "#fff4d0",
+          metalBright: "#fae19c",
+          metalMid: "#d4af37",
+          metalDark: "#856218",
+          metalShadow: "#473308",
+          dialBgCenter: "#fdfdfb",
+          dialBgEdge: "#f5f3ec",
+          goldMarkerLight: "#fff0cb",
+          goldMarkerMid: "#dcba52",
+          goldMarkerDark: "#8a6619"
+        };
+    }
+  }
+
+  // --- 1. Straps (Brown Alligator Leather) ---
+
   drawStraps(ctx, r) {
-    const strapW = r * 0.58;
+    const pal = this.getPalette();
+    const strapW = r * 0.52;
     const strapH = r * 1.05;
 
     ctx.save();
 
-    // Top & Bottom Straps
-    [-1, 1].forEach(dir => {
+    [-1, 1].forEach((dir) => {
       ctx.save();
       ctx.scale(1, dir);
 
-      // Strap background gradient (alligator grain leather)
-      const grad = ctx.createLinearGradient(-strapW / 2, r * 0.72, strapW / 2, r * 0.72);
-      if (this.finish === "rose-gold") {
-        grad.addColorStop(0, "#1c1410");
-        grad.addColorStop(0.5, "#30221a");
-        grad.addColorStop(1, "#1c1410");
-      } else if (this.finish === "obsidian") {
-        grad.addColorStop(0, "#08090b");
-        grad.addColorStop(0.5, "#15171c");
-        grad.addColorStop(1, "#08090b");
-      } else {
-        // Classic rich saddle espresso leather
-        grad.addColorStop(0, "#181412");
-        grad.addColorStop(0.2, "#2e241f");
-        grad.addColorStop(0.5, "#3e312a");
-        grad.addColorStop(0.8, "#2e241f");
-        grad.addColorStop(1, "#181412");
-      }
+      // Strap background gradient
+      const strapGrad = ctx.createLinearGradient(-strapW / 2, r * 0.65, strapW / 2, r * 0.65);
+      strapGrad.addColorStop(0, pal.strapEdge);
+      strapGrad.addColorStop(0.15, pal.strapBase);
+      strapGrad.addColorStop(0.5, pal.strapMid);
+      strapGrad.addColorStop(0.85, pal.strapBase);
+      strapGrad.addColorStop(1, pal.strapEdge);
 
-      ctx.fillStyle = grad;
+      ctx.fillStyle = strapGrad;
       ctx.beginPath();
-      ctx.roundRect(-strapW / 2, r * 0.7, strapW, strapH, [0, 0, 16, 16]);
+      // Curved lug entry
+      ctx.moveTo(-strapW / 2, r * 0.65);
+      ctx.quadraticCurveTo(0, r * 0.68, strapW / 2, r * 0.65);
+      ctx.lineTo(strapW / 2, r * 0.65 + strapH);
+      ctx.lineTo(-strapW / 2, r * 0.65 + strapH);
+      ctx.closePath();
       ctx.fill();
 
-      // Strap edge stitching
-      ctx.strokeStyle = "rgba(220, 190, 150, 0.4)";
-      ctx.lineWidth = 2;
+      // Alligator Scale Pattern (Horizontal segmental plates)
+      ctx.save();
+      ctx.strokeStyle = "rgba(0, 0, 0, 0.4)";
+      ctx.lineWidth = 2.5;
+
+      const scaleHeights = [r * 0.16, r * 0.22, r * 0.26, r * 0.24, r * 0.20];
+      let currentY = r * 0.72;
+
+      for (let s = 0; s < scaleHeights.length; s++) {
+        const sh = scaleHeights[s];
+        ctx.beginPath();
+        ctx.moveTo(-strapW / 2 + 6, currentY);
+        ctx.quadraticCurveTo(0, currentY + 3, strapW / 2 - 6, currentY);
+        ctx.stroke();
+
+        // Subtle vertical segment subdivisions
+        const divX = ((s % 2 === 0) ? -strapW * 0.12 : strapW * 0.12);
+        ctx.beginPath();
+        ctx.moveTo(divX, currentY);
+        ctx.lineTo(divX + (s % 2 === 0 ? 5 : -5), currentY + sh);
+        ctx.stroke();
+
+        currentY += sh;
+      }
+      ctx.restore();
+
+      // Tone-on-tone Saddle Stitching
+      ctx.strokeStyle = pal.stitch;
+      ctx.lineWidth = 1.8;
       ctx.setLineDash([4, 6]);
 
-      // Left stitch line
+      // Left Stitch
       ctx.beginPath();
-      ctx.moveTo(-strapW / 2 + 8, r * 0.72);
-      ctx.lineTo(-strapW / 2 + 8, r * 0.7 + strapH);
+      ctx.moveTo(-strapW / 2 + 7, r * 0.68);
+      ctx.lineTo(-strapW / 2 + 7, r * 0.65 + strapH);
       ctx.stroke();
 
-      // Right stitch line
+      // Right Stitch
       ctx.beginPath();
-      ctx.moveTo(strapW / 2 - 8, r * 0.72);
-      ctx.lineTo(strapW / 2 - 8, r * 0.7 + strapH);
+      ctx.moveTo(strapW / 2 - 7, r * 0.68);
+      ctx.lineTo(strapW / 2 - 7, r * 0.65 + strapH);
       ctx.stroke();
 
       ctx.setLineDash([]);
+
+      // Drop shadow from case onto strap
+      const shadowGrad = ctx.createLinearGradient(0, r * 0.62, 0, r * 0.76);
+      shadowGrad.addColorStop(0, "rgba(0, 0, 0, 0.7)");
+      shadowGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = shadowGrad;
+      ctx.fillRect(-strapW / 2, r * 0.62, strapW, r * 0.14);
+
       ctx.restore();
     });
 
     ctx.restore();
   }
 
-  drawCase(ctx, r) {
-    const caseR = r * 0.88;
+  // --- 2. Lugs (4 Sculpted Metallic Horns) ---
+
+  drawLugs(ctx, r) {
+    const pal = this.getPalette();
+    const lugW = r * 0.11;
+    const caseR = r * 0.85;
 
     ctx.save();
 
-    // Drop Shadow under watch case
-    ctx.shadowColor = "rgba(0, 0, 0, 0.65)";
+    // Drop shadow under lugs
+    ctx.shadowColor = "rgba(0, 0, 0, 0.55)";
+    ctx.shadowBlur = 18;
+    ctx.shadowOffsetY = 8;
+
+    [
+      { x: -caseR * 0.55, y: -caseR * 0.82, signX: -1, signY: -1 },
+      { x: caseR * 0.55, y: -caseR * 0.82, signX: 1, signY: -1 },
+      { x: -caseR * 0.55, y: caseR * 0.82, signX: -1, signY: 1 },
+      { x: caseR * 0.55, y: caseR * 0.82, signX: 1, signY: 1 }
+    ].forEach((lug) => {
+      ctx.save();
+      ctx.translate(lug.x, lug.y);
+
+      const lugGrad = ctx.createLinearGradient(-lugW, -lugW, lugW, lugW);
+      lugGrad.addColorStop(0, pal.metalLight);
+      lugGrad.addColorStop(0.3, pal.metalBright);
+      lugGrad.addColorStop(0.7, pal.metalMid);
+      lugGrad.addColorStop(1, pal.metalDark);
+
+      ctx.fillStyle = lugGrad;
+      ctx.beginPath();
+      ctx.moveTo(lug.signX * -lugW * 0.2, lug.signY * -lugW * 0.5);
+      ctx.quadraticCurveTo(lug.signX * lugW * 0.9, lug.signY * lugW * 0.2, lug.signX * lugW * 0.6, lug.signY * lugW * 1.5);
+      ctx.quadraticCurveTo(lug.signX * lugW * 0.1, lug.signY * lugW * 1.3, lug.signX * -lugW * 0.5, lug.signY * 0);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    });
+
+    ctx.restore();
+  }
+
+  // --- 3. Case Body & Crown ---
+
+  drawCase(ctx, r) {
+    const pal = this.getPalette();
+    const caseR = r * 0.84;
+
+    ctx.save();
+
+    // Outer Case Drop Shadow
+    ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
     ctx.shadowBlur = 32;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 16;
+    ctx.shadowOffsetY = 14;
 
-    // Metallic outer finish gradient
-    const grad = ctx.createLinearGradient(-caseR, -caseR, caseR, caseR);
-    if (this.finish === "rose-gold") {
-      grad.addColorStop(0, "#f3c7a5");
-      grad.addColorStop(0.25, "#d9976b");
-      grad.addColorStop(0.5, "#7b4831");
-      grad.addColorStop(0.75, "#e5ad85");
-      grad.addColorStop(1, "#9e6145");
-    } else if (this.finish === "obsidian") {
-      grad.addColorStop(0, "#3e424c");
-      grad.addColorStop(0.3, "#1a1d24");
-      grad.addColorStop(0.6, "#282d38");
-      grad.addColorStop(1, "#121318");
-    } else if (this.finish === "bronze") {
-      grad.addColorStop(0, "#d8ad69");
-      grad.addColorStop(0.35, "#8a6635");
-      grad.addColorStop(0.7, "#c19554");
-      grad.addColorStop(1, "#543e21");
-    } else {
-      // Classic 904L Brushed Stainless Steel
-      grad.addColorStop(0, "#f6f8fa");
-      grad.addColorStop(0.2, "#cfd5dc");
-      grad.addColorStop(0.45, "#8b94a0");
-      grad.addColorStop(0.7, "#e4e8ec");
-      grad.addColorStop(0.9, "#a2abb6");
-      grad.addColorStop(1, "#ffffff");
-    }
+    // Polished gold case body
+    const caseGrad = ctx.createLinearGradient(-caseR, -caseR, caseR, caseR);
+    caseGrad.addColorStop(0.0, pal.metalLight);
+    caseGrad.addColorStop(0.18, pal.metalBright);
+    caseGrad.addColorStop(0.45, pal.metalMid);
+    caseGrad.addColorStop(0.72, pal.metalDark);
+    caseGrad.addColorStop(0.88, pal.metalBright);
+    caseGrad.addColorStop(1.0, pal.metalShadow);
 
-    ctx.fillStyle = grad;
+    ctx.fillStyle = caseGrad;
     ctx.beginPath();
     ctx.arc(0, 0, caseR, 0, Math.PI * 2);
     ctx.fill();
 
-    // Reset shadow
     ctx.shadowColor = "transparent";
 
     // Winding Crown at 3 o'clock
     ctx.save();
     const crownX = caseR - 2;
-    const crownW = r * 0.08;
-    const crownH = r * 0.16;
+    const crownW = r * 0.065;
+    const crownH = r * 0.13;
 
+    // Crown metallic body
     const crownGrad = ctx.createLinearGradient(crownX, -crownH / 2, crownX + crownW, crownH / 2);
-    crownGrad.addColorStop(0, "#999");
-    crownGrad.addColorStop(0.5, "#fff");
-    crownGrad.addColorStop(1, "#444");
+    crownGrad.addColorStop(0, pal.metalLight);
+    crownGrad.addColorStop(0.5, pal.metalMid);
+    crownGrad.addColorStop(1, pal.metalDark);
 
     ctx.fillStyle = crownGrad;
     ctx.beginPath();
-    ctx.roundRect(crownX, -crownH / 2, crownW, crownH, [4, 6, 6, 4]);
+    ctx.rect(crownX, -crownH / 2, crownW, crownH);
     ctx.fill();
 
-    // Crown ridges
-    ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
-    for (let y = -crownH / 2 + 3; y < crownH / 2 - 2; y += 4) {
-      ctx.fillRect(crownX + 2, y, crownW - 4, 1.5);
-    }
-    ctx.restore();
-
-    ctx.restore();
-  }
-
-  drawBezel(ctx, r) {
-    const bezelOuter = r * 0.85;
-    const bezelInner = r * 0.74;
-
-    ctx.save();
-
-    // Circular brushed metallic bezel
-    const bezelGrad = ctx.createRadialGradient(0, 0, bezelInner, 0, 0, bezelOuter);
-    if (this.finish === "rose-gold") {
-      bezelGrad.addColorStop(0, "#73422c");
-      bezelGrad.addColorStop(0.5, "#d6986e");
-      bezelGrad.addColorStop(1, "#8e5239");
-    } else if (this.finish === "obsidian") {
-      bezelGrad.addColorStop(0, "#151820");
-      bezelGrad.addColorStop(0.5, "#252b37");
-      bezelGrad.addColorStop(1, "#0d0f14");
-    } else {
-      bezelGrad.addColorStop(0, "#7f8894");
-      bezelGrad.addColorStop(0.3, "#e2e6eb");
-      bezelGrad.addColorStop(0.7, "#9da5b0");
-      bezelGrad.addColorStop(1, "#545b66");
-    }
-
-    ctx.fillStyle = bezelGrad;
-    ctx.beginPath();
-    ctx.arc(0, 0, bezelOuter, 0, Math.PI * 2);
-    ctx.arc(0, 0, bezelInner, 0, Math.PI * 2, true);
-    ctx.fill();
-
-    // Tachymeter / Bezel Ring Indexes
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
-    ctx.lineWidth = 1.5;
-    for (let i = 0; i < 60; i++) {
-      const angle = (i / 60) * Math.PI * 2;
-      const isMajor = i % 5 === 0;
-      const startR = isMajor ? bezelInner + 3 : bezelInner + 6;
-      const endR = bezelOuter - 4;
-
-      const cos = Math.cos(angle);
-      const sin = Math.sin(angle);
-
+    // Fluted crown ridges
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.4)";
+    ctx.lineWidth = 1.2;
+    for (let y = -crownH / 2 + 3; y <= crownH / 2 - 3; y += 3) {
       ctx.beginPath();
-      ctx.moveTo(cos * startR, sin * startR);
-      ctx.lineTo(cos * endR, sin * endR);
+      ctx.moveTo(crownX, y);
+      ctx.lineTo(crownX + crownW, y);
       ctx.stroke();
     }
 
+    // Crown rounded polished dome cap
+    ctx.fillStyle = pal.metalLight;
+    ctx.beginPath();
+    ctx.arc(crownX + crownW, 0, crownH * 0.35, -Math.PI / 2, Math.PI / 2);
+    ctx.fill();
+
+    ctx.restore();
     ctx.restore();
   }
 
-  drawDial(ctx, r) {
-    const dialR = r * 0.74;
+  // --- 4. Double Bezel: Outer Coin-Edge Fluting & Inner Polished Ring ---
+
+  drawBezel(ctx, r) {
+    const pal = this.getPalette();
+    const flutedOuter = r * 0.835;
+    const flutedInner = r * 0.765;
+    const polishedInner = r * 0.735;
 
     ctx.save();
 
-    // Inner dial bevel shadow
-    const dialGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, dialR);
-    if (this.finish === "rose-gold") {
-      dialGrad.addColorStop(0, "#1f1816");
-      dialGrad.addColorStop(0.7, "#140e0c");
-      dialGrad.addColorStop(1, "#080605");
-    } else if (this.finish === "obsidian") {
-      dialGrad.addColorStop(0, "#161b24");
-      dialGrad.addColorStop(0.7, "#0c0e14");
-      dialGrad.addColorStop(1, "#040508");
-    } else {
-      // Midnight Cobalt Sunburst
-      dialGrad.addColorStop(0, "#132338");
-      dialGrad.addColorStop(0.65, "#0b1524");
-      dialGrad.addColorStop(0.95, "#060b13");
-      dialGrad.addColorStop(1, "#020407");
+    // A. Outer Fluted Bezel (Coin-edge fluting)
+    // 120 radial flutes with alternating light/shadow facets
+    const fluteCount = 120;
+    for (let i = 0; i < fluteCount; i++) {
+      const angle = (i / fluteCount) * Math.PI * 2;
+      const nextAngle = ((i + 1) / fluteCount) * Math.PI * 2;
+      const isLight = i % 2 === 0;
+
+      ctx.fillStyle = isLight ? pal.metalLight : pal.metalDark;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(angle) * flutedInner, Math.sin(angle) * flutedInner);
+      ctx.lineTo(Math.cos(angle) * flutedOuter, Math.sin(angle) * flutedOuter);
+      ctx.lineTo(Math.cos(nextAngle) * flutedOuter, Math.sin(nextAngle) * flutedOuter);
+      ctx.lineTo(Math.cos(nextAngle) * flutedInner, Math.sin(nextAngle) * flutedInner);
+      ctx.closePath();
+      ctx.fill();
     }
+
+    // Fluted edge highlight rings
+    ctx.strokeStyle = pal.metalBright;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(0, 0, flutedOuter, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // B. Inner Polished Domed Bezel (smooth mirror ring)
+    const innerGrad = ctx.createLinearGradient(-polishedInner, -polishedInner, polishedInner, polishedInner);
+    innerGrad.addColorStop(0.0, pal.metalLight);
+    innerGrad.addColorStop(0.25, pal.metalBright);
+    innerGrad.addColorStop(0.65, pal.metalMid);
+    innerGrad.addColorStop(0.85, pal.metalDark);
+    innerGrad.addColorStop(1.0, pal.metalBright);
+
+    ctx.fillStyle = innerGrad;
+    ctx.beginPath();
+    ctx.arc(0, 0, flutedInner, 0, Math.PI * 2);
+    ctx.arc(0, 0, polishedInner, 0, Math.PI * 2, true);
+    ctx.fill();
+
+    // Inner rim shadow
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.35)";
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(0, 0, polishedInner, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  // --- 5. Dial Face (Pure Porcelain White / Ivory Lacquer) ---
+
+  drawDial(ctx, r) {
+    const pal = this.getPalette();
+    const dialR = r * 0.735;
+
+    ctx.save();
+
+    // Multi-layer lacquer white dial with soft warmth
+    const dialGrad = ctx.createRadialGradient(0, -dialR * 0.2, dialR * 0.1, 0, 0, dialR);
+    dialGrad.addColorStop(0.0, pal.dialBgCenter);
+    dialGrad.addColorStop(0.75, pal.dialBgCenter);
+    dialGrad.addColorStop(0.95, pal.dialBgEdge);
+    dialGrad.addColorStop(1.0, "#e8e5dc");
 
     ctx.fillStyle = dialGrad;
     ctx.beginPath();
     ctx.arc(0, 0, dialR, 0, Math.PI * 2);
     ctx.fill();
 
-    // Sunburst ray reflections
-    ctx.save();
-    ctx.globalCompositeOperation = "screen";
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.02)";
-    ctx.lineWidth = 1;
-    for (let a = 0; a < Math.PI * 2; a += Math.PI / 90) {
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.lineTo(Math.cos(a) * dialR, Math.sin(a) * dialR);
-      ctx.stroke();
-    }
-    ctx.restore();
-
-    // Chronometer Brand & Precision Engraving
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    // Brand Emblem: PHILL
-    ctx.fillStyle = this.finish === "rose-gold" ? "#e5b18a" : "#cdd5e0";
-    ctx.font = `700 ${r * 0.056}px "Cinzel", "Playfair Display", "Times New Roman", serif`;
-    ctx.letterSpacing = "6px";
-    ctx.fillText("PHILL", 0, -dialR * 0.38);
-
-    ctx.font = `400 ${r * 0.024}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
-    ctx.fillStyle = "rgba(200, 215, 235, 0.55)";
-    ctx.letterSpacing = "2px";
-    ctx.fillText("GENÈVE", 0, -dialR * 0.28);
-    ctx.fillText("CHRONOMETER", 0, -dialR * 0.21);
-
-    // Swiss Made at bottom 6 o'clock
-    ctx.font = `500 ${r * 0.02}px sans-serif`;
-    ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.fillText("SWISS   MADE", 0, dialR * 0.88);
+    // Perimeter dial bevel shadow
+    const edgeShadow = ctx.createRadialGradient(0, 0, dialR - 6, 0, 0, dialR);
+    edgeShadow.addColorStop(0.0, "rgba(0, 0, 0, 0)");
+    edgeShadow.addColorStop(1.0, "rgba(0, 0, 0, 0.22)");
+    ctx.fillStyle = edgeShadow;
+    ctx.beginPath();
+    ctx.arc(0, 0, dialR, 0, Math.PI * 2);
+    ctx.fill();
 
     ctx.restore();
   }
 
-  drawCelestialSubdial(ctx, r) {
-    // 24-Hour Sun & Moon Complication at 6 o'clock
-    const dialR = r * 0.74;
-    const subX = 0;
-    const subY = dialR * 0.38;
-    const subR = dialR * 0.27;
+  // --- 6. Railroad Minute Track (Chemin-de-fer) ---
+
+  drawRailroadTrack(ctx, r) {
+    const dialR = r * 0.735;
+    const trackOuter = dialR * 0.94;
+    const trackInner = dialR * 0.885;
 
     ctx.save();
-    ctx.translate(subX, subY);
 
-    // Subdial circular frame
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
-    ctx.lineWidth = 1.5;
+    // Outer & Inner concentric hairline tracks
+    ctx.strokeStyle = "rgba(20, 20, 20, 0.85)";
+    ctx.lineWidth = 1.0;
+
     ctx.beginPath();
-    ctx.arc(0, 0, subR, 0, Math.PI * 2);
+    ctx.arc(0, 0, trackOuter, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Clip to aperture window
-    ctx.save();
     ctx.beginPath();
-    ctx.arc(0, 0, subR - 2, 0, Math.PI * 2);
-    ctx.clip();
+    ctx.arc(0, 0, trackInner, 0, Math.PI * 2);
+    ctx.stroke();
 
-    // Rotating celestial sky disc
-    ctx.save();
-    ctx.rotate(this.handAngles.celestial);
-
-    // Top half: daytime golden azure sky with sun
-    // Bottom half: nighttime deep space navy with moon & stars
-    const skyGrad = ctx.createLinearGradient(0, -subR, 0, subR);
-    skyGrad.addColorStop(0, "#1d5894");  // Noon sky
-    skyGrad.addColorStop(0.4, "#d8853b"); // Sunset/Sunrise horizon
-    skyGrad.addColorStop(0.6, "#15172d"); // Twilight
-    skyGrad.addColorStop(1, "#04060f");   // Midnight space
-    ctx.fillStyle = skyGrad;
-    ctx.fillRect(-subR, -subR, subR * 2, subR * 2);
-
-    // Radiant Golden Sun (at top noon position)
-    const sunY = -subR * 0.55;
-    const sunR = subR * 0.28;
-    const sunGrad = ctx.createRadialGradient(0, sunY, 1, 0, sunY, sunR);
-    sunGrad.addColorStop(0, "#fff5d0");
-    sunGrad.addColorStop(0.4, "#ffc640");
-    sunGrad.addColorStop(1, "rgba(255, 160, 20, 0)");
-    ctx.fillStyle = sunGrad;
-    ctx.beginPath();
-    ctx.arc(0, sunY, sunR, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Golden Crescent Moon (at bottom midnight position)
-    const moonY = subR * 0.55;
-    const moonR = subR * 0.22;
-    ctx.fillStyle = "#e8efff";
-    ctx.beginPath();
-    ctx.arc(0, moonY, moonR, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Moon shadow to form crescent
-    ctx.fillStyle = "#0c0e18";
-    ctx.beginPath();
-    ctx.arc(moonR * 0.45, moonY - moonR * 0.1, moonR * 0.85, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Tiny stars around moon
-    ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
-    [[-subR * 0.4, moonY - 6], [subR * 0.4, moonY + 4], [-subR * 0.25, moonY + 10], [subR * 0.3, moonY - 10]].forEach(([sx, sy]) => {
-      ctx.fillRect(sx, sy, 1.5, 1.5);
-    });
-
-    ctx.restore(); // end rotating disc
-    ctx.restore(); // end clip
-
-    // Subdial 24-hr Roman/Numeric markers (24, 6, 12, 18)
-    ctx.font = `600 ${r * 0.024}px sans-serif`;
-    ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("24", 0, -subR + 9);
-    ctx.fillText("12", 0, subR - 8);
-    ctx.fillText("6", subR - 9, 0);
-    ctx.fillText("18", -subR + 9, 0);
-
-    ctx.restore();
-  }
-
-  drawDateAperture(ctx, r) {
-    // 3 o'clock Date Window with Cyclops Lens effect
-    const dialR = r * 0.74;
-    const dateX = dialR * 0.64;
-    const dateY = 0;
-    const dateW = r * 0.15;
-    const dateH = r * 0.12;
-
-    ctx.save();
-    ctx.translate(dateX, dateY);
-
-    // Beveled frame
-    ctx.fillStyle = this.finish === "rose-gold" ? "#d4976c" : "#bdc5cf";
-    ctx.beginPath();
-    ctx.roundRect(-dateW / 2 - 2, -dateH / 2 - 2, dateW + 4, dateH + 4, 3);
-    ctx.fill();
-
-    // Inner window
-    ctx.fillStyle = "#f6f8fb";
-    ctx.beginPath();
-    ctx.roundRect(-dateW / 2, -dateH / 2, dateW, dateH, 2);
-    ctx.fill();
-
-    // Date Numeral
-    ctx.fillStyle = "#111822";
-    ctx.font = `700 ${r * 0.068}px "Helvetica Neue", Arial, sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(String(this.currentTime.day || 1), 0, 1);
-
-    ctx.restore();
-  }
-
-  drawIndices(ctx, r) {
-    const dialR = r * 0.74;
-
-    ctx.save();
-
+    // 60 Radial Minute Ticks
     for (let i = 0; i < 60; i++) {
       const angle = (i / 60) * Math.PI * 2;
-      const isHour = i % 5 === 0;
+      const isFive = i % 5 === 0;
+
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+
+      ctx.beginPath();
+      ctx.moveTo(cos * trackInner, sin * trackInner);
+      ctx.lineTo(cos * trackOuter, sin * trackOuter);
+
+      if (isFive) {
+        ctx.strokeStyle = "rgba(10, 10, 10, 0.95)";
+        ctx.lineWidth = 2.0;
+        ctx.stroke();
+
+        // Small black dot outside track at each hour
+        const dotR = trackOuter + 4.5;
+        ctx.fillStyle = "rgba(20, 20, 20, 0.9)";
+        ctx.beginPath();
+        ctx.arc(cos * dotR, sin * dotR, 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.strokeStyle = "rgba(40, 40, 40, 0.65)";
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
+    }
+
+    ctx.restore();
+  }
+
+  // --- 7. Applied Faceted Gold Numerals (12, 3, 9) & Dagger Markers ---
+
+  drawHourMarkers(ctx, r) {
+    const pal = this.getPalette();
+    const dialR = r * 0.735;
+
+    ctx.save();
+
+    // A. Applied Faceted Gold Arabic Numerals: "12", "3", "9"
+    const numerals = [
+      { text: "12", x: 0, y: -dialR * 0.72 },
+      { text: "3", x: dialR * 0.72, y: 0 },
+      { text: "9", x: -dialR * 0.72, y: 0 }
+    ];
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    numerals.forEach((num) => {
+      ctx.save();
+      ctx.translate(num.x, num.y);
+
+      // 3D Drop shadow
+      ctx.shadowColor = "rgba(0, 0, 0, 0.28)";
+      ctx.shadowBlur = 3;
+      ctx.shadowOffsetY = 1.5;
+
+      ctx.font = `600 ${r * 0.088}px "Cinzel", "Playfair Display", "Times New Roman", serif`;
+
+      // Gradient fill for applied gold relief
+      const numGrad = ctx.createLinearGradient(0, -r * 0.04, 0, r * 0.04);
+      numGrad.addColorStop(0.0, pal.goldMarkerLight);
+      numGrad.addColorStop(0.5, pal.goldMarkerMid);
+      numGrad.addColorStop(1.0, pal.goldMarkerDark);
+
+      ctx.fillStyle = numGrad;
+      ctx.fillText(num.text, 0, 0);
+
+      // Fine highlight outline
+      ctx.shadowColor = "transparent";
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.lineWidth = 0.5;
+      ctx.strokeText(num.text, 0, 0);
+
+      ctx.restore();
+    });
+
+    // B. Applied Faceted Gold Dagger Markers at hours 1, 2, 4, 5, 7, 8, 10, 11
+    // (Hour 6 is omitted for small seconds subdial; 3, 9, 12 have Arabic numerals)
+    const daggerHours = [1, 2, 4, 5, 7, 8, 10, 11];
+    const markerInnerR = dialR * 0.62;
+    const markerOuterR = dialR * 0.865;
+    const markerWidth = r * 0.024;
+
+    daggerHours.forEach((hour) => {
+      const angle = (hour / 12) * Math.PI * 2;
 
       ctx.save();
       ctx.rotate(angle);
 
-      if (isHour) {
-        const markerW = r * 0.024;
-        const markerH = (i === 0 || i === 30 || i === 45) ? r * 0.13 : r * 0.095;
-        const markerY = -dialR + 10;
+      // Drop shadow on dial
+      ctx.shadowColor = "rgba(0, 0, 0, 0.26)";
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetY = 1.5;
 
-        // Skip 3 o'clock marker partially for date window
-        if (i === 15) {
-          ctx.restore();
-          continue;
-        }
+      // Facet 1: Left / Light side
+      ctx.fillStyle = pal.goldMarkerLight;
+      ctx.beginPath();
+      ctx.moveTo(0, -markerInnerR);
+      ctx.lineTo(-markerWidth / 2, -markerOuterR);
+      ctx.lineTo(0, -markerOuterR);
+      ctx.closePath();
+      ctx.fill();
 
-        // Diamond-cut faceted metallic applied marker
-        ctx.fillStyle = this.finish === "rose-gold" ? "#e4a97f" : "#dce2ec";
-        ctx.beginPath();
-        ctx.roundRect(-markerW / 2, markerY, markerW, markerH, 2);
-        ctx.fill();
+      // Facet 2: Right / Dark side
+      ctx.fillStyle = pal.goldMarkerDark;
+      ctx.beginPath();
+      ctx.moveTo(0, -markerInnerR);
+      ctx.lineTo(0, -markerOuterR);
+      ctx.lineTo(markerWidth / 2, -markerOuterR);
+      ctx.closePath();
+      ctx.fill();
 
-        // Marker luminous center stripe (Super-LumiNova)
-        const lumeColor = this.lumeAmount > 0.05
-          ? `rgba(50, 255, 180, ${0.4 + this.lumeAmount * 0.6})`
-          : "rgba(240, 248, 255, 0.85)";
-
-        if (this.lumeAmount > 0.1) {
-          ctx.shadowColor = "#39ffb4";
-          ctx.shadowBlur = 12 * this.lumeAmount;
-        }
-
-        ctx.fillStyle = lumeColor;
-        ctx.fillRect(-markerW / 4, markerY + 3, markerW / 2, markerH - 6);
-      } else {
-        // Subtle minute railroad tick
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(0, -dialR + 4);
-        ctx.lineTo(0, -dialR + 12);
-        ctx.stroke();
-      }
+      // Center ridge specular shine
+      ctx.shadowColor = "transparent";
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(0, -markerInnerR);
+      ctx.lineTo(0, -markerOuterR);
+      ctx.stroke();
 
       ctx.restore();
-    }
+    });
 
     ctx.restore();
   }
 
-  drawHands(ctx, r) {
-    const dialR = r * 0.74;
+  // --- 8. Brand Emblem & Lettering ---
+
+  drawBrand(ctx, r) {
+    const pal = this.getPalette();
+    const dialR = r * 0.735;
 
     ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
-    // Night Super-LumiNova glow setup
-    const lumeColor = this.lumeAmount > 0.05
-      ? `rgba(60, 255, 190, ${0.5 + this.lumeAmount * 0.5})`
-      : "rgba(255, 255, 255, 0.9)";
-
-    const metalColor = this.finish === "rose-gold" ? "#e6ad85" : "#e4eaef";
-    const darkMetalColor = this.finish === "rose-gold" ? "#885139" : "#69727d";
-
-    // 1. Hour Hand (Dauphine Faceted)
+    // A. Five-Point Coronet / Crown Emblem
+    const crownY = -dialR * 0.44;
     ctx.save();
-    ctx.rotate(this.handAngles.hour);
+    ctx.translate(0, crownY);
 
-    // Drop shadow
-    ctx.shadowColor = "rgba(0, 0, 0, 0.45)";
-    ctx.shadowBlur = 8;
-    ctx.shadowOffsetY = 4;
+    const cW = r * 0.045;
+    const cH = r * 0.038;
 
-    const hrLen = dialR * 0.55;
-    const hrW = r * 0.038;
+    // Crown Gradient
+    const crownGrad = ctx.createLinearGradient(-cW, -cH, cW, cH);
+    crownGrad.addColorStop(0, pal.goldMarkerLight);
+    crownGrad.addColorStop(0.5, pal.goldMarkerMid);
+    crownGrad.addColorStop(1, pal.goldMarkerDark);
 
-    // Left Facet (Light)
-    ctx.fillStyle = metalColor;
+    ctx.fillStyle = crownGrad;
     ctx.beginPath();
-    ctx.moveTo(0, r * 0.06);
-    ctx.lineTo(-hrW, 0);
-    ctx.lineTo(0, -hrLen);
+    // 5 peaks with valleys
+    ctx.moveTo(-cW, -cH * 0.35);
+    ctx.lineTo(-cW * 0.55, cH * 0.1);
+    ctx.lineTo(-cW * 0.45, -cH * 0.7);
+    ctx.lineTo(-cW * 0.15, cH * 0.15);
+    ctx.lineTo(0, -cH); // Tallest center peak
+    ctx.lineTo(cW * 0.15, cH * 0.15);
+    ctx.lineTo(cW * 0.45, -cH * 0.7);
+    ctx.lineTo(cW * 0.55, cH * 0.1);
+    ctx.lineTo(cW, -cH * 0.35);
+    ctx.lineTo(cW * 0.6, cH * 0.5);
+    ctx.lineTo(-cW * 0.6, cH * 0.5);
     ctx.closePath();
     ctx.fill();
 
-    // Right Facet (Darker bevel)
-    ctx.fillStyle = darkMetalColor;
-    ctx.beginPath();
-    ctx.moveTo(0, r * 0.06);
-    ctx.lineTo(hrW, 0);
-    ctx.lineTo(0, -hrLen);
-    ctx.closePath();
-    ctx.fill();
+    // Small circular pearls on the 5 tips
+    const tips = [
+      [-cW, -cH * 0.35],
+      [-cW * 0.45, -cH * 0.7],
+      [0, -cH],
+      [cW * 0.45, -cH * 0.7],
+      [cW, -cH * 0.35]
+    ];
+    tips.forEach(([tx, ty]) => {
+      ctx.beginPath();
+      ctx.arc(tx, ty, r * 0.0055, 0, Math.PI * 2);
+      ctx.fill();
+    });
 
-    // Luminous inner slit
-    if (this.lumeAmount > 0.1) {
-      ctx.shadowColor = "#39ffb4";
-      ctx.shadowBlur = 14 * this.lumeAmount;
-    }
-    ctx.fillStyle = lumeColor;
-    ctx.fillRect(-hrW * 0.35, -hrLen * 0.8, hrW * 0.7, hrLen * 0.55);
+    // Crown base band
+    ctx.fillRect(-cW * 0.6, cH * 0.6, cW * 1.2, r * 0.006);
 
     ctx.restore();
 
-    // 2. Minute Hand (Longer Faceted Sword)
-    ctx.save();
-    ctx.rotate(this.handAngles.minute);
+    // B. Brand Title: "PHILL"
+    ctx.font = `700 ${r * 0.052}px "Cinzel", "Playfair Display", "Times New Roman", serif`;
+    ctx.fillStyle = "#11141a";
+    ctx.letterSpacing = "5px";
+    ctx.fillText("PHILL", 0, -dialR * 0.31);
 
-    ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
-    ctx.shadowBlur = 10;
-    ctx.shadowOffsetY = 6;
-
-    const minLen = dialR * 0.82;
-    const minW = r * 0.032;
-
-    // Left Facet
-    ctx.fillStyle = metalColor;
-    ctx.beginPath();
-    ctx.moveTo(0, r * 0.06);
-    ctx.lineTo(-minW, 0);
-    ctx.lineTo(0, -minLen);
-    ctx.closePath();
-    ctx.fill();
-
-    // Right Facet
-    ctx.fillStyle = darkMetalColor;
-    ctx.beginPath();
-    ctx.moveTo(0, r * 0.06);
-    ctx.lineTo(minW, 0);
-    ctx.lineTo(0, -minLen);
-    ctx.closePath();
-    ctx.fill();
-
-    // Luminous inner slit
-    if (this.lumeAmount > 0.1) {
-      ctx.shadowColor = "#39ffb4";
-      ctx.shadowBlur = 14 * this.lumeAmount;
-    }
-    ctx.fillStyle = lumeColor;
-    ctx.fillRect(-minW * 0.35, -minLen * 0.85, minW * 0.7, minLen * 0.65);
+    // C. Subtitle: "GENÈVE"
+    ctx.font = `500 ${r * 0.022}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+    ctx.fillStyle = "#333945";
+    ctx.letterSpacing = "3px";
+    ctx.fillText("GENÈVE", 0, -dialR * 0.22);
 
     ctx.restore();
+  }
 
-    // 3. Second Hand (Needle sweep with counterbalance and crimson tip)
+  // --- 9. Small Seconds Subdial (at 6 o'clock) ---
+
+  drawSmallSecondsSubdial(ctx, r) {
+    const pal = this.getPalette();
+    const dialR = r * 0.735;
+    const subX = 0;
+    const subY = dialR * 0.46;
+    const subR = dialR * 0.275;
+
+    ctx.save();
+    ctx.translate(subX, subY);
+
+    // A. Recessed subdial aperture shadow
+    ctx.save();
+    const subInnerShadow = ctx.createRadialGradient(0, 0, subR - 5, 0, 0, subR);
+    subInnerShadow.addColorStop(0, "rgba(0, 0, 0, 0)");
+    subInnerShadow.addColorStop(1, "rgba(0, 0, 0, 0.25)");
+
+    ctx.fillStyle = pal.dialBgCenter;
+    ctx.beginPath();
+    ctx.arc(0, 0, subR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = subInnerShadow;
+    ctx.fill();
+    ctx.restore();
+
+    // B. Concentric Circular Snailing (Azurage)
+    ctx.save();
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.045)";
+    ctx.lineWidth = 1;
+    for (let rad = subR * 0.2; rad < subR * 0.95; rad += 3.5) {
+      ctx.beginPath();
+      ctx.arc(0, 0, rad, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // C. Subdial Outer Perimeter Hairline
+    ctx.strokeStyle = "rgba(40, 40, 40, 0.6)";
+    ctx.lineWidth = 1.0;
+    ctx.beginPath();
+    ctx.arc(0, 0, subR, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // D. Subdial Seconds Railroad Track & Numbers: 60, 20, 40
+    const trackR = subR * 0.86;
+    const trackIn = subR * 0.78;
+
+    ctx.strokeStyle = "rgba(30, 30, 30, 0.75)";
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.arc(0, 0, trackR, 0, Math.PI * 2);
+    ctx.stroke();
+
+    for (let s = 0; s < 60; s++) {
+      const angle = (s / 60) * Math.PI * 2;
+      const isFive = s % 5 === 0;
+
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+
+      const r1 = isFive ? trackIn - 1 : trackIn + 2;
+      ctx.beginPath();
+      ctx.moveTo(cos * r1, sin * r1);
+      ctx.lineTo(cos * trackR, sin * trackR);
+      ctx.lineWidth = isFive ? 1.4 : 0.6;
+      ctx.stroke();
+    }
+
+    // Numbers: 60 (at top), 20 (bottom-right), 40 (bottom-left)
+    ctx.font = `600 ${r * 0.024}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+    ctx.fillStyle = "#1a1e24";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    const numDist = subR * 0.62;
+    // 60 at top
+    ctx.fillText("60", 0, -numDist);
+    // 20 at 120 degrees (4 o'clock)
+    ctx.fillText("20", Math.cos(Math.PI / 6) * numDist, Math.sin(Math.PI / 6) * numDist + 2);
+    // 40 at 240 degrees (8 o'clock)
+    ctx.fillText("40", -Math.cos(Math.PI / 6) * numDist, Math.sin(Math.PI / 6) * numDist + 2);
+
+    // E. Small Seconds Hand (Centered in Subdial)
     ctx.save();
     ctx.rotate(this.handAngles.second);
 
-    ctx.shadowColor = "rgba(0, 0, 0, 0.6)";
-    ctx.shadowBlur = 12;
-    ctx.shadowOffsetY = 8;
+    // Hand drop shadow
+    ctx.shadowColor = "rgba(0, 0, 0, 0.35)";
+    ctx.shadowBlur = 3;
+    ctx.shadowOffsetY = 1.5;
 
-    const secLen = dialR * 0.92;
-    const secTail = dialR * 0.28;
+    const secLen = subR * 0.84;
+    const secTail = subR * 0.22;
 
-    // Needle body
-    ctx.strokeStyle = "#e63946"; // Vibrant horological red
-    ctx.lineWidth = 1.8;
+    // Small seconds needle hand in gold
+    ctx.strokeStyle = pal.goldMarkerLight;
+    ctx.lineWidth = 1.4;
     ctx.lineCap = "round";
 
     ctx.beginPath();
@@ -1419,879 +1565,240 @@ class WatchEngine {
     ctx.lineTo(0, -secLen);
     ctx.stroke();
 
-    // Counterbalance circle
-    ctx.fillStyle = "#e63946";
-    ctx.beginPath();
-    ctx.arc(0, secTail * 0.5, r * 0.024, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.restore();
-
-    // 4. Center Hand Boss Pin (Polished metallic cap)
-    ctx.fillStyle = metalColor;
-    ctx.beginPath();
-    ctx.arc(0, 0, r * 0.035, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = "#1e2229";
+    // Small center hub
+    ctx.fillStyle = pal.goldMarkerLight;
     ctx.beginPath();
     ctx.arc(0, 0, r * 0.012, 0, Math.PI * 2);
     ctx.fill();
 
+    // Central jewel / pin
+    ctx.fillStyle = "#222";
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.004, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore(); // end subdial hand
+
+    ctx.restore(); // end subdial translate
+
+    // F. Inscription: "SUPERLATIVE CHRONOMETER" Arched Above Subdial
+    ctx.save();
+    ctx.font = `600 ${r * 0.018}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+    ctx.fillStyle = "#333944";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
+
+    const archRadius = subR + 8;
+    const archCenterY = subY;
+    const archText = "SUPERLATIVE CHRONOMETER";
+    const startAngle = -Math.PI * 0.78;
+    const endAngle = -Math.PI * 0.22;
+    const angleStep = (endAngle - startAngle) / (archText.length - 1);
+
+    for (let c = 0; c < archText.length; c++) {
+      const char = archText[c];
+      const charAngle = startAngle + c * angleStep;
+
+      ctx.save();
+      ctx.translate(Math.cos(charAngle) * archRadius, archCenterY + Math.sin(charAngle) * archRadius);
+      ctx.rotate(charAngle + Math.PI / 2);
+      ctx.fillText(char, 0, 0);
+      ctx.restore();
+    }
+    ctx.restore();
+
+    // G. "SWISS MADE" at 6 o'clock bottom of dial
+    ctx.save();
+    ctx.font = `600 ${r * 0.019}px sans-serif`;
+    ctx.fillStyle = "rgba(40, 40, 40, 0.75)";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("SWISS   MADE", 0, dialR * 0.94);
     ctx.restore();
   }
 
-  drawSapphireReflection(ctx, r) {
-    const dialR = r * 0.74;
+  // --- 10. Horological Hands: Breguet Observatory Hour & Sword Minute Hand ---
+
+  drawHands(ctx, r) {
+    const pal = this.getPalette();
+    const dialR = r * 0.735;
 
     ctx.save();
 
-    // Anti-Reflective curved sapphire glass diagonal flare
-    const flareGrad = ctx.createLinearGradient(-dialR, -dialR, dialR, dialR);
-    flareGrad.addColorStop(0, "rgba(255, 255, 255, 0.16)");
-    flareGrad.addColorStop(0.3, "rgba(255, 255, 255, 0.04)");
-    flareGrad.addColorStop(0.48, "rgba(255, 255, 255, 0)");
-    flareGrad.addColorStop(0.52, "rgba(100, 180, 255, 0.06)"); // AR violet/blue coating reflection
-    flareGrad.addColorStop(0.7, "rgba(255, 255, 255, 0.03)");
-    flareGrad.addColorStop(1, "rgba(255, 255, 255, 0.12)");
+    // A. Hour Hand (Signature Breguet Observatory Open-Ring Hand)
+    ctx.save();
+    ctx.rotate(this.handAngles.hour);
 
-    ctx.fillStyle = flareGrad;
+    // Hand drop shadow onto porcelain dial
+    ctx.shadowColor = "rgba(0, 0, 0, 0.38)";
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetY = 4;
+
+    const hrLen = dialR * 0.58;
+    const stemW = r * 0.024;
+    const eyeCenterY = -hrLen * 0.72;
+    const eyeRadiusOut = r * 0.038;
+    const eyeRadiusIn = r * 0.020; // Open ring showing dial below!
+
+    // Left Facet (Light Gold)
+    ctx.fillStyle = pal.goldMarkerLight;
     ctx.beginPath();
-    ctx.arc(0, 0, dialR - 1, 0, Math.PI * 2);
+    ctx.moveTo(0, r * 0.03);
+    ctx.lineTo(-stemW / 2, 0);
+    ctx.lineTo(-stemW * 0.35, eyeCenterY + eyeRadiusOut * 0.8);
+    // Outer arc of ring (left side)
+    ctx.arc(0, eyeCenterY, eyeRadiusOut, Math.PI * 0.65, Math.PI * 1.5, false);
+    // Sharp needle tip
+    ctx.lineTo(0, -hrLen);
+    ctx.lineTo(0, eyeCenterY - eyeRadiusOut);
+    // Inner hole cutout
+    ctx.arc(0, eyeCenterY, eyeRadiusIn, -Math.PI / 2, Math.PI / 2, true);
+    ctx.lineTo(0, 0);
+    ctx.closePath();
     ctx.fill();
+
+    // Right Facet (Darker Gold)
+    ctx.fillStyle = pal.goldMarkerDark;
+    ctx.beginPath();
+    ctx.moveTo(0, r * 0.03);
+    ctx.lineTo(stemW / 2, 0);
+    ctx.lineTo(stemW * 0.35, eyeCenterY + eyeRadiusOut * 0.8);
+    // Outer arc of ring (right side)
+    ctx.arc(0, eyeCenterY, eyeRadiusOut, Math.PI * 0.35, -Math.PI / 2, true);
+    // Sharp needle tip
+    ctx.lineTo(0, -hrLen);
+    ctx.lineTo(0, eyeCenterY - eyeRadiusOut);
+    // Inner hole cutout
+    ctx.arc(0, eyeCenterY, eyeRadiusIn, -Math.PI / 2, Math.PI / 2, false);
+    ctx.lineTo(0, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    // Center ridge highlight
+    ctx.shadowColor = "transparent";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(0, r * 0.02);
+    ctx.lineTo(0, eyeCenterY + eyeRadiusOut * 0.9);
+    ctx.moveTo(0, eyeCenterY - eyeRadiusOut * 0.9);
+    ctx.lineTo(0, -hrLen);
+    ctx.stroke();
+
+    ctx.restore(); // end hour hand
+
+    // B. Minute Hand (Sleek Double-Edged Sword Hand)
+    ctx.save();
+    ctx.rotate(this.handAngles.minute);
+
+    // Hand drop shadow
+    ctx.shadowColor = "rgba(0, 0, 0, 0.42)";
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetY = 6;
+
+    const minLen = dialR * 0.89; // Extends right to the railroad track
+    const minW = r * 0.026;
+
+    // Left Facet (Light Gold)
+    ctx.fillStyle = pal.goldMarkerLight;
+    ctx.beginPath();
+    ctx.moveTo(0, r * 0.035);
+    ctx.lineTo(-minW / 2, 0);
+    ctx.lineTo(-minW * 0.25, -minLen * 0.75);
+    ctx.lineTo(0, -minLen);
+    ctx.closePath();
+    ctx.fill();
+
+    // Right Facet (Dark Gold)
+    ctx.fillStyle = pal.goldMarkerDark;
+    ctx.beginPath();
+    ctx.moveTo(0, r * 0.035);
+    ctx.lineTo(minW / 2, 0);
+    ctx.lineTo(minW * 0.25, -minLen * 0.75);
+    ctx.lineTo(0, -minLen);
+    ctx.closePath();
+    ctx.fill();
+
+    // Central Ridge Specular Sheen
+    ctx.shadowColor = "transparent";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
+    ctx.lineWidth = 0.9;
+    ctx.beginPath();
+    ctx.moveTo(0, r * 0.03);
+    ctx.lineTo(0, -minLen);
+    ctx.stroke();
+
+    ctx.restore(); // end minute hand
+
+    // C. Central Arbor (Polished Domed Gold Cap)
+    ctx.save();
+    ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+    ctx.shadowBlur = 6;
+    ctx.shadowOffsetY = 3;
+
+    const capR = r * 0.032;
+    const capGrad = ctx.createRadialGradient(-capR * 0.3, -capR * 0.3, 1, 0, 0, capR);
+    capGrad.addColorStop(0, pal.metalLight);
+    capGrad.addColorStop(0.5, pal.metalBright);
+    capGrad.addColorStop(0.85, pal.metalMid);
+    capGrad.addColorStop(1, pal.metalDark);
+
+    ctx.fillStyle = capGrad;
+    ctx.beginPath();
+    ctx.arc(0, 0, capR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Center jewel / pin dot
+    ctx.fillStyle = "#1a1a1a";
+    ctx.beginPath();
+    ctx.arc(0, 0, capR * 0.28, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    ctx.restore();
+  }
+
+  // --- 11. Sapphire Crystal Reflection ---
+
+  drawCrystal(ctx, r) {
+    const dialR = r * 0.735;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(0, 0, dialR, 0, Math.PI * 2);
+    ctx.clip();
+
+    // Diagonal soft specular light sweep across top-left
+    const flare = ctx.createLinearGradient(-dialR, -dialR, dialR * 0.5, dialR * 0.5);
+    flare.addColorStop(0.0, "rgba(255, 255, 255, 0.14)");
+    flare.addColorStop(0.35, "rgba(255, 255, 255, 0.05)");
+    flare.addColorStop(0.6, "rgba(255, 255, 255, 0)");
+    flare.addColorStop(1.0, "rgba(255, 255, 255, 0)");
+
+    ctx.fillStyle = flare;
+    ctx.fillRect(-dialR, -dialR, dialR * 2, dialR * 2);
+
+    // Subtle anti-reflective blue/violet glint at bottom edge
+    const arGlint = ctx.createRadialGradient(0, dialR * 0.8, dialR * 0.1, 0, dialR * 0.8, dialR * 0.4);
+    arGlint.addColorStop(0.0, "rgba(100, 160, 255, 0.05)");
+    arGlint.addColorStop(1.0, "rgba(100, 160, 255, 0)");
+    ctx.fillStyle = arGlint;
+    ctx.fillRect(-dialR, dialR * 0.5, dialR * 2, dialR * 0.5);
 
     ctx.restore();
   }
 }
 
   // =========================================================================
-  // 4. 3D Wristwatch WebGL Engine (Case, Bezel, Lugs, Straps, 3D Spin)
-  // =========================================================================
-/**
- * 3D Wristwatch WebGL Engine — PHILL
- * Renders an ultra-luxurious, fully interactive 3D mechanical timepiece in real-time.
- * Features:
- * - Full 3D metallic case, beveled bezel, sculpted lugs, and knurled crown
- * - Curved 3D leather straps with realistic stitching and wrist curvature
- * - Live dynamic dial texture projected from the 2D watch canvas (hands tick in 3D!)
- * - Dome sapphire crystal with dynamic Fresnel specular light sweeps
- * - Drag-to-inspect 3D orbit controls
- * - High-speed cinematic 3D tumble/spin animation when searching locations
- */
-
-class Watch3DEngine {
-  constructor(canvas, watch2D, soundEngine) {
-    this.canvas = canvas;
-    this.watch2D = watch2D;
-    this.sound = soundEngine;
-
-    this.gl = canvas.getContext("webgl", { antialias: true, alpha: true }) ||
-              canvas.getContext("experimental-webgl", { antialias: true, alpha: true });
-
-    if (!this.gl) {
-      console.error("WebGL not available for 3D Wristwatch.");
-      return;
-    }
-
-    // 3D Orientation & Camera
-    this.rotation = { x: 0, y: 0, z: 0 };
-    this.targetRotation = { x: 0, y: 0, z: 0 };
-    this.cameraDistance = 4.2;
-    this.targetDistance = 4.2;
-    this.minDistance = 2.6;
-    this.maxDistance = 6.5;
-
-    // Interaction
-    this.isDragging = false;
-    this.lastMouse = { x: 0, y: 0 };
-    this.idleTimer = null;
-    this.autoIdle = true;
-
-    // Cinematic Spin Animation
-    this.isSpinning = false;
-    this.spinStartTime = 0;
-    this.spinDuration = 2200; // ms
-    this.startRot = { x: 0, y: 0, z: 0 };
-    this.endRot = { x: 0, y: 0, z: 0 };
-    this.startDist = 4.2;
-    this.endDist = 4.2;
-    this.onSpinComplete = null;
-
-    this.finish = "steel"; // 'steel' | 'rose-gold' | 'obsidian' | 'bronze'
-
-    this.initWebGL();
-    this.bindEvents();
-    this.resize();
-    this.startRenderLoop();
-  }
-
-  setFinish(finish) {
-    this.finish = finish;
-  }
-
-  initWebGL() {
-    const gl = this.gl;
-
-    const vsSource = `
-      attribute vec3 aPosition;
-      attribute vec3 aNormal;
-      attribute vec2 aTexCoord;
-
-      uniform mat4 uModel;
-      uniform mat4 uView;
-      uniform mat4 uProjection;
-      uniform mat3 uNormalMatrix;
-
-      varying vec3 vNormal;
-      varying vec3 vWorldPos;
-      varying vec2 vTexCoord;
-
-      void main() {
-        vec4 worldPos = uModel * vec4(aPosition, 1.0);
-        vWorldPos = worldPos.xyz;
-        vNormal = normalize(uNormalMatrix * aNormal);
-        vTexCoord = aTexCoord;
-        gl_Position = uProjection * uView * worldPos;
-      }
-    `;
-
-    const fsSource = `
-      precision mediump float;
-
-      varying vec3 vNormal;
-      varying vec3 vWorldPos;
-      varying vec2 vTexCoord;
-
-      uniform int uMaterial; // 0=Dial, 1=Metal Case, 2=Bezel, 3=Strap, 4=Sapphire Crystal, 5=Crown
-      uniform sampler2D uDialTexture;
-      uniform vec3 uBaseColor;
-      uniform vec3 uSpecColor;
-      uniform vec3 uCameraPos;
-
-      void main() {
-        vec3 normal = normalize(vNormal);
-        vec3 viewDir = normalize(uCameraPos - vWorldPos);
-
-        // Key light (Top right front)
-        vec3 lightDir1 = normalize(vec3(0.6, 0.8, 1.0));
-        // Fill light (Bottom left)
-        vec3 lightDir2 = normalize(vec3(-0.6, -0.4, 0.5));
-
-        float diff1 = max(dot(normal, lightDir1), 0.0);
-        float diff2 = max(dot(normal, lightDir2), 0.0) * 0.4;
-        float diffuse = diff1 + diff2;
-
-        // Specular
-        vec3 halfDir1 = normalize(lightDir1 + viewDir);
-        float spec1 = pow(max(dot(normal, halfDir1), 0.0), 32.0);
-
-        if (uMaterial == 0) {
-          // Live Dial Texture
-          vec4 dialColor = texture2D(uDialTexture, vTexCoord);
-          vec3 litColor = dialColor.rgb * (0.8 + diffuse * 0.3) + vec3(1.0) * spec1 * 0.15;
-          gl_FragColor = vec4(litColor, dialColor.a);
-          return;
-        }
-
-        if (uMaterial == 1 || uMaterial == 2 || uMaterial == 5) {
-          // Metallic Case, Bezel, and Crown
-          float metallicSpec = pow(max(dot(normal, halfDir1), 0.0), 48.0);
-          float fresnel = pow(1.0 - max(dot(viewDir, normal), 0.0), 2.5);
-          vec3 metalColor = uBaseColor * (0.35 + diffuse * 0.65) + uSpecColor * (metallicSpec * 1.2 + fresnel * 0.4);
-          gl_FragColor = vec4(metalColor, 1.0);
-          return;
-        }
-
-        if (uMaterial == 3) {
-          // Leather Straps with subtle stitching edge
-          vec3 strapCol = uBaseColor * (0.4 + diffuse * 0.6);
-          // Stitch line highlighting
-          float edgeDist = abs(vTexCoord.x - 0.5);
-          if (abs(edgeDist - 0.42) < 0.02) {
-            strapCol += vec3(0.3, 0.25, 0.2);
-          }
-          gl_FragColor = vec4(strapCol, 1.0);
-          return;
-        }
-
-        if (uMaterial == 4) {
-          // Sapphire Crystal Dome Lens
-          float fresnel = pow(1.0 - max(dot(viewDir, normal), 0.0), 3.0);
-          // Sweeping diagonal flare
-          float flare = pow(max(dot(normal, halfDir1), 0.0), 64.0);
-          vec3 glassCol = vec3(0.8, 0.95, 1.0) * (flare * 1.5 + fresnel * 0.6);
-          float alpha = 0.12 + fresnel * 0.35 + flare * 0.5;
-          gl_FragColor = vec4(glassCol, alpha);
-          return;
-        }
-
-        gl_FragColor = vec4(uBaseColor, 1.0);
-      }
-    `;
-
-    this.program = this.createProgram(gl, vsSource, fsSource);
-
-    this.locations = {
-      aPosition: gl.getAttribLocation(this.program, "aPosition"),
-      aNormal: gl.getAttribLocation(this.program, "aNormal"),
-      aTexCoord: gl.getAttribLocation(this.program, "aTexCoord"),
-      uModel: gl.getUniformLocation(this.program, "uModel"),
-      uView: gl.getUniformLocation(this.program, "uView"),
-      uProjection: gl.getUniformLocation(this.program, "uProjection"),
-      uNormalMatrix: gl.getUniformLocation(this.program, "uNormalMatrix"),
-      uMaterial: gl.getUniformLocation(this.program, "uMaterial"),
-      uDialTexture: gl.getUniformLocation(this.program, "uDialTexture"),
-      uBaseColor: gl.getUniformLocation(this.program, "uBaseColor"),
-      uSpecColor: gl.getUniformLocation(this.program, "uSpecColor"),
-      uCameraPos: gl.getUniformLocation(this.program, "uCameraPos")
-    };
-
-    // Build procedural 3D geometries
-    this.parts = {
-      dial: this.createDiscGeometry(1.0, 48, true),
-      crystal: this.createDomeGeometry(1.02, 0.06, 48),
-      bezel: this.createBezelGeometry(1.0, 1.14, 0.08, 48),
-      caseBody: this.createCylinderGeometry(1.14, 0.22, 48),
-      lugs: this.createLugsGeometry(),
-      crown: this.createCrownGeometry(0.12, 0.14, 24),
-      strapTop: this.createStrapGeometry(true),
-      strapBottom: this.createStrapGeometry(false)
-    };
-
-    // Upload geometry buffers
-    for (const key of Object.keys(this.parts)) {
-      const part = this.parts[key];
-      part.vBuffer = this.createBuffer(gl, gl.ARRAY_BUFFER, new Float32Array(part.vertices));
-      part.nBuffer = this.createBuffer(gl, gl.ARRAY_BUFFER, new Float32Array(part.normals));
-      part.tBuffer = this.createBuffer(gl, gl.ARRAY_BUFFER, new Float32Array(part.texCoords));
-      part.iBuffer = this.createBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(part.indices));
-    }
-
-    // Dynamic texture from the 2D watch canvas
-    this.dialTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, this.dialTexture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-    gl.enable(gl.DEPTH_TEST);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-  }
-
-  createProgram(gl, vs, fs) {
-    const vShader = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vShader, vs);
-    gl.compileShader(vShader);
-
-    const fShader = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fShader, fs);
-    gl.compileShader(fShader);
-
-    const prog = gl.createProgram();
-    gl.attachShader(prog, vShader);
-    gl.attachShader(prog, fShader);
-    gl.linkProgram(prog);
-    return prog;
-  }
-
-  createBuffer(gl, type, data) {
-    const buf = gl.createBuffer();
-    gl.bindBuffer(type, buf);
-    gl.bufferData(type, data, gl.STATIC_DRAW);
-    return buf;
-  }
-
-  // --- Procedural 3D Horological Geometry Generators ---
-
-  createDiscGeometry(radius, segments, isDial = false) {
-    const vertices = [0, 0, 0];
-    const normals = [0, 0, 1];
-    const texCoords = [0.5, 0.5];
-    const indices = [];
-
-    for (let i = 0; i <= segments; i++) {
-      const theta = (i / segments) * Math.PI * 2;
-      const x = Math.cos(theta) * radius;
-      const y = Math.sin(theta) * radius;
-      vertices.push(x, y, 0);
-      normals.push(0, 0, 1);
-      // Map UV so dial texture is oriented perfectly upright
-      texCoords.push(0.5 + Math.cos(theta) * 0.5, 0.5 - Math.sin(theta) * 0.5);
-
-      if (i > 0) {
-        indices.push(0, i, i + 1);
-      }
-    }
-    return { vertices, normals, texCoords, indices, count: indices.length };
-  }
-
-  createDomeGeometry(radius, height, segments) {
-    const vertices = [0, 0, height];
-    const normals = [0, 0, 1];
-    const texCoords = [0.5, 0.5];
-    const indices = [];
-
-    for (let i = 0; i <= segments; i++) {
-      const theta = (i / segments) * Math.PI * 2;
-      const x = Math.cos(theta) * radius;
-      const y = Math.sin(theta) * radius;
-      vertices.push(x, y, 0);
-      normals.push(x * 0.5, y * 0.5, 1.0);
-      texCoords.push(0.5 + Math.cos(theta) * 0.5, 0.5 - Math.sin(theta) * 0.5);
-
-      if (i > 0) {
-        indices.push(0, i, i + 1);
-      }
-    }
-    return { vertices, normals, texCoords, indices, count: indices.length };
-  }
-
-  createCylinderGeometry(radius, height, segments) {
-    const vertices = [];
-    const normals = [];
-    const texCoords = [];
-    const indices = [];
-
-    const halfH = height / 2;
-    for (let i = 0; i <= segments; i++) {
-      const theta = (i / segments) * Math.PI * 2;
-      const x = Math.cos(theta) * radius;
-      const y = Math.sin(theta) * radius;
-      const u = i / segments;
-
-      // Top rim
-      vertices.push(x, y, halfH);
-      normals.push(Math.cos(theta), Math.sin(theta), 0);
-      texCoords.push(u, 0);
-
-      // Bottom rim
-      vertices.push(x, y, -halfH);
-      normals.push(Math.cos(theta), Math.sin(theta), 0);
-      texCoords.push(u, 1);
-    }
-
-    for (let i = 0; i < segments; i++) {
-      const top1 = i * 2;
-      const bot1 = top1 + 1;
-      const top2 = (i + 1) * 2;
-      const bot2 = top2 + 1;
-
-      indices.push(top1, bot1, top2);
-      indices.push(top2, bot1, bot2);
-    }
-
-    return { vertices, normals, texCoords, indices, count: indices.length };
-  }
-
-  createBezelGeometry(innerR, outerR, depth, segments) {
-    const vertices = [];
-    const normals = [];
-    const texCoords = [];
-    const indices = [];
-
-    for (let i = 0; i <= segments; i++) {
-      const theta = (i / segments) * Math.PI * 2;
-      const cos = Math.cos(theta);
-      const sin = Math.sin(theta);
-      const u = i / segments;
-
-      // Inner top
-      vertices.push(cos * innerR, sin * innerR, depth);
-      normals.push(cos * 0.4, sin * 0.4, 0.9);
-      texCoords.push(u, 0);
-
-      // Outer top
-      vertices.push(cos * outerR, sin * outerR, 0);
-      normals.push(cos * 0.8, sin * 0.8, 0.4);
-      texCoords.push(u, 1);
-    }
-
-    for (let i = 0; i < segments; i++) {
-      const in1 = i * 2;
-      const out1 = in1 + 1;
-      const in2 = (i + 1) * 2;
-      const out2 = in2 + 1;
-
-      indices.push(in1, out1, in2);
-      indices.push(in2, out1, out2);
-    }
-
-    return { vertices, normals, texCoords, indices, count: indices.length };
-  }
-
-  createLugsGeometry() {
-    const vertices = [];
-    const normals = [];
-    const texCoords = [];
-    const indices = [];
-
-    // 4 Sculpted horns at top and bottom of watch case
-    const lugPositions = [
-      [-0.55, 0.95, -0.42, 1.45],  // Top Left
-      [0.42, 1.45, 0.55, 0.95],    // Top Right
-      [-0.55, -0.95, -0.42, -1.45],// Bottom Left
-      [0.42, -1.45, 0.55, -0.95]   // Bottom Right
-    ];
-
-    let baseIdx = 0;
-    lugPositions.forEach(([x1, y1, x2, y2]) => {
-      const zTop = 0.08, zBot = -0.10;
-      // Front facet
-      vertices.push(x1, y1, zTop, x2, y2, zTop * 0.5, x2, y2, zBot, x1, y1, zBot);
-      normals.push(0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1);
-      texCoords.push(0, 0, 1, 0, 1, 1, 0, 1);
-
-      indices.push(baseIdx, baseIdx + 1, baseIdx + 2);
-      indices.push(baseIdx, baseIdx + 2, baseIdx + 3);
-      baseIdx += 4;
-    });
-
-    return { vertices, normals, texCoords, indices, count: indices.length };
-  }
-
-  createCrownGeometry(radius, length, segments) {
-    const vertices = [];
-    const normals = [];
-    const texCoords = [];
-    const indices = [];
-
-    // Cylinder along X-axis at 3 o'clock
-    for (let i = 0; i <= segments; i++) {
-      const theta = (i / segments) * Math.PI * 2;
-      const y = Math.cos(theta) * radius;
-      const z = Math.sin(theta) * radius;
-      const u = i / segments;
-
-      vertices.push(0, y, z);
-      normals.push(0, Math.cos(theta), Math.sin(theta));
-      texCoords.push(u, 0);
-
-      vertices.push(length, y, z);
-      normals.push(0, Math.cos(theta), Math.sin(theta));
-      texCoords.push(u, 1);
-    }
-
-    for (let i = 0; i < segments; i++) {
-      const p1 = i * 2;
-      const p2 = p1 + 1;
-      const p3 = (i + 1) * 2;
-      const p4 = p3 + 1;
-
-      indices.push(p1, p2, p3);
-      indices.push(p3, p2, p4);
-    }
-
-    return { vertices, normals, texCoords, indices, count: indices.length };
-  }
-
-  createStrapGeometry(isTop) {
-    const vertices = [];
-    const normals = [];
-    const texCoords = [];
-    const indices = [];
-
-    const dir = isTop ? 1 : -1;
-    const width = 0.85;
-    const segments = 16;
-    const strapLength = 2.0;
-
-    for (let i = 0; i <= segments; i++) {
-      const t = i / segments;
-      const y = (1.25 + t * strapLength) * dir;
-      // Gentle backward curve following wrist curvature
-      const z = -0.06 - Math.pow(t, 1.8) * 0.85;
-      const nz = -Math.pow(t, 0.8) * 0.6;
-      const ny = dir * 0.3;
-
-      // Left edge
-      vertices.push(-width / 2, y, z);
-      normals.push(0, ny, 1 + nz);
-      texCoords.push(0, t);
-
-      // Right edge
-      vertices.push(width / 2, y, z);
-      normals.push(0, ny, 1 + nz);
-      texCoords.push(1, t);
-    }
-
-    for (let i = 0; i < segments; i++) {
-      const p1 = i * 2;
-      const p2 = p1 + 1;
-      const p3 = (i + 1) * 2;
-      const p4 = p3 + 1;
-
-      indices.push(p1, p2, p3);
-      indices.push(p3, p2, p4);
-    }
-
-    return { vertices, normals, texCoords, indices, count: indices.length };
-  }
-
-  bindEvents() {
-    const canvas = this.canvas;
-
-    const onPointerDown = (e) => {
-      this.isDragging = true;
-      this.autoIdle = false;
-      const x = e.clientX || (e.touches && e.touches[0].clientX);
-      const y = e.clientY || (e.touches && e.touches[0].clientY);
-      this.lastMouse = { x, y };
-      clearTimeout(this.idleTimer);
-    };
-
-    const onPointerMove = (e) => {
-      if (!this.isDragging || this.isSpinning) return;
-      const x = e.clientX || (e.touches && e.touches[0].clientX);
-      const y = e.clientY || (e.touches && e.touches[0].clientY);
-
-      const dx = x - this.lastMouse.x;
-      const dy = y - this.lastMouse.y;
-
-      this.targetRotation.y += dx * 0.008;
-      this.targetRotation.x += dy * 0.008;
-
-      // Constrain tilt to prevent upside-down flip
-      this.targetRotation.x = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, this.targetRotation.x));
-      this.lastMouse = { x, y };
-    };
-
-    const onPointerUp = () => {
-      if (!this.isDragging) return;
-      this.isDragging = false;
-
-      // Reset to face after 4 seconds of inactivity
-      this.idleTimer = setTimeout(() => {
-        if (!this.isSpinning) {
-          this.targetRotation = { x: 0, y: 0, z: 0 };
-          this.autoIdle = true;
-        }
-      }, 4000);
-    };
-
-    const onWheel = (e) => {
-      e.preventDefault();
-      this.targetDistance = Math.max(this.minDistance, Math.min(this.maxDistance, this.targetDistance + e.deltaY * 0.002));
-    };
-
-    canvas.addEventListener("mousedown", onPointerDown);
-    window.addEventListener("mousemove", onPointerMove);
-    window.addEventListener("mouseup", onPointerUp);
-
-    canvas.addEventListener("touchstart", onPointerDown, { passive: true });
-    window.addEventListener("touchmove", onPointerMove, { passive: true });
-    window.addEventListener("touchend", onPointerUp, { passive: true });
-
-    canvas.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("resize", () => this.resize());
-  }
-
-  resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const width = this.canvas.clientWidth || window.innerWidth;
-    const height = this.canvas.clientHeight || window.innerHeight;
-
-    if (this.canvas.width !== width * dpr || this.canvas.height !== height * dpr) {
-      this.canvas.width = width * dpr;
-      this.canvas.height = height * dpr;
-      this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-    }
-  }
-
-  /**
-   * The Climax Feature:
-   * 3D Wristwatch full-screen tumble & spin animation when a location is searched!
-   */
-  spinToLocation(timeInfo, onComplete) {
-    this.isSpinning = true;
-    this.autoIdle = false;
-    this.spinStartTime = performance.now();
-    this.spinDuration = 2200; // ms
-    this.onSpinComplete = onComplete;
-
-    this.startRot = { x: this.rotation.x, y: this.rotation.y, z: this.rotation.z };
-    // 3 full 360-degree spins along Y (yaw) plus a dynamic roll along X/Z
-    this.endRot = {
-      x: 0,
-      y: this.rotation.y + Math.PI * 6,
-      z: 0
-    };
-
-    this.startDist = this.cameraDistance;
-    this.endDist = 3.8; // Punch in slightly at destination
-
-    if (this.sound) {
-      this.sound.playWindingEffect(1.8);
-    }
-  }
-
-  startRenderLoop() {
-    const render = (now) => {
-      this.update(now);
-      this.draw();
-      requestAnimationFrame(render);
-    };
-    requestAnimationFrame(render);
-  }
-
-  update(now) {
-    if (this.isSpinning) {
-      const elapsed = now - this.spinStartTime;
-      const progress = Math.min(1.0, elapsed / this.spinDuration);
-
-      // Quintic ease out for mechanical spinning deceleration
-      const t = progress;
-      const ease = 1 - Math.pow(1 - t, 4);
-
-      this.rotation.y = this.startRot.y + (this.endRot.y - this.startRot.y) * ease;
-      // Banking tilt during spin
-      this.rotation.x = Math.sin(progress * Math.PI) * 0.45;
-      this.rotation.z = Math.sin(progress * Math.PI * 2) * 0.15;
-
-      this.cameraDistance = this.startDist + (this.endDist - this.startDist) * ease;
-
-      if (progress >= 1.0) {
-        this.isSpinning = false;
-        this.rotation.x = 0;
-        this.rotation.y = 0;
-        this.rotation.z = 0;
-        this.targetRotation = { x: 0, y: 0, z: 0 };
-        this.cameraDistance = 4.2;
-        this.targetDistance = 4.2;
-
-        if (this.sound) {
-          this.sound.playArrivalChime();
-        }
-
-        if (this.onSpinComplete) {
-          const cb = this.onSpinComplete;
-          this.onSpinComplete = null;
-          cb();
-        }
-      }
-    } else {
-      // Gentle idle sway when untouched
-      if (this.autoIdle && !this.isDragging) {
-        const time = now * 0.0012;
-        this.targetRotation.y = Math.sin(time) * 0.18;
-        this.targetRotation.x = Math.cos(time * 0.7) * 0.08;
-      }
-
-      this.rotation.x += (this.targetRotation.x - this.rotation.x) * 0.1;
-      this.rotation.y += (this.targetRotation.y - this.rotation.y) * 0.1;
-      this.rotation.z += (this.targetRotation.z - this.rotation.z) * 0.1;
-      this.cameraDistance += (this.targetDistance - this.cameraDistance) * 0.1;
-    }
-  }
-
-  draw() {
-    const gl = this.gl;
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    gl.useProgram(this.program);
-
-    // Update Dial Texture from 2D Watch Canvas in real-time
-    if (this.watch2D && this.watch2D.canvas) {
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, this.dialTexture);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.watch2D.canvas);
-      gl.uniform1i(this.locations.uDialTexture, 0);
-    }
-
-    // Build Matrices
-    const aspect = this.canvas.width / this.canvas.height;
-    const projMatrix = this.createPerspective(42 * Math.PI / 180, aspect, 0.1, 100.0);
-    const viewMatrix = this.createLookAt([0, 0, this.cameraDistance], [0, 0, 0], [0, 1, 0]);
-
-    // Model matrix with rotation around X, Y, Z
-    const modelMatrix = this.createIdentity();
-    this.rotateX(modelMatrix, this.rotation.x);
-    this.rotateY(modelMatrix, this.rotation.y);
-    this.rotateZ(modelMatrix, this.rotation.z);
-
-    const normalMatrix = this.createNormalMatrix(modelMatrix);
-
-    gl.uniformMatrix4fv(this.locations.uProjection, false, projMatrix);
-    gl.uniformMatrix4fv(this.locations.uView, false, viewMatrix);
-    gl.uniform3f(this.locations.uCameraPos, 0, 0, this.cameraDistance);
-
-    // Color definitions based on chosen finish
-    const metalColors = {
-      steel: { base: [0.78, 0.82, 0.88], spec: [1.0, 1.0, 1.0] },
-      "rose-gold": { base: [0.86, 0.62, 0.48], spec: [1.0, 0.88, 0.75] },
-      obsidian: { base: [0.18, 0.20, 0.24], spec: [0.45, 0.50, 0.58] },
-      bronze: { base: [0.74, 0.55, 0.32], spec: [0.95, 0.78, 0.52] }
-    };
-    const strapColors = {
-      steel: [0.12, 0.10, 0.09],      // Rich espresso leather
-      "rose-gold": [0.15, 0.09, 0.07], // Saddle cognac leather
-      obsidian: [0.06, 0.07, 0.08],    // Midnight stealth black leather
-      bronze: [0.18, 0.12, 0.08]       // Vintage tobacco leather
-    };
-
-    const finishColor = metalColors[this.finish] || metalColors.steel;
-    const strapCol = strapColors[this.finish] || strapColors.steel;
-
-    // Helper to render a mesh part
-    const drawPart = (part, mMatrix, materialType, baseCol, specCol) => {
-      const nMat = this.createNormalMatrix(mMatrix);
-      gl.uniformMatrix4fv(this.locations.uModel, false, mMatrix);
-      gl.uniformMatrix3fv(this.locations.uNormalMatrix, false, nMat);
-      gl.uniform1i(this.locations.uMaterial, materialType);
-      gl.uniform3fv(this.locations.uBaseColor, baseCol || finishColor.base);
-      gl.uniform3fv(this.locations.uSpecColor, specCol || finishColor.spec);
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, part.vBuffer);
-      gl.enableVertexAttribArray(this.locations.aPosition);
-      gl.vertexAttribPointer(this.locations.aPosition, 3, gl.FLOAT, false, 0, 0);
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, part.nBuffer);
-      gl.enableVertexAttribArray(this.locations.aNormal);
-      gl.vertexAttribPointer(this.locations.aNormal, 3, gl.FLOAT, false, 0, 0);
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, part.tBuffer);
-      gl.enableVertexAttribArray(this.locations.aTexCoord);
-      gl.vertexAttribPointer(this.locations.aTexCoord, 2, gl.FLOAT, false, 0, 0);
-
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, part.iBuffer);
-      gl.drawElements(gl.TRIANGLES, part.count, gl.UNSIGNED_SHORT, 0);
-    };
-
-    // 1. Draw Leather Straps (Top and Bottom)
-    drawPart(this.parts.strapTop, modelMatrix, 3, strapCol, [0.3, 0.25, 0.2]);
-    drawPart(this.parts.strapBottom, modelMatrix, 3, strapCol, [0.3, 0.25, 0.2]);
-
-    // 2. Draw Lugs (4 horns)
-    drawPart(this.parts.lugs, modelMatrix, 1);
-
-    // 3. Draw Main Case Body
-    drawPart(this.parts.caseBody, modelMatrix, 1);
-
-    // 4. Draw Winding Crown at 3 o'clock
-    const crownMatrix = new Float32Array(modelMatrix);
-    this.translate(crownMatrix, 1.14, 0, 0);
-    drawPart(this.parts.crown, crownMatrix, 5);
-
-    // 5. Draw Bezel
-    const bezelMatrix = new Float32Array(modelMatrix);
-    this.translate(bezelMatrix, 0, 0, 0.11);
-    drawPart(this.parts.bezel, bezelMatrix, 2);
-
-    // 6. Draw Live Watch Dial Face
-    const dialMatrix = new Float32Array(modelMatrix);
-    this.translate(dialMatrix, 0, 0, 0.12);
-    drawPart(this.parts.dial, dialMatrix, 0);
-
-    // 7. Draw Dome Sapphire Crystal with specular sheen
-    const crystalMatrix = new Float32Array(modelMatrix);
-    this.translate(crystalMatrix, 0, 0, 0.14);
-    drawPart(this.parts.crystal, crystalMatrix, 4);
-  }
-
-  // --- 4x4 Matrix Utilities ---
-  createIdentity() {
-    return new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
-  }
-
-  createPerspective(fovy, aspect, near, far) {
-    const f = 1.0 / Math.tan(fovy / 2);
-    const nf = 1 / (near - far);
-    return new Float32Array([
-      f / aspect, 0, 0, 0,
-      0, f, 0, 0,
-      0, 0, (far + near) * nf, -1,
-      0, 0, 2 * far * near * nf, 0
-    ]);
-  }
-
-  createLookAt(eye, center, up) {
-    const z0 = eye[0] - center[0], z1 = eye[1] - center[1], z2 = eye[2] - center[2];
-    const lenZ = 1 / Math.hypot(z0, z1, z2);
-    const zx = z0 * lenZ, zy = z1 * lenZ, zz = z2 * lenZ;
-
-    const x0 = up[1] * zz - up[2] * zy, x1 = up[2] * zx - up[0] * zz, x2 = up[0] * zy - up[1] * zx;
-    const lenX = 1 / Math.hypot(x0, x1, x2);
-    const xx = x0 * lenX, xy = x1 * lenX, xz = x2 * lenX;
-
-    const yx = zy * xz - zz * xy, yy = zz * xx - zx * xz, yz = zx * xy - zy * xx;
-
-    return new Float32Array([
-      xx, yx, zx, 0,
-      xy, yy, zy, 0,
-      xz, yz, zz, 0,
-      -(xx * eye[0] + xy * eye[1] + xz * eye[2]),
-      -(yx * eye[0] + yy * eye[1] + yz * eye[2]),
-      -(zx * eye[0] + zy * eye[1] + zz * eye[2]),
-      1
-    ]);
-  }
-
-  createNormalMatrix(m) {
-    return new Float32Array([m[0], m[1], m[2], m[4], m[5], m[6], m[8], m[9], m[10]]);
-  }
-
-  translate(m, tx, ty, tz) {
-    m[12] += m[0] * tx + m[4] * ty + m[8] * tz;
-    m[13] += m[1] * tx + m[5] * ty + m[9] * tz;
-    m[14] += m[2] * tx + m[6] * ty + m[10] * tz;
-    m[15] += m[3] * tx + m[7] * ty + m[11] * tz;
-  }
-
-  rotateX(m, rad) {
-    const s = Math.sin(rad), c = Math.cos(rad);
-    const m1 = m[1], m5 = m[5], m9 = m[9], m13 = m[13];
-    const m2 = m[2], m6 = m[6], m10 = m[10], m14 = m[14];
-    m[1] = m1 * c + m2 * s;
-    m[5] = m5 * c + m6 * s;
-    m[9] = m9 * c + m10 * s;
-    m[13] = m13 * c + m14 * s;
-    m[2] = m2 * c - m1 * s;
-    m[6] = m6 * c - m5 * s;
-    m[10] = m10 * c - m9 * s;
-    m[14] = m14 * c - m13 * s;
-  }
-
-  rotateY(m, rad) {
-    const s = Math.sin(rad), c = Math.cos(rad);
-    const m0 = m[0], m4 = m[4], m8 = m[8], m12 = m[12];
-    const m2 = m[2], m6 = m[6], m10 = m[10], m14 = m[14];
-    m[0] = m0 * c - m2 * s;
-    m[4] = m4 * c - m6 * s;
-    m[8] = m8 * c - m10 * s;
-    m[12] = m12 * c - m14 * s;
-    m[2] = m0 * s + m2 * c;
-    m[6] = m4 * s + m6 * c;
-    m[10] = m8 * s + m10 * c;
-    m[14] = m12 * s + m14 * c;
-  }
-
-  rotateZ(m, rad) {
-    const s = Math.sin(rad), c = Math.cos(rad);
-    const m0 = m[0], m4 = m[4], m8 = m[8], m12 = m[12];
-    const m1 = m[1], m5 = m[5], m9 = m[9], m13 = m[13];
-    m[0] = m0 * c + m1 * s;
-    m[4] = m4 * c + m5 * s;
-    m[8] = m8 * c + m9 * s;
-    m[12] = m12 * c + m13 * s;
-    m[1] = m1 * c - m0 * s;
-    m[5] = m5 * c - m4 * s;
-    m[9] = m9 * c - m8 * s;
-    m[13] = m13 * c - m12 * s;
-  }
-}
-
-  // =========================================================================
-  // 5. Application Controller
+  // 4. Application Controller
   // =========================================================================
 /**
  * Antigravity "PHILL" World Time Application Controller
  * Orchestrates global search (countries, cities, towns),
- * 3D wristwatch spinning animation, horological hand transitions,
+ * high-speed horological hand spinning & mechanical deceleration,
  * and dynamic atmospheric background themes.
  */
-
 
 
 
@@ -2307,8 +1814,7 @@ class WatchWorldApp {
 
     this.heroStage = document.getElementById("hero-stage");
     this.watchWrapper = document.getElementById("watch-wrapper");
-    this.watch3DCanvas = document.getElementById("watch-3d-canvas");
-    this.watch2DCanvas = document.getElementById("watch-2d-canvas");
+    this.watchCanvas = document.getElementById("watch-canvas");
     this.watchTelemetryEl = document.getElementById("watch-telemetry");
 
     // Info Display Elements
@@ -2345,10 +1851,8 @@ class WatchWorldApp {
   }
 
   initEngines() {
-    // 2D engine renders the Swiss horological dial with active ticking hands
-    this.watch2D = new WatchEngine(this.watch2DCanvas, soundEngine, true);
-    // 3D engine renders the case, bezel, lugs, crown, straps, and maps 2D dial
-    this.watch3D = new Watch3DEngine(this.watch3DCanvas, this.watch2D, soundEngine);
+    // 2D Swiss luxury dress watch engine
+    this.watch = new WatchEngine(this.watchCanvas, soundEngine);
   }
 
   generateStarfield() {
@@ -2435,15 +1939,14 @@ class WatchWorldApp {
       }
     });
 
-    // Watch Finish Selection (Steel, Rose Gold, Obsidian, Bronze)
+    // Watch Finish Selection (Yellow Gold, Rose Gold, White Gold, Platinum)
     this.finishButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         soundEngine.init();
         this.finishButtons.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         const finish = btn.dataset.finish;
-        this.watch2D.setFinish(finish);
-        this.watch3D.setFinish(finish);
+        this.watch.setFinish(finish);
       });
     });
 
@@ -2520,11 +2023,10 @@ class WatchWorldApp {
 
   /**
    * The Central Climax Sequence:
-   * 1. Telemetry HUD activates with location coordinates.
-   * 2. 3D Wrist Watch performs cinematic tumble & spin animation with mechanical winding sound.
-   * 3. Settle on arrival with crystal chime.
-   * 4. Horological hands sweep rapidly forward to the destination time.
-   * 5. Background sky theme seamlessly morphs to reflect destination local time.
+   * 1. Telemetry HUD activates with destination name.
+   * 2. The watch hands spin rapidly forward with mechanical gear whirl.
+   * 3. Hands gradually decelerate and smoothly lock onto the destination time with crystal chime.
+   * 4. Background sky atmosphere seamlessly morphs to match the local solar time.
    */
   selectLocation(city, isUserTriggered = true) {
     this.selectedCity = city;
@@ -2536,29 +2038,25 @@ class WatchWorldApp {
     this.updateInfoCards(city, timeInfo);
 
     if (!isUserTriggered) {
-      // Direct set without spin
-      this.watch2D.setTime(timeInfo, false);
+      // Direct set without fast spin animation
+      this.watch.setTime(timeInfo, false);
       this.applyBackgroundTheme(timeInfo);
       this.setTelemetry(`✦ ${city.flag} ${city.name.toUpperCase()} • SYNCHRONIZED`, false);
       this.startLiveClock();
       return;
     }
 
-    if (this.isTransitioning) return;
     this.isTransitioning = true;
 
-    // --- 3D Wristwatch Spin Animation ---
-    this.setTelemetry(`✦ TARGETING ${city.flag} ${city.name.toUpperCase()} • SPINNING TIMEPIECE...`, true);
+    // --- Fast Hand Spin & Deceleration Animation ---
+    this.setTelemetry(`✦ TARGETING ${city.flag} ${city.name.toUpperCase()} • SPINNING HANDS...`, true);
 
-    this.watch3D.spinToLocation(timeInfo, () => {
-      // When spin completes: hands sweep rapidly to destination time
-      this.watch2D.setTime(timeInfo, true);
+    // Background theme starts morphing as the hands spin
+    this.applyBackgroundTheme(timeInfo);
 
-      // Background theme updates to reflect destination's time of day
-      this.applyBackgroundTheme(timeInfo);
-
+    this.watch.setTime(timeInfo, true, () => {
+      // When hands finish spinning and lock onto time
       this.setTelemetry(`✦ ${city.flag} ${city.name.toUpperCase()} • SYNCHRONIZED`, false);
-
       this.isTransitioning = false;
       this.startLiveClock();
     });
@@ -2666,7 +2164,7 @@ class WatchWorldApp {
       if (!this.selectedCity || this.isTransitioning) return;
       const updatedInfo = getTimeInfoForZone(this.selectedCity.tz);
       this.updateInfoCards(this.selectedCity, updatedInfo);
-      this.watch2D.currentTime = { ...updatedInfo };
+      this.watch.currentTime = { ...updatedInfo };
     }, 1000);
   }
 

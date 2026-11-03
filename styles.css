@@ -478,7 +478,7 @@ body.theme-sunset #stars-layer {
   perspective: 1400px;
 }
 
-/* 3D Watch Wrapper */
+/* 2D Watch Wrapper */
 .watch-wrapper {
   position: relative;
   width: 580px;
@@ -492,27 +492,11 @@ body.theme-sunset #stars-layer {
   transition: transform var(--transition-slow);
 }
 
-.watch-3d-canvas {
+.watch-canvas {
   width: 100%;
   height: 100%;
   display: block;
-  cursor: grab;
-  touch-action: none;
-  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.65));
-}
-.watch-3d-canvas:active {
-  cursor: grabbing;
-}
-
-/* Offscreen 2D watch engine feeding live WebGL textures */
-#watch-2d-canvas {
-  position: fixed;
-  left: -9999px;
-  top: -9999px;
-  width: 512px;
-  height: 512px;
-  pointer-events: none;
-  opacity: 0;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.65));
 }
 
 /* Watch Telemetry Status Pill */
@@ -719,10 +703,10 @@ body.theme-sunset #stars-layer {
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.4);
 }
-.swatch-steel { background: linear-gradient(135deg, #f0f3f6, #9aa0a6); }
-.swatch-rosegold { background: linear-gradient(135deg, #f5c49f, #b36e4b); }
-.swatch-obsidian { background: linear-gradient(135deg, #444b58, #16181f); }
-.swatch-bronze { background: linear-gradient(135deg, #e4b875, #7d592b); }
+.swatch-gold { background: linear-gradient(135deg, #fff0cb, #d4af37, #856218); }
+.swatch-rosegold { background: linear-gradient(135deg, #fae2d2, #d6936d, #854728); }
+.swatch-whitegold { background: linear-gradient(135deg, #ffffff, #c6d0dc, #788596); }
+.swatch-platinum { background: linear-gradient(135deg, #f4f8ff, #b2c4dc, #526c8a); }
 
 .finish-btn.active {
   border-color: var(--accent-gold);

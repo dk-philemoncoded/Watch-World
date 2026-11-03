@@ -80,16 +80,14 @@
       </div>
     </section>
 
-    <!-- Hero Stage: The 3D Mechanical Wrist Watch by PHILL -->
+    <!-- Hero Stage: The 2D Mechanical Wrist Watch by PHILL -->
     <main id="hero-stage" class="hero-stage">
       
-      <!-- 3D Wrist Watch Container -->
+      <!-- Wrist Watch Container -->
       <div id="watch-wrapper" class="watch-wrapper">
-        <canvas id="watch-3d-canvas" class="watch-3d-canvas" width="640" height="640"></canvas>
-        <!-- Offscreen 2D watch engine feeding live dial textures -->
-        <canvas id="watch-2d-canvas" width="512" height="512" style="display: none;"></canvas>
+        <canvas id="watch-canvas" class="watch-canvas" width="760" height="760"></canvas>
         <div id="watch-telemetry" class="watch-telemetry">✦ CALIBRATING TIMEZONE...</div>
-        <div class="watch-hint">✦ Drag to inspect in 3D • Search any country, city, or town to spin & sync time</div>
+        <div class="watch-hint">✦ Search any country, city, or town to see the hands spin & settle to local time</div>
       </div>
 
     </main>
@@ -125,21 +123,21 @@
       <div class="watch-customizer">
         <div class="customizer-title">Bezel & Case Finish</div>
         <div class="finish-options">
-          <button type="button" class="finish-btn active" data-finish="steel" title="Stainless Steel">
-            <span class="finish-swatch swatch-steel"></span>
-            <span>Steel</span>
+          <button type="button" class="finish-btn active" data-finish="gold" title="18ct Yellow Gold">
+            <span class="finish-swatch swatch-gold"></span>
+            <span>Yellow Gold</span>
           </button>
-          <button type="button" class="finish-btn" data-finish="rose-gold" title="Royal Rose Gold">
+          <button type="button" class="finish-btn" data-finish="rose-gold" title="18ct Everose Gold">
             <span class="finish-swatch swatch-rosegold"></span>
             <span>Rose Gold</span>
           </button>
-          <button type="button" class="finish-btn" data-finish="obsidian" title="Obsidian DLC">
-            <span class="finish-swatch swatch-obsidian"></span>
-            <span>Obsidian</span>
+          <button type="button" class="finish-btn" data-finish="white-gold" title="18ct White Gold">
+            <span class="finish-swatch swatch-whitegold"></span>
+            <span>White Gold</span>
           </button>
-          <button type="button" class="finish-btn" data-finish="bronze" title="Vintage Bronze">
-            <span class="finish-swatch swatch-bronze"></span>
-            <span>Bronze</span>
+          <button type="button" class="finish-btn" data-finish="platinum" title="950 Platinum">
+            <span class="finish-swatch swatch-platinum"></span>
+            <span>Platinum</span>
           </button>
         </div>
       </div>

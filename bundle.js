@@ -3320,7 +3320,14 @@ class HorizonScenery {
     // Characters movement & boundary wrap
     this.characters.forEach(char => {
       if (char.vx) {
-        char.x += char.vx * dt;
+        let isPaused = false;
+        if (char.type === "photographer") {
+          const cycle = (timeSec * 0.25) % 1.0;
+          if (cycle > 0.55 && cycle < 0.85) isPaused = true;
+        }
+        if (!isPaused) {
+          char.x += char.vx * dt;
+        }
         // Direction must always match vx sign so character faces where they walk!
         char.facing = char.vx >= 0 ? 1 : -1;
 
@@ -3841,11 +3848,40 @@ class HorizonScenery {
 
       // Foliage
       ctx.fillStyle = colors.tree;
-      ctx.beginPath();
-      ctx.arc(sway, -t.trunkH - t.radius * 0.7, t.radius, 0, Math.PI * 2);
-      ctx.arc(sway - t.radius * 0.4, -t.trunkH - t.radius * 0.4, t.radius * 0.7, 0, Math.PI * 2);
-      ctx.arc(sway + t.radius * 0.4, -t.trunkH - t.radius * 0.4, t.radius * 0.7, 0, Math.PI * 2);
-      ctx.fill();
+      if (t.type === "pine") {
+        // Conical Evergreen Pine
+        const topY = -t.trunkH - t.radius * 1.35;
+        // Tier 1 (top)
+        ctx.beginPath();
+        ctx.moveTo(sway * 0.7, topY);
+        ctx.lineTo(-t.radius * 0.45, topY + t.radius * 0.55);
+        ctx.lineTo(t.radius * 0.45, topY + t.radius * 0.55);
+        ctx.closePath();
+        ctx.fill();
+
+        // Tier 2 (mid)
+        ctx.beginPath();
+        ctx.moveTo(sway * 0.5, topY + t.radius * 0.35);
+        ctx.lineTo(-t.radius * 0.7, topY + t.radius * 0.95);
+        ctx.lineTo(t.radius * 0.7, topY + t.radius * 0.95);
+        ctx.closePath();
+        ctx.fill();
+
+        // Tier 3 (base)
+        ctx.beginPath();
+        ctx.moveTo(sway * 0.3, topY + t.radius * 0.75);
+        ctx.lineTo(-t.radius * 0.95, -t.trunkH);
+        ctx.lineTo(t.radius * 0.95, -t.trunkH);
+        ctx.closePath();
+        ctx.fill();
+      } else {
+        // Deciduous / Elm rounded canopy
+        ctx.beginPath();
+        ctx.arc(sway, -t.trunkH - t.radius * 0.7, t.radius, 0, Math.PI * 2);
+        ctx.arc(sway - t.radius * 0.4, -t.trunkH - t.radius * 0.4, t.radius * 0.7, 0, Math.PI * 2);
+        ctx.arc(sway + t.radius * 0.4, -t.trunkH - t.radius * 0.4, t.radius * 0.7, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
       ctx.restore();
     });
@@ -3969,11 +4005,36 @@ class HorizonScenery {
       // Translate to character ground position
       ctx.translate(char.x, char.y);
 
-      // Soft drop shadow under feet
+      // Soft contact drop shadows scaled to entity geometry
       ctx.save();
       ctx.fillStyle = colors.shadowColor;
       ctx.beginPath();
-      ctx.ellipse(0, 0, 12 * char.scale, 3.5 * char.scale, 0, 0, Math.PI * 2);
+      if (char.type === "cyclist") {
+        const f = char.facing || 1;
+        ctx.ellipse(-26 * f * char.scale, 0, 8 * char.scale, 2.5 * char.scale, 0, 0, Math.PI * 2);
+        ctx.ellipse(26 * f * char.scale, 0, 8 * char.scale, 2.5 * char.scale, 0, 0, Math.PI * 2);
+      } else if (char.type === "dog_walker") {
+        const f = char.facing || 1;
+        ctx.ellipse(0, 0, 11 * char.scale, 3.2 * char.scale, 0, 0, Math.PI * 2);
+        ctx.ellipse(36 * f * char.scale, 0, 8 * char.scale, 2.4 * char.scale, 0, 0, Math.PI * 2);
+      } else if (char.type === "couple") {
+        const f = char.facing || 1;
+        ctx.ellipse(-8 * f * char.scale, 0, 9 * char.scale, 3.0 * char.scale, 0, 0, Math.PI * 2);
+        ctx.ellipse(8 * f * char.scale, 0, 9 * char.scale, 3.0 * char.scale, 0, 0, Math.PI * 2);
+      } else if (char.type === "stroller_parent") {
+        const f = char.facing || 1;
+        ctx.ellipse(0, 0, 11 * char.scale, 3.2 * char.scale, 0, 0, Math.PI * 2);
+        ctx.ellipse(32 * f * char.scale, 0, 14 * char.scale, 2.8 * char.scale, 0, 0, Math.PI * 2);
+      } else if (char.type.startsWith("bench_")) {
+        const f = char.facing || 1;
+        ctx.ellipse(10 * f * char.scale, 0, 8 * char.scale, 2.8 * char.scale, 0, 0, Math.PI * 2);
+      } else if (char.type === "stargazer") {
+        const f = char.facing || 1;
+        ctx.ellipse(0, 0, 9 * char.scale, 3.0 * char.scale, 0, 0, Math.PI * 2);
+        ctx.ellipse(14 * f * char.scale, 0, 12 * char.scale, 2.6 * char.scale, 0, 0, Math.PI * 2);
+      } else {
+        ctx.ellipse(0, 0, 12 * char.scale, 3.5 * char.scale, 0, 0, Math.PI * 2);
+      }
       ctx.fill();
       ctx.restore();
 
@@ -4049,19 +4110,21 @@ class HorizonScenery {
 
   /**
    * Calculates human walking leg angles where knees strictly bend backward.
+   * Swing phase (cos > 0) lifts the foot by flexing the knee backward.
+   * Stance phase (cos <= 0) keeps the leg solid and straight on the pavement.
    * phase: 0..2PI
    */
   calcWalkLeg(phase) {
-    const swing = Math.sin(phase) * 0.48; // Thigh swing (-back, +front)
-    // Knee flexes backward ONLY during forward swing recovery
-    const kneeFlex = Math.max(0, -Math.cos(phase)) * 0.75;
+    const swing = Math.sin(phase) * 0.42; // Thigh swing (-back, +front)
+    // Knee flexes backward ONLY during forward swing recovery (when cos > 0)
+    const kneeFlex = Math.max(0, Math.cos(phase)) * 0.72;
     return {
       thighAngle: swing,
       calfAngle: swing - kneeFlex // Minus sign guarantees backward bend!
     };
   }
 
-  drawArticulatedLeg(ctx, hipX, hipY, thighAngle, calfAngle, thighLen = 14, calfLen = 14) {
+  drawArticulatedLeg(ctx, hipX, hipY, thighAngle, calfAngle, thighLen = 13, calfLen = 13) {
     const kX = hipX + Math.sin(thighAngle) * thighLen;
     const kY = hipY + Math.cos(thighAngle) * thighLen;
     const aX = kX + Math.sin(calfAngle) * calfLen;
@@ -4099,7 +4162,7 @@ class HorizonScenery {
   // A. Jogger (Athletic forward lean, high knees, rhythmic arms)
   renderJogger(ctx, colors, timeSec, char) {
     const pace = timeSec * 11;
-    const bounce = Math.abs(Math.sin(pace)) * 4;
+    const bounce = Math.abs(Math.sin(pace)) * 3.5;
     const baseY = -bounce;
 
     ctx.fillStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
@@ -4109,24 +4172,24 @@ class HorizonScenery {
 
     // Head
     ctx.beginPath();
-    ctx.arc(6, baseY - 58, 6.5, 0, Math.PI * 2);
+    ctx.arc(6, baseY - 56, 6.5, 0, Math.PI * 2);
     ctx.fill();
 
     // Torso (leaning forward 14 degrees)
     ctx.save();
     ctx.translate(0, baseY);
     ctx.rotate(14 * Math.PI / 180);
-    ctx.fillRect(-4, -52, 9, 24);
+    ctx.fillRect(-4, -50, 9, 24);
     ctx.restore();
 
-    // Legs (Running gait)
+    // Legs (Running gait: high knee lift on forward swing, straight push on stance)
     const leg1 = Math.sin(pace) * 0.85;
     const leg2 = Math.sin(pace + Math.PI) * 0.85;
-    const kneeFlex1 = Math.max(0, -Math.cos(pace)) * 1.2;
-    const kneeFlex2 = Math.max(0, -Math.cos(pace + Math.PI)) * 1.2;
+    const kneeFlex1 = Math.max(0, Math.cos(pace)) * 1.30;
+    const kneeFlex2 = Math.max(0, Math.cos(pace + Math.PI)) * 1.30;
 
-    this.drawArticulatedLeg(ctx, -2, baseY - 28, leg1, leg1 - kneeFlex1, 15, 14);
-    this.drawArticulatedLeg(ctx, 3, baseY - 28, leg2, leg2 - kneeFlex2, 15, 14);
+    this.drawArticulatedLeg(ctx, -2, baseY - 26, leg1, leg1 - kneeFlex1, 14, 13);
+    this.drawArticulatedLeg(ctx, 3, baseY - 26, leg2, leg2 - kneeFlex2, 14, 13);
 
     // Pumping Arms
     const arm1 = -Math.sin(pace) * 0.85;
@@ -4159,7 +4222,7 @@ class HorizonScenery {
   renderDogWalker(ctx, colors, timeSec, char) {
     const pace = timeSec * 4.8;
     const bounce = Math.abs(Math.sin(pace)) * 1.8;
-    const baseY = -bounce;
+    const baseY = bounce;
 
     ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
     ctx.strokeStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
@@ -4240,37 +4303,37 @@ class HorizonScenery {
     const d2 = Math.sin(dogPace + Math.PI) * 0.55;
 
     // Forelegs
-    const fKnee1 = Math.sin(d1) * 4;
-    const fPaw1 = Math.sin(d1) * 7;
+    const fKnee1 = Math.sin(d1) * 3;
+    const fPaw1 = Math.sin(d1) * 6;
     ctx.beginPath();
     ctx.moveTo(7, -8);
     ctx.lineTo(7 + fKnee1, -4);
-    ctx.lineTo(7 + fPaw1, 0);
+    ctx.lineTo(7 + fPaw1, dogBounce);
     ctx.stroke();
 
-    const fKnee2 = Math.sin(d2) * 4;
-    const fPaw2 = Math.sin(d2) * 7;
+    const fKnee2 = Math.sin(d2) * 3;
+    const fPaw2 = Math.sin(d2) * 6;
     ctx.beginPath();
     ctx.moveTo(9, -8);
     ctx.lineTo(9 + fKnee2, -4);
-    ctx.lineTo(9 + fPaw2, 0);
+    ctx.lineTo(9 + fPaw2, dogBounce);
     ctx.stroke();
 
     // Hindlegs with natural hock flexion
-    const hHock1 = -Math.sin(d2) * 4;
-    const hPaw1 = Math.sin(d2) * 7;
+    const hHock1 = -Math.sin(d2) * 3;
+    const hPaw1 = Math.sin(d2) * 6;
     ctx.beginPath();
     ctx.moveTo(-7, -8);
     ctx.lineTo(-9 + hHock1, -4);
-    ctx.lineTo(-7 + hPaw1, 0);
+    ctx.lineTo(-7 + hPaw1, dogBounce);
     ctx.stroke();
 
-    const hHock2 = -Math.sin(d1) * 4;
-    const hPaw2 = Math.sin(d1) * 7;
+    const hHock2 = -Math.sin(d1) * 3;
+    const hPaw2 = Math.sin(d1) * 6;
     ctx.beginPath();
     ctx.moveTo(-5, -8);
     ctx.lineTo(-7 + hHock2, -4);
-    ctx.lineTo(-5 + hPaw2, 0);
+    ctx.lineTo(-5 + hPaw2, dogBounce);
     ctx.stroke();
 
     // Wagging tail
@@ -4304,7 +4367,7 @@ class HorizonScenery {
     ctx.arc(frontX, axleY, wheelR, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Rotating Spokes
+    // Rotating Spokes (8 radial wire spokes per wheel)
     [rearX, frontX].forEach(wx => {
       ctx.save();
       ctx.translate(wx, axleY);
@@ -4313,6 +4376,9 @@ class HorizonScenery {
       ctx.beginPath();
       ctx.moveTo(-wheelR, 0); ctx.lineTo(wheelR, 0);
       ctx.moveTo(0, -wheelR); ctx.lineTo(0, wheelR);
+      const diag = wheelR * 0.707;
+      ctx.moveTo(-diag, -diag); ctx.lineTo(diag, diag);
+      ctx.moveTo(-diag, diag); ctx.lineTo(diag, -diag);
       ctx.stroke();
       ctx.restore();
     });
@@ -4465,7 +4531,7 @@ class HorizonScenery {
   renderStrollerParent(ctx, colors, timeSec, char) {
     const pace = timeSec * 4.6;
     const bounce = Math.abs(Math.sin(pace)) * 1.8;
-    const baseY = -bounce;
+    const baseY = bounce;
 
     ctx.save();
     ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
@@ -4500,12 +4566,6 @@ class HorizonScenery {
     const sX = 32;
     ctx.lineWidth = 2.0;
 
-    // Wheels
-    ctx.beginPath();
-    ctx.arc(sX - 10, -5, 5, 0, Math.PI * 2);
-    ctx.arc(sX + 12, -5, 5, 0, Math.PI * 2);
-    ctx.stroke();
-
     // Chassis & Bassinet
     ctx.beginPath();
     ctx.moveTo(handleX, handleY);
@@ -4514,7 +4574,7 @@ class HorizonScenery {
     ctx.lineTo(sX + 12, -5);
     ctx.stroke();
 
-    // Bassinet with canopy
+    // Bassinet body
     ctx.beginPath();
     ctx.moveTo(sX - 12, -18);
     ctx.lineTo(sX + 16, -18);
@@ -4523,10 +4583,33 @@ class HorizonScenery {
     ctx.closePath();
     ctx.fill();
 
+    // Baby bonnet peeking out
+    ctx.beginPath();
+    ctx.arc(sX - 2, -21, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+
     // Canopy
     ctx.beginPath();
     ctx.arc(sX - 2, -18, 10, Math.PI, Math.PI * 1.7, false);
     ctx.stroke();
+
+    // Wheels with rotating spokes
+    const pramWheelAngle = timeSec * 12;
+    [sX - 10, sX + 12].forEach(wx => {
+      ctx.beginPath();
+      ctx.arc(wx, -5, 5, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.save();
+      ctx.translate(wx, -5);
+      ctx.rotate(pramWheelAngle);
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(-5, 0); ctx.lineTo(5, 0);
+      ctx.moveTo(0, -5); ctx.lineTo(0, 5);
+      ctx.stroke();
+      ctx.restore();
+    });
 
     ctx.restore();
   }
@@ -4535,7 +4618,7 @@ class HorizonScenery {
   renderWalker(ctx, colors, timeSec, char, opts) {
     const pace = timeSec * 4.6;
     const bounce = Math.abs(Math.sin(pace)) * 1.8;
-    const baseY = -bounce;
+    const baseY = bounce;
 
     ctx.save();
     ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
@@ -4554,12 +4637,13 @@ class HorizonScenery {
 
     // Torso / Overcoat
     if (opts.hasCoat) {
-      // Warm knee-length winter/evening coat
+      // Warm knee-length winter/evening coat with subtle hem flare
+      const flare = Math.sin(pace) * 2;
       ctx.beginPath();
       ctx.moveTo(-5, baseY - 50);
       ctx.lineTo(5, baseY - 50);
-      ctx.lineTo(7, baseY - 22);
-      ctx.lineTo(-7, baseY - 22);
+      ctx.lineTo(7 + flare, baseY - 22);
+      ctx.lineTo(-7 + flare, baseY - 22);
       ctx.closePath();
       ctx.fill();
     } else {
@@ -4569,8 +4653,8 @@ class HorizonScenery {
     // Anatomical Walking Legs
     const l1 = this.calcWalkLeg(pace);
     const l2 = this.calcWalkLeg(pace + Math.PI);
-    this.drawArticulatedLeg(ctx, -3, baseY - 24, l1.thighAngle, l1.calfAngle);
-    this.drawArticulatedLeg(ctx, 3, baseY - 24, l2.thighAngle, l2.calfAngle);
+    this.drawArticulatedLeg(ctx, -3, baseY - 26, l1.thighAngle, l1.calfAngle, 13, 13);
+    this.drawArticulatedLeg(ctx, 3, baseY - 26, l2.thighAngle, l2.calfAngle, 13, 13);
 
     if (opts.hasCoat) {
       // Hands tucked in coat pockets
@@ -4642,7 +4726,10 @@ class HorizonScenery {
 
   // G. Photographer / Tourist
   renderPhotographer(ctx, colors, timeSec, char) {
-    const isMoving = char.vx && Math.abs(char.vx) > 0.1;
+    const hasVx = char.vx && Math.abs(char.vx) > 0.1;
+    const walkPauseCycle = (timeSec * 0.25) % 1.0;
+    const isWalkPaused = hasVx && (walkPauseCycle > 0.55 && walkPauseCycle < 0.85);
+    const isStationary = !hasVx || isWalkPaused;
 
     ctx.save();
     ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
@@ -4650,11 +4737,11 @@ class HorizonScenery {
     ctx.lineWidth = 3.0;
     ctx.lineCap = "round";
 
-    if (!isMoving) {
-      // Standing stationary at promenade railing taking pictures of the sunset/scenery
-      const cycle = (timeSec * 0.35) % 1.0;
-      const isShooting = cycle > 0.35 && cycle < 0.80;
-      const isFlashing = cycle > 0.60 && cycle < 0.65;
+    if (isStationary) {
+      // Standing stationary taking pictures of scenery
+      const cycle = hasVx ? ((walkPauseCycle - 0.55) / 0.30) : ((timeSec * 0.35) % 1.0);
+      const isShooting = hasVx ? (cycle > 0.15 && cycle < 0.85) : (cycle > 0.35 && cycle < 0.80);
+      const isFlashing = hasVx ? (cycle > 0.50 && cycle < 0.60) : (cycle > 0.60 && cycle < 0.65);
 
       // Head
       ctx.beginPath();
@@ -4714,30 +4801,32 @@ class HorizonScenery {
       }
     } else {
       // Walking with camera hanging on chest
-      const pace = timeSec * 4;
+      const pace = timeSec * 4.2;
+      const bounce = Math.abs(Math.sin(pace)) * 1.8;
+      const baseY = bounce;
       const l1 = this.calcWalkLeg(pace);
       const l2 = this.calcWalkLeg(pace + Math.PI);
 
       // Head
       ctx.beginPath();
-      ctx.arc(0, -56, 6.5, 0, Math.PI * 2);
+      ctx.arc(0, baseY - 56, 6.5, 0, Math.PI * 2);
       ctx.fill();
 
       // Torso
-      ctx.fillRect(-5, -50, 10, 24);
+      ctx.fillRect(-5, baseY - 50, 10, 24);
 
       // Walking Legs
-      this.drawArticulatedLeg(ctx, -3, -26, l1.thighAngle, l1.calfAngle);
-      this.drawArticulatedLeg(ctx, 3, -26, l2.thighAngle, l2.calfAngle);
+      this.drawArticulatedLeg(ctx, -3, baseY - 26, l1.thighAngle, l1.calfAngle, 13, 13);
+      this.drawArticulatedLeg(ctx, 3, baseY - 26, l2.thighAngle, l2.calfAngle, 13, 13);
 
       // Arms swinging
       ctx.beginPath();
-      ctx.moveTo(-4, -46); ctx.lineTo(-4 - Math.sin(pace) * 8, -28);
-      ctx.moveTo(4, -46); ctx.lineTo(4 + Math.sin(pace) * 8, -28);
+      ctx.moveTo(-4, baseY - 46); ctx.lineTo(-4 - Math.sin(pace) * 8, baseY - 28);
+      ctx.moveTo(4, baseY - 46); ctx.lineTo(4 + Math.sin(pace) * 8, baseY - 28);
       ctx.stroke();
 
       // Camera on chest
-      ctx.fillRect(1, -42, 6, 5);
+      ctx.fillRect(1, baseY - 42, 6, 5);
     }
 
     ctx.restore();
@@ -4747,7 +4836,7 @@ class HorizonScenery {
   renderCouple(ctx, colors, timeSec, char) {
     const pace = timeSec * 4.2;
     const bounce = Math.abs(Math.sin(pace)) * 1.8;
-    const baseY = -bounce;
+    const baseY = bounce;
 
     ctx.save();
     ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
@@ -4764,8 +4853,8 @@ class HorizonScenery {
     // Person 1 Two Walking Legs
     const p1L1 = this.calcWalkLeg(pace);
     const p1L2 = this.calcWalkLeg(pace + Math.PI);
-    this.drawArticulatedLeg(ctx, -12, baseY - 26, p1L1.thighAngle, p1L1.calfAngle);
-    this.drawArticulatedLeg(ctx, -5, baseY - 26, p1L2.thighAngle, p1L2.calfAngle);
+    this.drawArticulatedLeg(ctx, -12, baseY - 26, p1L1.thighAngle, p1L1.calfAngle, 13, 13);
+    this.drawArticulatedLeg(ctx, -5, baseY - 26, p1L2.thighAngle, p1L2.calfAngle, 13, 13);
 
     // Person 1 outer swinging arm
     ctx.beginPath();
@@ -4782,8 +4871,8 @@ class HorizonScenery {
     // Person 2 Two Walking Legs
     const p2L1 = this.calcWalkLeg(pace + 0.35);
     const p2L2 = this.calcWalkLeg(pace + 0.35 + Math.PI);
-    this.drawArticulatedLeg(ctx, 4, baseY - 24, p2L1.thighAngle, p2L1.calfAngle);
-    this.drawArticulatedLeg(ctx, 11, baseY - 24, p2L2.thighAngle, p2L2.calfAngle);
+    this.drawArticulatedLeg(ctx, 4, baseY - 24, p2L1.thighAngle, p2L1.calfAngle, 12, 12);
+    this.drawArticulatedLeg(ctx, 11, baseY - 24, p2L2.thighAngle, p2L2.calfAngle, 12, 12);
 
     // Person 2 outer swinging arm
     ctx.beginPath();
@@ -4913,7 +5002,7 @@ class HorizonScenery {
     ctx.restore();
   }
 
-  // L. Bench Guitarist (Dusk)
+  // L. Bench Guitarist (Sunset & Dusk)
   renderBenchGuitarist(ctx, colors, timeSec, char) {
     ctx.save();
     ctx.fillStyle = colors.silhouette;
@@ -4921,9 +5010,9 @@ class HorizonScenery {
     ctx.lineWidth = 2.8;
     ctx.lineCap = "round";
 
-    // Head tilted slightly towards guitar fretboard
+    // Head tilted forward towards the fretboard
     ctx.beginPath();
-    ctx.arc(-2, -49, 6.2, 0, Math.PI * 2);
+    ctx.arc(0, -49, 6.2, 0, Math.PI * 2);
     ctx.fill();
 
     // Torso sitting on bench seat (-22)
@@ -4932,28 +5021,38 @@ class HorizonScenery {
     // Anatomical Seated Legs resting on bench (-22) and reaching ground (0)
     this.drawSeatedLegs(ctx, -1, -22);
 
-    // Acoustic Guitar resting on player's lap at y = -22
+    // Acoustic Guitar body resting on lap facing right (+X)
     ctx.fillStyle = "#d97706";
     ctx.beginPath();
-    ctx.ellipse(5, -27, 9, 6, 25 * Math.PI / 180, 0, Math.PI * 2);
+    ctx.ellipse(1, -26, 9, 6, -18 * Math.PI / 180, 0, Math.PI * 2);
     ctx.fill();
 
-    // Guitar neck & headstock angled up
-    ctx.strokeStyle = colors.silhouette;
-    ctx.lineWidth = 2.0;
+    // Soundhole
+    ctx.fillStyle = colors.silhouette;
     ctx.beginPath();
-    ctx.moveTo(5, -27); ctx.lineTo(-10, -38);
+    ctx.arc(1, -26, 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Guitar neck & headstock pointing FORWARD and UP (+X, +Y upward)
+    ctx.strokeStyle = colors.silhouette;
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.moveTo(4, -28); ctx.lineTo(16, -38);
     ctx.stroke();
 
-    // Strumming right hand
+    // Headstock
+    ctx.fillRect(15, -41, 4, 3);
+
+    // Fretting left arm/hand reaching forward along neck
+    ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    ctx.moveTo(1, -38); ctx.lineTo(9, -36); ctx.lineTo(13, -37);
+    ctx.stroke();
+
+    // Strumming right hand over guitar strings
     const strum = Math.sin(timeSec * 7) * 2;
     ctx.beginPath();
-    ctx.moveTo(1, -38); ctx.lineTo(6, -26 + strum);
-    ctx.stroke();
-
-    // Fretting left arm/hand
-    ctx.beginPath();
-    ctx.moveTo(-4, -38); ctx.lineTo(-8, -36);
+    ctx.moveTo(-3, -38); ctx.lineTo(-1, -31); ctx.lineTo(2, -26 + strum);
     ctx.stroke();
 
     ctx.restore();
@@ -5051,24 +5150,25 @@ class HorizonScenery {
     ctx.lineWidth = 2.8;
     ctx.lineCap = "round";
 
-    // Head
+    // Head tilting up towards morning sky
     ctx.beginPath();
-    ctx.arc(0, -52 - yogaCycle * 3, 6.0, 0, Math.PI * 2);
+    ctx.arc(0, -52 - yogaCycle * 2.5, 6.0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Torso stretching up
-    ctx.fillRect(-4, -46 - yogaCycle * 2, 8, 22);
+    // Torso stretching upward from anchored hips (-22)
+    const torsoTop = -46 - yogaCycle * 2;
+    ctx.fillRect(-4, torsoTop, 8, -22 - torsoTop);
 
-    // Legs in warrior/stretch stance
+    // Legs in wide warrior/triangle stretch stance with feet planted
     ctx.beginPath();
-    ctx.moveTo(-2, -24); ctx.lineTo(-10, 0);
-    ctx.moveTo(2, -24); ctx.lineTo(10, 0);
+    ctx.moveTo(-3, -22); ctx.lineTo(-8, -11); ctx.lineTo(-13, 0); ctx.lineTo(-18, 0);
+    ctx.moveTo(3, -22); ctx.lineTo(8, -11); ctx.lineTo(13, 0); ctx.lineTo(18, 0);
     ctx.stroke();
 
-    // Arms reaching up to greet morning sun
+    // Arms reaching gracefully up to greet the morning sun
     ctx.beginPath();
-    ctx.moveTo(-3, -44); ctx.lineTo(-10, -58 - yogaCycle * 4);
-    ctx.moveTo(3, -44); ctx.lineTo(10, -58 - yogaCycle * 4);
+    ctx.moveTo(-3, torsoTop + 2); ctx.lineTo(-11, -58 - yogaCycle * 3.5);
+    ctx.moveTo(3, torsoTop + 2); ctx.lineTo(11, -58 - yogaCycle * 3.5);
     ctx.stroke();
 
     ctx.restore();

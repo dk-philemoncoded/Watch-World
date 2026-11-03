@@ -1,13 +1,14 @@
 /**
- * Antigravity "Watch World" Application Controller
- * Orchestrates the search, cinematic watch zoom, 3D globe flight,
- * watch transition, and dynamic background time theme.
+ * Antigravity "PHILL" World Time Application Controller
+ * Orchestrates global search (countries, cities, towns),
+ * 3D wristwatch spinning animation, horological hand transitions,
+ * and dynamic atmospheric background themes.
  */
 
-import { WORLD_CITIES, WORLD_COUNTRIES, searchCities, resolveAnyLocation, findNearestCity, getTimeInfoForZone } from "./world-cities.js";
+import { WORLD_CITIES, WORLD_COUNTRIES, searchCities, resolveAnyLocation, getTimeInfoForZone } from "./world-cities.js";
 import { soundEngine } from "./sound.js";
-import { GlobeEngine } from "./globe.js";
 import { WatchEngine } from "./watch.js";
+import { Watch3DEngine } from "./watch3d.js";
 
 class WatchWorldApp {
   constructor() {
@@ -16,16 +17,14 @@ class WatchWorldApp {
     this.searchInput = document.getElementById("search-input");
     this.suggestionsDropdown = document.getElementById("suggestions-dropdown");
     this.popularChips = document.querySelectorAll(".city-chip");
-    
+
     this.heroStage = document.getElementById("hero-stage");
     this.watchWrapper = document.getElementById("watch-wrapper");
-    this.globeWrapper = document.getElementById("globe-wrapper");
-    this.watchCanvas = document.getElementById("watch-canvas");
-    this.globeCanvas = document.getElementById("globe-canvas");
-    this.globeTelemetryEl = document.getElementById("globe-telemetry");
+    this.watch3DCanvas = document.getElementById("watch-3d-canvas");
+    this.watch2DCanvas = document.getElementById("watch-2d-canvas");
+    this.watchTelemetryEl = document.getElementById("watch-telemetry");
 
     // Info Display Elements
-    this.locationBadge = document.getElementById("location-badge");
     this.locationNameEl = document.getElementById("location-name");
     this.locationCountryEl = document.getElementById("location-country");
     this.digitalTimeEl = document.getElementById("digital-time");
@@ -38,7 +37,6 @@ class WatchWorldApp {
     // Controls
     this.soundToggleBtn = document.getElementById("sound-toggle-btn");
     this.finishButtons = document.querySelectorAll(".finish-btn");
-    this.viewModeButtons = document.querySelectorAll(".view-mode-btn");
 
     // Background Container
     this.body = document.body;
@@ -49,9 +47,9 @@ class WatchWorldApp {
     // State
     this.selectedCity = null;
     this.userHomeTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
-    this.currentViewMode = "cinema"; // 'cinema' | 'split'
     this.isTransitioning = false;
     this.liveClockTimer = null;
+    this.telemetryTimer = null;
 
     this.initEngines();
     this.generateStarfield();
@@ -60,17 +58,10 @@ class WatchWorldApp {
   }
 
   initEngines() {
-    this.watch = new WatchEngine(this.watchCanvas, soundEngine);
-    this.globe = new GlobeEngine(this.globeCanvas);
-
-    // When user clicks anywhere directly on the 3D globe:
-    this.globe.onLocationSelected = (lat, lng) => {
-      soundEngine.init();
-      const { city } = findNearestCity(lat, lng);
-      if (city) {
-        this.selectLocation(city, true);
-      }
-    };
+    // 2D engine renders the Swiss horological dial with active ticking hands
+    this.watch2D = new WatchEngine(this.watch2DCanvas, soundEngine, true);
+    // 3D engine renders the case, bezel, lugs, crown, straps, and maps 2D dial
+    this.watch3D = new Watch3DEngine(this.watch3DCanvas, this.watch2D, soundEngine);
   }
 
   generateStarfield() {
@@ -121,7 +112,7 @@ class WatchWorldApp {
       const query = this.searchInput.value.trim();
       if (!query) return;
 
-      this.showSearchFeedback(`Locating "${query}" on globe...`);
+      this.showSearchFeedback(`Locating "${query}"...`);
       const resolved = await resolveAnyLocation(query);
       if (resolved) {
         this.suggestionsDropdown.classList.add("hidden");
@@ -164,16 +155,8 @@ class WatchWorldApp {
         this.finishButtons.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         const finish = btn.dataset.finish;
-        this.watch.setFinish(finish);
-      });
-    });
-
-    // View Mode Toggle (Cinema vs Split View)
-    this.viewModeButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        this.viewModeButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        this.setViewMode(btn.dataset.mode);
+        this.watch2D.setFinish(finish);
+        this.watch3D.setFinish(finish);
       });
     });
 
@@ -235,32 +218,26 @@ class WatchWorldApp {
   initDefaultLocation() {
     // Find closest city to user's local timezone
     const matchedCity = WORLD_CITIES.find(c => c.tz === this.userHomeTimezone) ||
-                        WORLD_CITIES.find(c => c.name === "London");
+                        WORLD_CITIES.find(c => c.name === "London") ||
+                        WORLD_COUNTRIES.find(c => c.name === "United Kingdom");
 
-    this.selectLocation(matchedCity, false);
-  }
-
-  setViewMode(mode) {
-    this.currentViewMode = mode;
-    this.heroStage.classList.toggle("split-view", mode === "split");
-    this.heroStage.classList.toggle("cinema-view", mode === "cinema");
-
-    if (mode === "split") {
-      this.watchWrapper.style.transform = "";
-      this.watchWrapper.style.opacity = "1";
-      this.globeWrapper.style.transform = "";
-      this.globeWrapper.style.opacity = "1";
-    }
+    this.selectLocation(matchedCity || {
+      name: "London",
+      country: "United Kingdom",
+      flag: "🇬🇧",
+      lat: 51.5074,
+      lng: -0.1278,
+      tz: "Europe/London"
+    }, false);
   }
 
   /**
-   * The Climax Sequence:
-   * 1. Wrist watch zooms in dramatically
-   * 2. 3D Globe spins to destination coordinates with atmospheric flight
-   * 3. Globe zooms in deep onto the target location pin
-   * 4. Right at maximum zoom, watch face transitions back
-   * 5. Watch hands rapidly sweep to the local time
-   * 6. Background theme seamlessly morphs to reflect time of day
+   * The Central Climax Sequence:
+   * 1. Telemetry HUD activates with location coordinates.
+   * 2. 3D Wrist Watch performs cinematic tumble & spin animation with mechanical winding sound.
+   * 3. Settle on arrival with crystal chime.
+   * 4. Horological hands sweep rapidly forward to the destination time.
+   * 5. Background sky theme seamlessly morphs to reflect destination local time.
    */
   selectLocation(city, isUserTriggered = true) {
     this.selectedCity = city;
@@ -271,12 +248,11 @@ class WatchWorldApp {
     // Update digital readout and meta cards
     this.updateInfoCards(city, timeInfo);
 
-    if (!isUserTriggered || this.currentViewMode === "split") {
-      // Direct set without cinematic zoom
-      this.watch.setTime(timeInfo, true);
-      this.globe.setPin(city.lat, city.lng);
-      this.globe.flyTo(city.lat, city.lng, { duration: 1500, zoomIn: false });
+    if (!isUserTriggered) {
+      // Direct set without spin
+      this.watch2D.setTime(timeInfo, false);
       this.applyBackgroundTheme(timeInfo);
+      this.setTelemetry(`✦ ${city.flag} ${city.name.toUpperCase()} • SYNCHRONIZED`, false);
       this.startLiveClock();
       return;
     }
@@ -284,54 +260,37 @@ class WatchWorldApp {
     if (this.isTransitioning) return;
     this.isTransitioning = true;
 
-    // --- STEP 1: Wrist Watch Zooms In ---
-    this.heroStage.classList.add("state-watch-zooming");
-    soundEngine.playWindingEffect(1.6);
+    // --- 3D Wristwatch Spin Animation ---
+    this.setTelemetry(`✦ TARGETING ${city.flag} ${city.name.toUpperCase()} • SPINNING TIMEPIECE...`, true);
 
-    setTimeout(() => {
-      // --- STEP 2: Globe Emerges in FULL SCREEN & Spins to Destination ---
-      this.heroStage.classList.remove("state-watch-zooming");
-      this.heroStage.classList.add("state-globe-flying");
+    this.watch3D.spinToLocation(timeInfo, () => {
+      // When spin completes: hands sweep rapidly to destination time
+      this.watch2D.setTime(timeInfo, true);
 
-      // Update Telemetry HUD
-      if (this.globeTelemetryEl) {
-        const latStr = `${Math.abs(city.lat).toFixed(1)}°${city.lat >= 0 ? "N" : "S"}`;
-        const lngStr = `${Math.abs(city.lng).toFixed(1)}°${city.lng >= 0 ? "E" : "W"}`;
-        this.globeTelemetryEl.innerHTML = `✦ TARGETING <strong>${city.flag} ${city.name.toUpperCase()}</strong> (${latStr}, ${lngStr}) • ROTATING GLOBE...`;
-      }
+      // Background theme updates to reflect destination's time of day
+      this.applyBackgroundTheme(timeInfo);
 
-      // Resize globe canvas to fill the full viewport
-      this.globe.resize();
+      this.setTelemetry(`✦ ${city.flag} ${city.name.toUpperCase()} • SYNCHRONIZED`, false);
 
-      // Fly camera and spin globe to target coordinates
-      this.globe.flyTo(city.lat, city.lng, {
-        duration: 2600,
-        zoomIn: true,
-        onArrival: () => {
-          // --- STEP 3: Just when the place is fully zoomed in! ---
-          if (this.globeTelemetryEl) {
-            this.globeTelemetryEl.innerHTML = `✦ <strong>${city.flag} ${city.name.toUpperCase()}</strong> REACHED • TRANSITIONING TIME...`;
-          }
+      this.isTransitioning = false;
+      this.startLiveClock();
+    });
+  }
 
-          // Transition watch face back to tell the time of the place
-          this.heroStage.classList.remove("state-globe-flying");
-          this.heroStage.classList.add("state-watch-reveal");
+  setTelemetry(msg, isPulsing = false) {
+    if (!this.watchTelemetryEl) return;
+    this.watchTelemetryEl.innerHTML = msg;
+    this.watchTelemetryEl.classList.add("visible");
+    this.watchTelemetryEl.classList.toggle("pulse", isPulsing);
 
-          // Watch hands spin rapidly to the new time!
-          this.watch.setTime(timeInfo, true);
-
-          // Background theme updates to reflect the destination's time
-          this.applyBackgroundTheme(timeInfo);
-
-          setTimeout(() => {
-            this.heroStage.classList.remove("state-watch-reveal");
-            this.globe.resize();
-            this.isTransitioning = false;
-            this.startLiveClock();
-          }, 1400);
+    clearTimeout(this.telemetryTimer);
+    if (!isPulsing) {
+      this.telemetryTimer = setTimeout(() => {
+        if (this.watchTelemetryEl) {
+          this.watchTelemetryEl.classList.remove("visible", "pulse");
         }
-      });
-    }, 450);
+      }, 4000);
+    }
   }
 
   updateInfoCards(city, timeInfo) {
@@ -404,7 +363,6 @@ class WatchWorldApp {
 
     // Update Celestial Glow position & color in the sky
     if (this.sunMoonGlow) {
-      // Calculate celestial angle: Noon = 50% top, Midnight = below horizon
       const hour = timeInfo.decimalHour;
       let glowX = ((hour / 24) * 100);
       let glowY = 30 + Math.sin(((hour - 6) / 12) * Math.PI) * -20;
@@ -421,7 +379,7 @@ class WatchWorldApp {
       if (!this.selectedCity || this.isTransitioning) return;
       const updatedInfo = getTimeInfoForZone(this.selectedCity.tz);
       this.updateInfoCards(this.selectedCity, updatedInfo);
-      this.watch.currentTime = { ...updatedInfo };
+      this.watch2D.currentTime = { ...updatedInfo };
     }, 1000);
   }
 

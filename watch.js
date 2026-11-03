@@ -37,10 +37,11 @@ if (typeof CanvasRenderingContext2D !== "undefined" && !CanvasRenderingContext2D
 }
 
 export class WatchEngine {
-  constructor(canvas, soundEngine) {
+  constructor(canvas, soundEngine, isDialTexture = true) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.sound = soundEngine;
+    this.isDialTexture = isDialTexture;
 
     // Theme finish: 'steel' | 'rose-gold' | 'obsidian' | 'bronze'
     this.finish = "steel";
@@ -265,32 +266,26 @@ export class WatchEngine {
     ctx.save();
     ctx.translate(r, r);
 
-    // 1. Draw Straps framing the watch (top and bottom leather bands)
-    this.drawStraps(ctx, r);
-
-    // 2. Draw Steel Case & Lugs
-    this.drawCase(ctx, r);
-
-    // 3. Draw Bezel (Polished ring + Fluted markers)
-    this.drawBezel(ctx, r);
-
-    // 4. Draw Dial Face (Guilloché sunburst texture, chapter ring)
-    this.drawDial(ctx, r);
-
-    // 5. Draw 24-Hour Sun / Moon Complication (at 6 o'clock)
-    this.drawCelestialSubdial(ctx, r);
-
-    // 6. Draw Date Aperture (at 3 o'clock)
-    this.drawDateAperture(ctx, r);
-
-    // 7. Draw Applied Hour Markers (with Super-LumiNova)
-    this.drawIndices(ctx, r);
-
-    // 8. Draw Hands (Hour, Minute, Seconds)
-    this.drawHands(ctx, r);
-
-    // 9. Draw Sapphire Glass Convex Lens Sheen & Reflections
-    this.drawSapphireReflection(ctx, r);
+    if (this.isDialTexture) {
+      // Scale dial so it covers the circular face for 3D model mapping
+      const dialScale = 1.34;
+      ctx.scale(dialScale, dialScale);
+      this.drawDial(ctx, r);
+      this.drawCelestialSubdial(ctx, r);
+      this.drawDateAperture(ctx, r);
+      this.drawIndices(ctx, r);
+      this.drawHands(ctx, r);
+    } else {
+      this.drawStraps(ctx, r);
+      this.drawCase(ctx, r);
+      this.drawBezel(ctx, r);
+      this.drawDial(ctx, r);
+      this.drawCelestialSubdial(ctx, r);
+      this.drawDateAperture(ctx, r);
+      this.drawIndices(ctx, r);
+      this.drawHands(ctx, r);
+      this.drawSapphireReflection(ctx, r);
+    }
 
     ctx.restore();
   }

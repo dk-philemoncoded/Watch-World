@@ -34,12 +34,6 @@
       </div>
 
       <div class="header-actions">
-        <!-- View Mode Switcher -->
-        <div class="view-modes">
-          <button class="view-mode-btn active" data-mode="cinema" title="Cinematic Zoom Sequence">Cinematic</button>
-          <button class="view-mode-btn" data-mode="split" title="Side-by-Side Dual View">Split View</button>
-        </div>
-
         <!-- Sound Toggle -->
         <button id="sound-toggle-btn" class="icon-btn" aria-label="Toggle mechanical watch sound" title="Toggle Mechanical Audio">
           <span class="sound-icon">🔊</span>
@@ -86,19 +80,16 @@
       </div>
     </section>
 
-    <!-- Hero Stage: The Analog Wrist Watch & 3D Globe Cinematic Experience -->
-    <main id="hero-stage" class="hero-stage cinema-view">
+    <!-- Hero Stage: The 3D Mechanical Wrist Watch by PHILL -->
+    <main id="hero-stage" class="hero-stage">
       
-      <!-- Analog Wrist Watch Canvas Container (Hero Section) -->
+      <!-- 3D Wrist Watch Container -->
       <div id="watch-wrapper" class="watch-wrapper">
-        <canvas id="watch-canvas" width="500" height="500"></canvas>
-      </div>
-
-      <!-- 3D Interactive WebGL Globe Canvas Container -->
-      <div id="globe-wrapper" class="globe-wrapper">
-        <div id="globe-telemetry" class="globe-telemetry">✦ EXPLORING PLANET EARTH</div>
-        <canvas id="globe-canvas" width="520" height="520"></canvas>
-        <div class="globe-hud">✦ Drag to rotate • Click anywhere on Earth to inspect</div>
+        <canvas id="watch-3d-canvas" class="watch-3d-canvas" width="640" height="640"></canvas>
+        <!-- Offscreen 2D watch engine feeding live dial textures -->
+        <canvas id="watch-2d-canvas" width="512" height="512" style="display: none;"></canvas>
+        <div id="watch-telemetry" class="watch-telemetry">✦ CALIBRATING TIMEZONE...</div>
+        <div class="watch-hint">✦ Drag to inspect in 3D • Search any country, city, or town to spin & sync time</div>
       </div>
 
     </main>

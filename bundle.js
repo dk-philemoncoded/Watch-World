@@ -1784,7 +1784,7 @@ class WatchEngine {
 }
 
   // =========================================================================
-  // 4. Horizon & Vector Character Scenery Engine
+  // 4. 3D Buckled Wristwatch WebGL Engine (PHILL)
   // =========================================================================
 /**
  * 3D Wristwatch WebGL Engine - PHILL
@@ -2734,7 +2734,7 @@ class Watch3DEngine {
     };
 
     this.startDist = this.cameraDistance;
-    this.endDist = 3.8; // Punch in slightly at destination
+    this.endDist = this.cameraDistance; // Equal size throughout spinning and at completion
 
     if (this.sound) {
       this.sound.playWindingEffect(1.8);
@@ -2772,8 +2772,8 @@ class Watch3DEngine {
         this.rotation.y = 0.32;
         this.rotation.z = 0;
         this.targetRotation = { x: -0.16, y: 0.32, z: 0 };
-        this.cameraDistance = 4.1;
-        this.targetDistance = 4.1;
+        this.cameraDistance = this.startDist;
+        this.targetDistance = this.startDist;
 
         if (this.sound) {
           this.sound.playArrivalChime();
@@ -5477,8 +5477,27 @@ class WatchWorldApp {
   }
 
   updateInfoCards(city, timeInfo) {
-    if (this.locationNameEl) this.locationNameEl.textContent = `${city.flag} ${city.name}`;
-    if (this.locationCountryEl) this.locationCountryEl.textContent = city.country;
+    if (!city) return;
+
+    // Defensively sanitize city and country to ensure no "undefined" or null appears
+    const rawName = city.name || "";
+    const rawCountry = city.country || "";
+
+    const cleanName = String(rawName)
+      .replace(/^undefined\s*/i, "")
+      .replace(/^null\s*/i, "")
+      .trim() || (rawCountry ? String(rawCountry).trim() : "Location");
+
+    let cleanCountry = String(rawCountry)
+      .replace(/^undefined\s*/i, "")
+      .replace(/^null\s*/i, "")
+      .trim();
+    if (cleanCountry.toLowerCase() === "undefined" || cleanCountry.toLowerCase() === "null") {
+      cleanCountry = "";
+    }
+
+    if (this.locationNameEl) this.locationNameEl.textContent = cleanName;
+    if (this.locationCountryEl) this.locationCountryEl.textContent = cleanCountry;
 
     // Format digital clock
     const hr12 = timeInfo.hours % 12 || 12;
@@ -5497,7 +5516,8 @@ class WatchWorldApp {
     }
     if (this.timePeriodEl) this.timePeriodEl.textContent = ampm;
 
-    if (this.timezoneBadgeEl) this.timezoneBadgeEl.textContent = `${timeInfo.offsetStr} | ${city.tz.split("/")[1] || city.tz}`;
+    const tzRegion = (city.tz && city.tz.includes("/")) ? city.tz.split("/")[1].replace(/_/g, " ") : (city.tz || "UTC");
+    if (this.timezoneBadgeEl) this.timezoneBadgeEl.textContent = `${timeInfo.offsetStr || "UTC"} | ${tzRegion}`;
 
     // Relative difference vs user's home timezone
     const homeNow = new Date();

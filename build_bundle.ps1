@@ -1,4 +1,4 @@
-# Build bundle.js from individual modules
+﻿# Build bundle.js from individual modules
 $header = @"
 /**
  * PHILL - World Watch & Planetary Timepiece
@@ -39,10 +39,10 @@ $watchContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\watch.js"
 $watch3DContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\watch3d.js")
 
 # 4. scenery.js
-$sceneryContent = Clean-Module (Get-Content -Raw -Path ".\scenery.js")
+$sceneryContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\scenery.js")
 
 # 5. app.js
-$appContent = Clean-Module (Get-Content -Raw -Path ".\app.js")
+$appContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\app.js")
 
 $bundleContent = $header + `
 "`r`n  // =========================================================================`r`n  // 1. World Locations & Timezone Resolver`r`n  // =========================================================================`r`n" + $citiesContent + `
@@ -55,3 +55,4 @@ $bundleContent = $header + `
 [System.IO.File]::WriteAllText("c:\Users\Dream\Documents\Antigravity\Watch World\bundle.js", $bundleContent, [System.Text.Encoding]::UTF8)
 
 Write-Host "bundle.js built successfully. Size: $( (Get-Item '.\bundle.js').Length ) bytes."
+

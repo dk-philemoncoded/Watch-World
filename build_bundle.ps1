@@ -38,11 +38,11 @@ $watchContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\watch.js"
 # 4. watch3d.js
 $watch3DContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\watch3d.js")
 
-# 5. scenery.js
-$sceneryContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\scenery.js")
+# 4. scenery.js
+$sceneryContent = Clean-Module (Get-Content -Raw -Path ".\scenery.js")
 
-# 6. app.js
-$appContent = Clean-Module (Get-Content -Raw -Encoding utf8 -Path ".\app.js")
+# 5. app.js
+$appContent = Clean-Module (Get-Content -Raw -Path ".\app.js")
 
 $bundleContent = $header + `
 "`r`n  // =========================================================================`r`n  // 1. World Locations & Timezone Resolver`r`n  // =========================================================================`r`n" + $citiesContent + `

@@ -1784,7 +1784,7 @@ class WatchEngine {
 }
 
   // =========================================================================
-  // 4. 3D Buckled Wristwatch WebGL Engine (PHILL)
+  // 4. Horizon & Vector Character Scenery Engine
   // =========================================================================
 /**
  * 3D Wristwatch WebGL Engine - PHILL
@@ -2734,7 +2734,7 @@ class Watch3DEngine {
     };
 
     this.startDist = this.cameraDistance;
-    this.endDist = this.cameraDistance; // Equal size throughout spinning and at completion
+    this.endDist = 3.8; // Punch in slightly at destination
 
     if (this.sound) {
       this.sound.playWindingEffect(1.8);
@@ -2772,8 +2772,8 @@ class Watch3DEngine {
         this.rotation.y = 0.32;
         this.rotation.z = 0;
         this.targetRotation = { x: -0.16, y: 0.32, z: 0 };
-        this.cameraDistance = this.startDist;
-        this.targetDistance = this.startDist;
+        this.cameraDistance = 4.1;
+        this.targetDistance = 4.1;
 
         if (this.sound) {
           this.sound.playArrivalChime();
@@ -5477,7 +5477,7 @@ class WatchWorldApp {
   }
 
   updateInfoCards(city, timeInfo) {
-    if (this.locationNameEl) this.locationNameEl.textContent = city.name;
+    if (this.locationNameEl) this.locationNameEl.textContent = `${city.flag} ${city.name}`;
     if (this.locationCountryEl) this.locationCountryEl.textContent = city.country;
 
     // Format digital clock

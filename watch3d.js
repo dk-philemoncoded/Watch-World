@@ -33,8 +33,8 @@ export class Watch3DEngine {
     // 3D Orientation & Camera (Initial elegant beauty angle showing face + 3D volume + buckle)
     this.rotation = { x: -0.16, y: 0.32, z: 0 };
     this.targetRotation = { x: -0.16, y: 0.32, z: 0 };
-    this.cameraDistance = this.startDist;
-        this.targetDistance = this.startDist;
+    this.cameraDistance = 4.1;
+    this.targetDistance = 4.1;
     this.minDistance = 2.4;
     this.maxDistance = 6.5;
 

@@ -170,56 +170,57 @@ export class HorizonScenery {
     if (time === "dawn") {
       // 🌅 DAWN: Morning Jogger, Dog Walker, Commuter with Coffee, Sunrise Cyclist, Stretcher, Early Walker
       this.characters.push(
-        { type: "jogger", x: w * 0.12, y: groundY, vx: 85, scale: 0.92, facing: 1 },
-        { type: "dog_walker", x: w * 0.38, y: groundY, vx: 38, scale: 0.90, facing: 1 },
-        { type: "cyclist", x: w * 0.85, y: groundY, vx: -95, scale: 0.88, facing: -1 },
-        { type: "walker_coffee", x: w * 0.28, y: groundY, vx: 34, scale: 0.90, facing: 1 },
-        { type: "bench_coffee", x: this.benches[0].x + 24, y: groundY, scale: 0.90, facing: 1 },
-        { type: "jogger", x: w * 0.68, y: groundY, vx: -82, scale: 0.88, facing: -1 },
+        { type: "jogger", x: w * 0.12, y: groundY, vx: 75, scale: 0.92, facing: 1 },
+        { type: "dog_walker", x: w * 0.38, y: groundY, vx: 34, scale: 0.90, facing: 1 },
+        { type: "cyclist", x: w * 0.85, y: groundY, vx: -82, scale: 0.88, facing: -1 },
+        { type: "walker_coffee", x: w * 0.28, y: groundY, vx: 32, scale: 0.90, facing: 1 },
+        { type: "bench_coffee", x: this.benches[0].x, y: groundY, scale: 0.90, facing: 1 },
+        { type: "jogger", x: w * 0.68, y: groundY, vx: -72, scale: 0.88, facing: -1 },
         { type: "stretcher", x: w * 0.60, y: groundY, scale: 0.90, facing: 1 }
       );
     } else if (time === "day") {
       // ☀️ BROAD DAYLIGHT: Bustling park promenade with readers, skaters, strollers, cyclists, tourists
       this.characters.push(
-        { type: "bench_reader", x: this.benches[0].x + 24, y: groundY, scale: 0.90, facing: 1 },
-        { type: "bench_laptop", x: this.benches[1].x + 24, y: groundY, scale: 0.90, facing: 1 },
-        { type: "skateboarder", x: w * 0.18, y: groundY, vx: 78, scale: 0.90, facing: 1 },
-        { type: "stroller_parent", x: w * 0.32, y: groundY, vx: 36, scale: 0.90, facing: 1 },
-        { type: "couple", x: w * 0.46, y: groundY, vx: 32, scale: 0.90, facing: 1 },
-        { type: "cyclist", x: w * 0.88, y: groundY, vx: -90, scale: 0.88, facing: -1 },
-        { type: "dog_walker", x: w * 0.64, y: groundY, vx: -36, scale: 0.88, facing: -1 },
-        { type: "photographer", x: w * 0.74, y: groundY, vx: 26, scale: 0.90, facing: 1 },
-        { type: "walker_phone", x: w * 0.05, y: groundY, vx: 35, scale: 0.90, facing: 1 }
+        { type: "bench_reader", x: this.benches[0].x, y: groundY, scale: 0.90, facing: 1 },
+        { type: "bench_laptop", x: this.benches[1].x, y: groundY, scale: 0.90, facing: 1 },
+        { type: "skateboarder", x: w * 0.18, y: groundY, vx: 74, scale: 0.90, facing: 1 },
+        { type: "stroller_parent", x: w * 0.32, y: groundY, vx: 34, scale: 0.90, facing: 1 },
+        { type: "couple", x: w * 0.46, y: groundY, vx: 28, scale: 0.90, facing: 1 },
+        { type: "cyclist", x: w * 0.88, y: groundY, vx: -80, scale: 0.88, facing: -1 },
+        { type: "dog_walker", x: w * 0.64, y: groundY, vx: -34, scale: 0.88, facing: -1 },
+        { type: "photographer", x: w * 0.74, y: groundY, vx: 24, scale: 0.90, facing: 1 },
+        { type: "walker_phone", x: w * 0.05, y: groundY, vx: 30, scale: 0.90, facing: 1 }
       );
     } else if (time === "sunset") {
-      // 🌇 SUNSET / GOLDEN HOUR: Romantic couple, Sunset watcher, Evening jogger, Dog walker, Skater
+      // 🌇 SUNSET / GOLDEN HOUR: Romantic couple, Sunset watcher, Evening jogger, Dog walker, Cyclist, Railing photographer
       this.characters.push(
-        { type: "couple", x: w * 0.30, y: groundY, vx: 28, scale: 0.92, facing: 1 },
-        { type: "bench_watcher", x: this.benches[1].x + 24, y: groundY, scale: 0.90, facing: -1 },
-        { type: "bench_guitarist", x: this.benches[0].x + 24, y: groundY, scale: 0.90, facing: 1 },
-        { type: "jogger", x: w * 0.76, y: groundY, vx: 82, scale: 0.90, facing: 1 },
-        { type: "dog_walker", x: w * 0.14, y: groundY, vx: 34, scale: 0.88, facing: 1 },
-        { type: "cyclist", x: w * 0.92, y: groundY, vx: -85, scale: 0.88, facing: -1 },
-        { type: "photographer", x: w * 0.44, y: groundY, vx: 22, scale: 0.90, facing: 1 }
+        { type: "couple", x: w * 0.28, y: groundY, vx: 26, scale: 0.92, facing: 1 },
+        { type: "bench_watcher", x: this.benches[1].x, y: groundY, scale: 0.90, facing: 1 },
+        { type: "bench_guitarist", x: this.benches[0].x, y: groundY, scale: 0.90, facing: 1 },
+        { type: "jogger", x: w * 0.74, y: groundY, vx: 72, scale: 0.90, facing: 1 },
+        { type: "dog_walker", x: w * 0.12, y: groundY, vx: 32, scale: 0.88, facing: 1 },
+        { type: "cyclist", x: w * 0.90, y: groundY, vx: -78, scale: 0.88, facing: -1 },
+        { type: "photographer", x: w * 0.50, y: groundY, vx: 0, scale: 0.90, facing: 1 }
       );
     } else if (time === "dusk") {
-      // 🌆 DUSK: Acoustic guitarist on bench, evening stroll in coats, phone texter under streetlamp
+      // 🌆 DUSK: Acoustic guitarist on bench, evening stroll in coats, phone texter under streetlamp, couple
       this.characters.push(
-        { type: "bench_guitarist", x: this.benches[0].x + 24, y: groundY, scale: 0.92, facing: 1 },
-        { type: "walker_coat", x: w * 0.42, y: groundY, vx: 35, scale: 0.90, facing: 1 },
-        { type: "dog_walker", x: w * 0.78, y: groundY, vx: -34, scale: 0.88, facing: -1 },
-        { type: "walker_phone", x: w * 0.62, y: groundY, vx: 30, scale: 0.90, facing: 1 },
-        { type: "couple", x: w * 0.20, y: groundY, vx: 28, scale: 0.90, facing: 1 },
-        { type: "jogger", x: w * 0.90, y: groundY, vx: -78, scale: 0.88, facing: -1 }
+        { type: "bench_guitarist", x: this.benches[0].x, y: groundY, scale: 0.92, facing: 1 },
+        { type: "bench_watcher", x: this.benches[1].x, y: groundY, scale: 0.90, facing: 1 },
+        { type: "walker_coat", x: w * 0.40, y: groundY, vx: 32, scale: 0.90, facing: 1 },
+        { type: "dog_walker", x: w * 0.76, y: groundY, vx: -32, scale: 0.88, facing: -1 },
+        { type: "walker_phone", x: w * 0.60, y: groundY, vx: 28, scale: 0.90, facing: 1 },
+        { type: "couple", x: w * 0.18, y: groundY, vx: 26, scale: 0.90, facing: 1 },
+        { type: "jogger", x: w * 0.88, y: groundY, vx: -70, scale: 0.88, facing: -1 }
       );
     } else {
       // 🌙 NIGHT: Stargazer at telescope, solitary nocturnal walker, late night runner, bench thinker
       this.characters.push(
         { type: "stargazer", x: w * 0.26, y: groundY, scale: 0.92, facing: 1 },
-        { type: "walker_coat", x: w * 0.54, y: groundY, vx: 30, scale: 0.90, facing: 1 },
-        { type: "bench_watcher", x: this.benches[1].x + 24, y: groundY, scale: 0.90, facing: 1 },
-        { type: "jogger_night", x: w * 0.86, y: groundY, vx: -76, scale: 0.88, facing: -1 },
-        { type: "walker_phone", x: w * 0.70, y: groundY, vx: -28, scale: 0.88, facing: -1 }
+        { type: "walker_coat", x: w * 0.54, y: groundY, vx: 28, scale: 0.90, facing: 1 },
+        { type: "bench_watcher", x: this.benches[1].x, y: groundY, scale: 0.90, facing: 1 },
+        { type: "jogger_night", x: w * 0.86, y: groundY, vx: -68, scale: 0.88, facing: -1 },
+        { type: "walker_phone", x: w * 0.70, y: groundY, vx: -26, scale: 0.88, facing: -1 }
       );
     }
   }
@@ -358,13 +359,15 @@ export class HorizonScenery {
           hillsBack: "#462947",
           hillsFront: "#331c34",
           skyline: "#422340",
-          ground: "#1f1221",
-          pavement: "#2c1a2e",
-          railing: "rgba(255, 200, 160, 0.25)",
-          tree: "#221323",
-          silhouette: "#261528",
+          ground: "#352238",
+          pavement: "#462e4a",
+          railing: "rgba(255, 200, 160, 0.50)",
+          tree: "#27162b",
+          silhouette: "#140816",
+          benchColor: "#2a182c",
+          lampPostColor: "#1c0f1f",
           charAccent: "#ffbe88",
-          shadowColor: "rgba(30, 15, 30, 0.45)",
+          shadowColor: "rgba(20, 8, 20, 0.55)",
           lampLight: "rgba(255, 215, 140, 0)",
           lampLightMid: "rgba(255, 215, 140, 0)",
           lampGlow: 0,
@@ -389,6 +392,8 @@ export class HorizonScenery {
           railing: "rgba(255, 255, 255, 0.65)",
           tree: "#265437",
           silhouette: "#1e293b",
+          benchColor: "#334155",
+          lampPostColor: "#1e293b",
           charAccent: "#38bdf8",
           shadowColor: "rgba(15, 23, 42, 0.35)",
           lampLight: "rgba(255, 220, 140, 0)",
@@ -410,13 +415,15 @@ export class HorizonScenery {
           hillsBack: "#421832",
           hillsFront: "#2b0d20",
           skyline: "#3e122e",
-          ground: "#1a0814",
-          pavement: "#250d1e",
-          railing: "rgba(255, 150, 80, 0.35)",
-          tree: "#1f0917",
-          silhouette: "#210918",
+          ground: "#351e2c",
+          pavement: "#48283c",
+          railing: "rgba(255, 175, 110, 0.65)",
+          tree: "#231120",
+          silhouette: "#100410",
+          benchColor: "#281423",
+          lampPostColor: "#1d0e1b",
           charAccent: "#fb923c",
-          shadowColor: "rgba(20, 5, 15, 0.55)",
+          shadowColor: "rgba(10, 2, 10, 0.65)",
           lampLight: "rgba(255, 195, 90, 0.45)",
           lampLightMid: "rgba(255, 195, 90, 0.15)",
           lampGlow: 0.5,
@@ -436,13 +443,15 @@ export class HorizonScenery {
           hillsBack: "#211433",
           hillsFront: "#150b23",
           skyline: "#201131",
-          ground: "#0d0616",
-          pavement: "#140a20",
-          railing: "rgba(180, 130, 240, 0.25)",
-          tree: "#100719",
-          silhouette: "#13081e",
+          ground: "#231f38",
+          pavement: "#322d4f",
+          railing: "rgba(200, 160, 255, 0.50)",
+          tree: "#161124",
+          silhouette: "#0a0614",
+          benchColor: "#19152b",
+          lampPostColor: "#120d20",
           charAccent: "#c084fc",
-          shadowColor: "rgba(10, 5, 15, 0.6)",
+          shadowColor: "rgba(6, 4, 12, 0.70)",
           lampLight: "rgba(255, 215, 120, 0.80)",
           lampLightMid: "rgba(255, 215, 120, 0.22)",
           lampGlow: 0.85,
@@ -463,13 +472,15 @@ export class HorizonScenery {
           hillsBack: "#121a28",
           hillsFront: "#0a101b",
           skyline: "#111824",
-          ground: "#05070d",
-          pavement: "#0a0e17",
-          railing: "rgba(255, 255, 255, 0.12)",
-          tree: "#070a10",
-          silhouette: "#090d16",
+          ground: "#161d2e",
+          pavement: "#20293d",
+          railing: "rgba(255, 255, 255, 0.30)",
+          tree: "#0e131d",
+          silhouette: "#05070d",
+          benchColor: "#111726",
+          lampPostColor: "#0a0f1a",
           charAccent: "#38bdf8",
-          shadowColor: "rgba(2, 4, 8, 0.7)",
+          shadowColor: "rgba(2, 4, 8, 0.75)",
           lampLight: "rgba(255, 225, 140, 0.90)",
           lampLightMid: "rgba(255, 225, 140, 0.26)",
           lampGlow: 1.0,
@@ -803,7 +814,7 @@ export class HorizonScenery {
 
   drawBenches(ctx, colors) {
     ctx.save();
-    ctx.fillStyle = colors.isDaylight ? "#475569" : colors.silhouette;
+    ctx.fillStyle = colors.benchColor || (colors.isDaylight ? "#475569" : "#1a162b");
 
     this.benches.forEach(b => {
       ctx.save();
@@ -858,7 +869,7 @@ export class HorizonScenery {
       }
 
       // Lamp Post
-      ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
+      ctx.fillStyle = colors.lampPostColor || (colors.isDaylight ? "#1e293b" : "#120e1e");
 
       // Base
       ctx.beginPath();
@@ -893,7 +904,7 @@ export class HorizonScenery {
       }
 
       // Finial
-      ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
+      ctx.fillStyle = colors.lampPostColor || (colors.isDaylight ? "#1e293b" : "#120e1e");
       ctx.beginPath();
       ctx.moveTo(-9, -lampH);
       ctx.lineTo(0, -lampH - 8);
@@ -1019,6 +1030,24 @@ export class HorizonScenery {
     ctx.lineTo(aX, aY);
     // Foot shoe pointing forward (+X)
     ctx.lineTo(aX + 5, aY);
+    ctx.stroke();
+  }
+
+  drawSeatedLegs(ctx, hipX = -1, seatY = -22) {
+    // Far leg (slightly deeper X, drawn first)
+    ctx.beginPath();
+    ctx.moveTo(hipX + 3, seatY);
+    ctx.lineTo(hipX + 13, seatY);
+    ctx.lineTo(hipX + 13, 0);
+    ctx.lineTo(hipX + 17, 0);
+    ctx.stroke();
+
+    // Near leg (resting on seat, calf dropping to ground)
+    ctx.beginPath();
+    ctx.moveTo(hipX - 2, seatY);
+    ctx.lineTo(hipX + 9, seatY);
+    ctx.lineTo(hipX + 9, 0);
+    ctx.lineTo(hipX + 13, 0);
     ctx.stroke();
   }
 
@@ -1161,21 +1190,44 @@ export class HorizonScenery {
     ctx.lineTo(11, -17);
     ctx.fill();
 
-    // 4 Trotting Legs
+    // 4 Trotting Legs with canine hock & stifle articulation
     ctx.strokeStyle = colors.isDaylight ? "#78350f" : colors.silhouette;
     ctx.lineWidth = 2.0;
     const d1 = Math.sin(dogPace) * 0.55;
     const d2 = Math.sin(dogPace + Math.PI) * 0.55;
 
+    // Forelegs
+    const fKnee1 = Math.sin(d1) * 4;
+    const fPaw1 = Math.sin(d1) * 7;
     ctx.beginPath();
     ctx.moveTo(7, -8);
-    ctx.lineTo(7 + Math.sin(d1) * 8, 0);
+    ctx.lineTo(7 + fKnee1, -4);
+    ctx.lineTo(7 + fPaw1, 0);
+    ctx.stroke();
+
+    const fKnee2 = Math.sin(d2) * 4;
+    const fPaw2 = Math.sin(d2) * 7;
+    ctx.beginPath();
     ctx.moveTo(9, -8);
-    ctx.lineTo(9 + Math.sin(d2) * 8, 0);
+    ctx.lineTo(9 + fKnee2, -4);
+    ctx.lineTo(9 + fPaw2, 0);
+    ctx.stroke();
+
+    // Hindlegs with natural hock flexion
+    const hHock1 = -Math.sin(d2) * 4;
+    const hPaw1 = Math.sin(d2) * 7;
+    ctx.beginPath();
     ctx.moveTo(-7, -8);
-    ctx.lineTo(-7 + Math.sin(d2) * 8, 0);
+    ctx.lineTo(-9 + hHock1, -4);
+    ctx.lineTo(-7 + hPaw1, 0);
+    ctx.stroke();
+
+    const hHock2 = -Math.sin(d1) * 4;
+    const hPaw2 = Math.sin(d1) * 7;
+    ctx.beginPath();
     ctx.moveTo(-5, -8);
-    ctx.lineTo(-5 + Math.sin(d1) * 8, 0);
+    ctx.lineTo(-7 + hHock2, -4);
+    ctx.lineTo(-5 + hPaw2, 0);
     ctx.stroke();
 
     // Wagging tail
@@ -1238,7 +1290,26 @@ export class HorizonScenery {
     // Saddle
     ctx.fillRect(spX - 5, spY - 2, 12, 3);
 
-    // Cyclist
+    // Far Leg (180 deg out of phase with near leg)
+    const pedalR = 6;
+    const p2X = bbX + Math.cos(pedalAngle + Math.PI) * pedalR;
+    const p2Y = bbY + Math.sin(pedalAngle + Math.PI) * pedalR;
+    const knee2X = -1 + Math.cos(pedalAngle + Math.PI) * 5;
+    const knee2Y = -22 + Math.sin(pedalAngle + Math.PI) * 3;
+
+    ctx.save();
+    ctx.strokeStyle = colors.isDaylight ? "#334155" : colors.silhouette;
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.moveTo(bbX, bbY); ctx.lineTo(p2X, p2Y); // crank
+    ctx.moveTo(spX + 1, spY);
+    ctx.lineTo(knee2X, knee2Y);
+    ctx.lineTo(p2X, p2Y);
+    ctx.lineTo(p2X + 4, p2Y);
+    ctx.stroke();
+    ctx.restore();
+
+    // Cyclist Body & Head
     ctx.beginPath();
     ctx.arc(8, -58, 6.5, 0, Math.PI * 2);
     ctx.fill();
@@ -1257,17 +1328,19 @@ export class HorizonScenery {
     ctx.lineTo(htX + 5, htY - 5);
     ctx.stroke();
 
-    // Legs rotating with pedals
-    const pedalR = 6;
-    const pX = bbX + Math.cos(pedalAngle) * pedalR;
-    const pY = bbY + Math.sin(pedalAngle) * pedalR;
+    // Near Leg (Pedaling)
+    const p1X = bbX + Math.cos(pedalAngle) * pedalR;
+    const p1Y = bbY + Math.sin(pedalAngle) * pedalR;
+    const knee1X = 2 + Math.cos(pedalAngle) * 5;
+    const knee1Y = -22 + Math.sin(pedalAngle) * 3;
 
+    ctx.lineWidth = 2.6;
     ctx.beginPath();
-    ctx.moveTo(spX + 2, spY);
-    const kneeX = 2 + Math.cos(pedalAngle) * 5;
-    const kneeY = -22 + Math.sin(pedalAngle) * 3;
-    ctx.lineTo(kneeX, kneeY);
-    ctx.lineTo(pX, pY);
+    ctx.moveTo(bbX, bbY); ctx.lineTo(p1X, p1Y); // crank
+    ctx.moveTo(spX + 3, spY);
+    ctx.lineTo(knee1X, knee1Y);
+    ctx.lineTo(p1X, p1Y);
+    ctx.lineTo(p1X + 4, p1Y);
     ctx.stroke();
 
     ctx.restore();
@@ -1427,21 +1500,46 @@ export class HorizonScenery {
     ctx.lineWidth = 3.0;
     ctx.lineCap = "round";
 
-    // Head
+    // Head (tilted forward if looking at phone)
     ctx.beginPath();
-    ctx.arc(0, baseY - 56, 6.5, 0, Math.PI * 2);
+    if (opts.hasPhone) {
+      ctx.arc(2, baseY - 54, 6.5, 0, Math.PI * 2);
+    } else {
+      ctx.arc(0, baseY - 56, 6.5, 0, Math.PI * 2);
+    }
     ctx.fill();
 
-    // Torso
-    ctx.fillRect(-5, baseY - 50, 10, opts.hasCoat ? 28 : 24);
+    // Torso / Overcoat
+    if (opts.hasCoat) {
+      // Warm knee-length winter/evening coat
+      ctx.beginPath();
+      ctx.moveTo(-5, baseY - 50);
+      ctx.lineTo(5, baseY - 50);
+      ctx.lineTo(7, baseY - 22);
+      ctx.lineTo(-7, baseY - 22);
+      ctx.closePath();
+      ctx.fill();
+    } else {
+      ctx.fillRect(-5, baseY - 50, 10, 24);
+    }
 
     // Anatomical Walking Legs
     const l1 = this.calcWalkLeg(pace);
     const l2 = this.calcWalkLeg(pace + Math.PI);
-    this.drawArticulatedLeg(ctx, -3, baseY - 26, l1.thighAngle, l1.calfAngle);
-    this.drawArticulatedLeg(ctx, 3, baseY - 26, l2.thighAngle, l2.calfAngle);
+    this.drawArticulatedLeg(ctx, -3, baseY - 24, l1.thighAngle, l1.calfAngle);
+    this.drawArticulatedLeg(ctx, 3, baseY - 24, l2.thighAngle, l2.calfAngle);
 
-    if (opts.hasCoffee) {
+    if (opts.hasCoat) {
+      // Hands tucked in coat pockets
+      ctx.beginPath();
+      ctx.moveTo(-4, baseY - 46);
+      ctx.lineTo(-7, baseY - 36);
+      ctx.lineTo(-3, baseY - 32);
+      ctx.moveTo(4, baseY - 46);
+      ctx.lineTo(7, baseY - 36);
+      ctx.lineTo(3, baseY - 32);
+      ctx.stroke();
+    } else if (opts.hasCoffee) {
       // Steaming coffee cup
       ctx.beginPath();
       ctx.moveTo(-4, baseY - 46);
@@ -1499,11 +1597,9 @@ export class HorizonScenery {
     ctx.restore();
   }
 
-  // G. Photographer / Tourist (Pauses to take a picture with camera flash!)
+  // G. Photographer / Tourist
   renderPhotographer(ctx, colors, timeSec, char) {
-    const cycle = (timeSec * 0.4) % 1.0;
-    const isShooting = cycle > 0.4 && cycle < 0.8;
-    const isFlashing = cycle > 0.65 && cycle < 0.68;
+    const isMoving = char.vx && Math.abs(char.vx) > 0.1;
 
     ctx.save();
     ctx.fillStyle = colors.isDaylight ? "#1e293b" : colors.silhouette;
@@ -1511,46 +1607,87 @@ export class HorizonScenery {
     ctx.lineWidth = 3.0;
     ctx.lineCap = "round";
 
-    // Head
-    ctx.beginPath();
-    ctx.arc(0, -56, 6.5, 0, Math.PI * 2);
-    ctx.fill();
+    if (!isMoving) {
+      // Standing stationary at promenade railing taking pictures of the sunset/scenery
+      const cycle = (timeSec * 0.35) % 1.0;
+      const isShooting = cycle > 0.35 && cycle < 0.80;
+      const isFlashing = cycle > 0.60 && cycle < 0.65;
 
-    // Torso
-    ctx.fillRect(-5, -50, 10, 24);
-
-    // Legs
-    if (isShooting) {
-      // Standing planted
+      // Head
       ctx.beginPath();
-      ctx.moveTo(-3, -26); ctx.lineTo(-6, 0);
-      ctx.moveTo(3, -26); ctx.lineTo(6, 0);
+      ctx.arc(0, -56, 6.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Torso
+      ctx.fillRect(-5, -50, 10, 24);
+
+      // Standing Legs planted firmly on the ground
+      ctx.beginPath();
+      ctx.moveTo(-3, -26); ctx.lineTo(-5, 0); ctx.lineTo(-1, 0);
+      ctx.moveTo(3, -26); ctx.lineTo(5, 0); ctx.lineTo(9, 0);
       ctx.stroke();
 
-      // Arms raised holding camera to eyes
-      ctx.beginPath();
-      ctx.moveTo(-4, -46); ctx.lineTo(3, -54);
-      ctx.moveTo(4, -46); ctx.lineTo(3, -54);
-      ctx.stroke();
-
-      // Camera
-      ctx.fillRect(4, -57, 7, 5);
-
-      // Camera Flash
-      if (isFlashing) {
-        ctx.fillStyle = "#ffffff";
+      if (isShooting) {
+        // Arms raised holding camera up to eye
         ctx.beginPath();
-        ctx.arc(14, -55, 12, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.moveTo(-4, -46); ctx.lineTo(4, -54);
+        ctx.moveTo(4, -46); ctx.lineTo(4, -54);
+        ctx.stroke();
+
+        // Camera
+        ctx.fillRect(4, -57, 7, 5);
+
+        // Flash
+        if (isFlashing) {
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.arc(14, -55, 14, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Flash rays
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(14, -72); ctx.lineTo(14, -38);
+          ctx.moveTo(-3, -55); ctx.lineTo(31, -55);
+          ctx.stroke();
+        }
+      } else {
+        // Holding camera at chest level, looking at scenery or reviewing photo
+        ctx.beginPath();
+        ctx.moveTo(-4, -46); ctx.lineTo(2, -38);
+        ctx.moveTo(4, -46); ctx.lineTo(4, -38);
+        ctx.stroke();
+
+        ctx.fillRect(2, -41, 6, 5);
+
+        // LCD preview glow
+        if (cycle > 0.80 && (this.timeOfDay === "sunset" || this.timeOfDay === "dusk" || this.timeOfDay === "night")) {
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.arc(4, -39, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
     } else {
-      // Walking with camera around neck
+      // Walking with camera hanging on chest
       const pace = timeSec * 4;
       const l1 = this.calcWalkLeg(pace);
       const l2 = this.calcWalkLeg(pace + Math.PI);
+
+      // Head
+      ctx.beginPath();
+      ctx.arc(0, -56, 6.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Torso
+      ctx.fillRect(-5, -50, 10, 24);
+
+      // Walking Legs
       this.drawArticulatedLeg(ctx, -3, -26, l1.thighAngle, l1.calfAngle);
       this.drawArticulatedLeg(ctx, 3, -26, l2.thighAngle, l2.calfAngle);
 
+      // Arms swinging
       ctx.beginPath();
       ctx.moveTo(-4, -46); ctx.lineTo(-4 - Math.sin(pace) * 8, -28);
       ctx.moveTo(4, -46); ctx.lineTo(4 + Math.sin(pace) * 8, -28);
@@ -1579,26 +1716,44 @@ export class HorizonScenery {
     ctx.beginPath();
     ctx.arc(-8, baseY - 58, 6.5, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillRect(-12, baseY - 52, 9, 26);
+    ctx.fillRect(-13, baseY - 52, 10, 26);
+
+    // Person 1 Two Walking Legs
+    const p1L1 = this.calcWalkLeg(pace);
+    const p1L2 = this.calcWalkLeg(pace + Math.PI);
+    this.drawArticulatedLeg(ctx, -12, baseY - 26, p1L1.thighAngle, p1L1.calfAngle);
+    this.drawArticulatedLeg(ctx, -5, baseY - 26, p1L2.thighAngle, p1L2.calfAngle);
+
+    // Person 1 outer swinging arm
+    ctx.beginPath();
+    ctx.moveTo(-13, baseY - 46);
+    ctx.lineTo(-13 - Math.sin(pace) * 8, baseY - 28);
+    ctx.stroke();
 
     // Person 2 (Slightly shorter)
     ctx.beginPath();
     ctx.arc(8, baseY - 54, 6.0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillRect(4, baseY - 48, 8, 24);
+    ctx.fillRect(4, baseY - 48, 9, 24);
 
-    // Joined Hands
+    // Person 2 Two Walking Legs
+    const p2L1 = this.calcWalkLeg(pace + 0.35);
+    const p2L2 = this.calcWalkLeg(pace + 0.35 + Math.PI);
+    this.drawArticulatedLeg(ctx, 4, baseY - 24, p2L1.thighAngle, p2L1.calfAngle);
+    this.drawArticulatedLeg(ctx, 11, baseY - 24, p2L2.thighAngle, p2L2.calfAngle);
+
+    // Person 2 outer swinging arm
     ctx.beginPath();
-    ctx.moveTo(-6, baseY - 46);
-    ctx.lineTo(0, baseY - 32);
-    ctx.lineTo(6, baseY - 42);
+    ctx.moveTo(12, baseY - 42);
+    ctx.lineTo(12 + Math.sin(pace + 0.35) * 8, baseY - 26);
     ctx.stroke();
 
-    // Outer walking legs
-    const l1 = this.calcWalkLeg(pace);
-    const l2 = this.calcWalkLeg(pace + Math.PI * 0.8);
-    this.drawArticulatedLeg(ctx, -10, baseY - 26, l1.thighAngle, l1.calfAngle);
-    this.drawArticulatedLeg(ctx, 8, baseY - 24, l2.thighAngle, l2.calfAngle);
+    // Joined Hands in the center
+    ctx.beginPath();
+    ctx.moveTo(-5, baseY - 46);
+    ctx.lineTo(0, baseY - 31);
+    ctx.lineTo(5, baseY - 42);
+    ctx.stroke();
 
     ctx.restore();
   }
@@ -1609,28 +1764,28 @@ export class HorizonScenery {
     ctx.fillStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
     ctx.strokeStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
     ctx.lineWidth = 2.8;
+    ctx.lineCap = "round";
 
-    // Head tilted down
+    // Head tilted down reading
     ctx.beginPath();
-    ctx.arc(2, -32, 6.0, 0, Math.PI * 2);
+    ctx.arc(2, -48, 6.0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Torso
-    ctx.fillRect(-3, -26, 8, 14);
+    // Torso sitting on bench
+    ctx.fillRect(-4, -43, 9, 21);
 
-    // Seated bent legs
+    // Seated legs
+    this.drawSeatedLegs(ctx, -1, -22);
+
+    // Arms holding book above lap
     ctx.beginPath();
-    ctx.moveTo(5, -12); ctx.lineTo(13, -12); ctx.lineTo(13, 0);
+    ctx.moveTo(2, -38); ctx.lineTo(9, -27);
     ctx.stroke();
 
-    // Arms & Open Book
-    ctx.beginPath();
-    ctx.moveTo(2, -22); ctx.lineTo(10, -18);
-    ctx.stroke();
-
+    // Open Book
     ctx.fillStyle = "#ffffff";
     ctx.beginPath();
-    ctx.moveTo(8, -20); ctx.lineTo(14, -22); ctx.lineTo(16, -16); ctx.lineTo(10, -15);
+    ctx.moveTo(6, -30); ctx.lineTo(13, -32); ctx.lineTo(15, -25); ctx.lineTo(8, -24);
     ctx.closePath();
     ctx.fill();
 
@@ -1643,31 +1798,32 @@ export class HorizonScenery {
     ctx.fillStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
     ctx.strokeStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
     ctx.lineWidth = 2.8;
+    ctx.lineCap = "round";
 
+    // Head looking at laptop screen
     ctx.beginPath();
-    ctx.arc(2, -32, 6.0, 0, Math.PI * 2);
+    ctx.arc(2, -48, 6.0, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillRect(-3, -26, 8, 14);
+    // Torso
+    ctx.fillRect(-4, -43, 9, 21);
 
-    // Legs
-    ctx.beginPath();
-    ctx.moveTo(5, -12); ctx.lineTo(13, -12); ctx.lineTo(13, 0);
-    ctx.stroke();
+    // Seated legs
+    this.drawSeatedLegs(ctx, -1, -22);
 
-    // Laptop
+    // Laptop on lap
     ctx.strokeStyle = "#cbd5e1";
     ctx.lineWidth = 2.0;
     ctx.beginPath();
-    ctx.moveTo(8, -14); ctx.lineTo(16, -14); // base
-    ctx.lineTo(14, -22); // screen
+    ctx.moveTo(6, -24); ctx.lineTo(16, -24); // base
+    ctx.lineTo(13, -34); // open screen
     ctx.stroke();
 
-    // Hands typing
+    // Hands typing on keyboard
     ctx.strokeStyle = colors.isDaylight ? "#0f172a" : colors.silhouette;
     ctx.lineWidth = 2.4;
     ctx.beginPath();
-    ctx.moveTo(2, -22); ctx.lineTo(10, -15);
+    ctx.moveTo(1, -37); ctx.lineTo(8, -26);
     ctx.stroke();
 
     ctx.restore();
@@ -1679,20 +1835,37 @@ export class HorizonScenery {
     ctx.fillStyle = colors.silhouette;
     ctx.strokeStyle = colors.silhouette;
     ctx.lineWidth = 2.8;
+    ctx.lineCap = "round";
 
+    // Head
     ctx.beginPath();
-    ctx.arc(-2, -33, 6.0, 0, Math.PI * 2);
+    ctx.arc(-2, -49, 6.0, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillRect(-4, -26, 8, 14);
+    // Torso
+    ctx.fillRect(-5, -43, 9, 21);
 
-    // Legs
+    // Seated legs
+    this.drawSeatedLegs(ctx, -2, -22);
+
+    // Arm holding warm coffee cup
     ctx.beginPath();
-    ctx.moveTo(4, -12); ctx.lineTo(12, -12); ctx.lineTo(12, 0);
+    ctx.moveTo(2, -38); ctx.lineTo(8, -32); ctx.lineTo(11, -34);
     ctx.stroke();
 
-    // Hand holding cup
-    ctx.fillRect(8, -20, 4, 6);
+    // Coffee cup
+    ctx.fillRect(10, -36, 5, 7);
+
+    // Rising steam
+    ctx.save();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.lineWidth = 1;
+    const sY = -38 - ((timeSec * 14) % 16);
+    ctx.beginPath();
+    ctx.moveTo(12, -38);
+    ctx.quadraticCurveTo(14, sY + 4, 12, sY);
+    ctx.stroke();
+    ctx.restore();
 
     ctx.restore();
   }
@@ -1703,33 +1876,41 @@ export class HorizonScenery {
     ctx.fillStyle = colors.silhouette;
     ctx.strokeStyle = colors.silhouette;
     ctx.lineWidth = 2.8;
+    ctx.lineCap = "round";
 
+    // Head tilted slightly towards guitar fretboard
     ctx.beginPath();
-    ctx.arc(-2, -33, 6.2, 0, Math.PI * 2);
+    ctx.arc(-2, -49, 6.2, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillRect(-6, -26, 10, 16);
+    // Torso sitting on bench seat (-22)
+    ctx.fillRect(-5, -43, 9, 21);
 
-    // Legs
-    ctx.beginPath();
-    ctx.moveTo(2, -12); ctx.lineTo(12, -12); ctx.lineTo(12, 0);
-    ctx.stroke();
+    // Anatomical Seated Legs resting on bench (-22) and reaching ground (0)
+    this.drawSeatedLegs(ctx, -1, -22);
 
-    // Acoustic Guitar
+    // Acoustic Guitar resting on player's lap at y = -22
     ctx.fillStyle = "#d97706";
     ctx.beginPath();
-    ctx.ellipse(4, -16, 9, 6, 25 * Math.PI / 180, 0, Math.PI * 2);
+    ctx.ellipse(5, -27, 9, 6, 25 * Math.PI / 180, 0, Math.PI * 2);
     ctx.fill();
 
+    // Guitar neck & headstock angled up
     ctx.strokeStyle = colors.silhouette;
     ctx.lineWidth = 2.0;
     ctx.beginPath();
-    ctx.moveTo(4, -16); ctx.lineTo(-10, -26);
+    ctx.moveTo(5, -27); ctx.lineTo(-10, -38);
     ctx.stroke();
 
+    // Strumming right hand
     const strum = Math.sin(timeSec * 7) * 2;
     ctx.beginPath();
-    ctx.moveTo(2, -24); ctx.lineTo(6, -16 + strum);
+    ctx.moveTo(1, -38); ctx.lineTo(6, -26 + strum);
+    ctx.stroke();
+
+    // Fretting left arm/hand
+    ctx.beginPath();
+    ctx.moveTo(-4, -38); ctx.lineTo(-8, -36);
     ctx.stroke();
 
     ctx.restore();
@@ -1741,19 +1922,27 @@ export class HorizonScenery {
     ctx.fillStyle = colors.silhouette;
     ctx.strokeStyle = colors.silhouette;
     ctx.lineWidth = 2.8;
+    ctx.lineCap = "round";
 
+    // Head looking towards horizon
     ctx.beginPath();
-    ctx.arc(-4, -32, 6.2, 0, Math.PI * 2);
+    ctx.arc(-2, -49, 6.2, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillRect(-7, -26, 9, 16);
+    // Torso relaxed against backrest
+    ctx.fillRect(-6, -43, 9, 21);
 
+    // Seated Legs
+    this.drawSeatedLegs(ctx, -2, -22);
+
+    // Arm resting along backrest
     ctx.beginPath();
-    ctx.moveTo(0, -12); ctx.lineTo(12, -12); ctx.lineTo(10, 0);
+    ctx.moveTo(-4, -39); ctx.lineTo(-15, -34); ctx.lineTo(-15, -28);
     ctx.stroke();
 
+    // Other arm resting on lap
     ctx.beginPath();
-    ctx.moveTo(-5, -24); ctx.lineTo(-12, -22);
+    ctx.moveTo(2, -39); ctx.lineTo(6, -25);
     ctx.stroke();
 
     ctx.restore();

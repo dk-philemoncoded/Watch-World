@@ -8,6 +8,7 @@
 import { WORLD_CITIES, WORLD_COUNTRIES, searchCities, resolveAnyLocation, getTimeInfoForZone } from "./world-cities.js";
 import { soundEngine } from "./sound.js";
 import { WatchEngine } from "./watch.js";
+import { Watch3DEngine } from "./watch3d.js";
 import { HorizonScenery } from "./scenery.js";
 
 class WatchWorldApp {
@@ -20,6 +21,7 @@ class WatchWorldApp {
 
     this.heroStage = document.getElementById("hero-stage");
     this.watchWrapper = document.getElementById("watch-wrapper");
+    this.watch3DCanvas = document.getElementById("watch-3d-canvas");
     this.watchCanvas = document.getElementById("watch-canvas");
     this.horizonCanvas = document.getElementById("horizon-canvas");
     this.watchTelemetryEl = document.getElementById("watch-telemetry");
@@ -58,8 +60,10 @@ class WatchWorldApp {
   }
 
   initEngines() {
-    // 2D Swiss luxury dress watch engine
+    // 2D Swiss luxury dress watch engine (renders live dial texture)
     this.watch = new WatchEngine(this.watchCanvas, soundEngine);
+    // 3D Buckled Wristwatch WebGL engine
+    this.watch3D = new Watch3DEngine(this.watch3DCanvas, this.watch, soundEngine);
     // Animated Horizon & 2D Vector Human Activity Scenery
     this.scenery = new HorizonScenery(this.horizonCanvas);
   }
@@ -156,6 +160,9 @@ class WatchWorldApp {
         btn.classList.add("active");
         const finish = btn.dataset.finish;
         this.watch.setFinish(finish);
+        if (this.watch3D) {
+          this.watch3D.setFinish(finish);
+        }
       });
     });
 
@@ -249,6 +256,9 @@ class WatchWorldApp {
     if (!isUserTriggered) {
       // Direct set without fast spin animation
       this.watch.setTime(timeInfo, false);
+      if (this.watch3D) {
+        this.watch3D.setFinish(this.watch.finish);
+      }
       this.applyBackgroundTheme(timeInfo);
       this.setTelemetry(`✦ ${city.flag} ${city.name.toUpperCase()} • SYNCHRONIZED`, false);
       this.startLiveClock();
@@ -262,6 +272,10 @@ class WatchWorldApp {
 
     // Background theme starts morphing as the hands spin
     this.applyBackgroundTheme(timeInfo);
+
+    if (this.watch3D) {
+      this.watch3D.spinToLocation(timeInfo);
+    }
 
     this.watch.setTime(timeInfo, true, () => {
       // When hands finish spinning and lock onto time

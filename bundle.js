@@ -1820,8 +1820,8 @@ class Watch3DEngine {
     // 3D Orientation & Camera (Initial elegant beauty angle showing face + 3D volume + buckle)
     this.rotation = { x: -0.16, y: 0.32, z: 0 };
     this.targetRotation = { x: -0.16, y: 0.32, z: 0 };
-    this.cameraDistance = 4.1;
-    this.targetDistance = 4.1;
+    this.cameraDistance = this.startDist;
+        this.targetDistance = this.startDist;
     this.minDistance = 2.4;
     this.maxDistance = 6.5;
 
@@ -2734,7 +2734,7 @@ class Watch3DEngine {
     };
 
     this.startDist = this.cameraDistance;
-    this.endDist = 3.8; // Punch in slightly at destination
+    this.endDist = this.cameraDistance; // Equal size throughout spinning and at completion
 
     if (this.sound) {
       this.sound.playWindingEffect(1.8);
@@ -2772,8 +2772,8 @@ class Watch3DEngine {
         this.rotation.y = 0.32;
         this.rotation.z = 0;
         this.targetRotation = { x: -0.16, y: 0.32, z: 0 };
-        this.cameraDistance = 4.1;
-        this.targetDistance = 4.1;
+        this.cameraDistance = this.startDist;
+        this.targetDistance = this.startDist;
 
         if (this.sound) {
           this.sound.playArrivalChime();

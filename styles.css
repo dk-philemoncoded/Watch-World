@@ -575,27 +575,6 @@ body.theme-sunset #stars-layer {
   100% { transform: translateX(-50%) scale(1.03); box-shadow: 0 0 35px rgba(229, 179, 126, 0.95); }
 }
 
-/* Interactive Hint */
-.watch-hint {
-  position: absolute;
-  bottom: -16px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.76rem;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  pointer-events: none;
-  white-space: nowrap;
-  opacity: 0.75;
-  transition: opacity 0.3s ease;
-}
-
-.watch-wrapper:hover .watch-hint {
-  opacity: 1;
-  color: var(--accent-gold);
-}
-
 /* ==========================================================================
    Information Deck & Complications
    ========================================================================== */

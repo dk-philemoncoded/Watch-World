@@ -8,6 +8,7 @@
 import { WORLD_CITIES, WORLD_COUNTRIES, searchCities, resolveAnyLocation, getTimeInfoForZone } from "./world-cities.js";
 import { soundEngine } from "./sound.js";
 import { WatchEngine } from "./watch.js";
+import { HorizonScenery } from "./scenery.js";
 
 class WatchWorldApp {
   constructor() {
@@ -20,6 +21,7 @@ class WatchWorldApp {
     this.heroStage = document.getElementById("hero-stage");
     this.watchWrapper = document.getElementById("watch-wrapper");
     this.watchCanvas = document.getElementById("watch-canvas");
+    this.horizonCanvas = document.getElementById("horizon-canvas");
     this.watchTelemetryEl = document.getElementById("watch-telemetry");
 
     // Info Display Elements
@@ -58,6 +60,8 @@ class WatchWorldApp {
   initEngines() {
     // 2D Swiss luxury dress watch engine
     this.watch = new WatchEngine(this.watchCanvas, soundEngine);
+    // Animated Horizon & 2D Vector Human Activity Scenery
+    this.scenery = new HorizonScenery(this.horizonCanvas);
   }
 
   generateStarfield() {
@@ -359,6 +363,11 @@ class WatchWorldApp {
 
       this.sunMoonGlow.style.left = `${glowX}%`;
       this.sunMoonGlow.style.top = `${glowY}%`;
+    }
+
+    // Update Animated Horizon & 2D Vector Human Activity Scenery
+    if (this.scenery) {
+      this.scenery.setTime(theme, timeInfo.decimalHour);
     }
   }
 

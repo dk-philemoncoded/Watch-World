@@ -56,9 +56,19 @@ html, body {
 #sky-background {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   transition: background var(--transition-slow), opacity var(--transition-slow);
   pointer-events: none;
+}
+
+#horizon-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
 }
 
 /* 1. Dawn / Sunrise (05:00 - 06:59) */

@@ -1,8 +1,39 @@
 # PHILL — World Watch & Planetary Timepiece ⏱️✨
 
-An interactive, Swiss luxury dress watch experience by **PHILL** (inspired by the classic Rolex Perpetual 1908 aesthetic) that displays the accurate local time of any country, city, or town on Earth in high-definition 2D canvas with fast-spinning hands, smooth mechanical deceleration, and dynamic atmospheric sky lighting.
+An interactive, Swiss luxury dress watch experience by **PHILL** (inspired by the classic Rolex Perpetual 1908 aesthetic) that displays the accurate local time of any country, city, or town on Earth in high-definition 2D canvas with fast-spinning hands, smooth mechanical deceleration, dynamic atmospheric sky lighting, and **animated 2D vector characters engaging in real human activities matching the time frame of the searched location**.
 
 ## ✨ Features
+
+- **Animated 2D Vector Characters & Living Horizon**:
+  - The background depicts the sky and horizon of the searched location's exact local time, brought to life with procedural 2D vector characters engaged in authentic human activities:
+    - 🌅 **Dawn / Early Morning (05:00 - 08:59)**:
+      - Morning joggers with high-knee strides and athletic gait.
+      - Dog walkers with a trotting puppy, floppy ears, and wagging tail.
+      - Commuters walking with steaming cups of takeaway coffee.
+      - Cyclists pedaling through the sunrise mist with turning spoked wheels.
+      - Golden-orange rising sun with morning birds soaring across the sky.
+    - ☀️ **Broad Daylight / Afternoon (09:00 - 16:59)**:
+      - People strolling along the promenade with backpacks and tote bags.
+      - A relaxed reader sitting on a park bench reading a book.
+      - Friends walking together and waving hello.
+      - Cyclists gliding across the promenade path.
+      - High radiant sun, drifting cumulus clouds, and birds in flight.
+    - 🌇 **Sunset / Golden Hour (17:00 - 19:29)**:
+      - Romantic couples strolling arm in arm bathed in golden-crimson twilight.
+      - Evening runner finishing a workout.
+      - Park bench sunset watcher taking in the golden view.
+      - Glowing amber sun resting directly on the horizon line.
+      - Victorian streetlamps beginning to warm up with golden filaments.
+    - 🌆 **Twilight / Dusk (19:30 - 21:59)**:
+      - Pedestrians in cozy jackets heading toward cafes and dinner spots.
+      - Acoustic guitarist sitting on a park bench gently strumming.
+      - Illuminated streetlamps casting warm pools of volumetric light onto the pavement.
+      - Distant city apartment towers with glowing warm windows.
+    - 🌙 **Midnight / Night (22:00 - 04:59)**:
+      - Stargazer standing beside a brass telescope observing the moon and constellations.
+      - Nocturnal walker strolling leisurely under the streetlamps with hands in coat pockets.
+      - Night jogger with a glowing reflective armband.
+      - Luminous crescent moon, deep starfield, and periodic shooting stars.
 
 - **Hero 2D Mechanical Wrist Watch by PHILL**:
   - **Double Bezel**: Outer delicate coin-edge fluted bezel with microscopic golden notches, inner mirror-polished domed gold ring.
@@ -39,14 +70,6 @@ An interactive, Swiss luxury dress watch experience by **PHILL** (inspired by th
   - Search any **Country** (*Nigeria*, *Japan*, *Spain*, *France*, *Brazil*, *Canada*, *Australia*), **City**, or **Town** (*Oxford*, *Ibadan*, *Kyoto*, *Cannes*, *Honolulu*).
   - Autocomplete dropdown with flags and timezone indicators.
   - Press Enter or click **Find Time** to instantly locate and calculate the destination time.
-
-- **Dynamic Atmospheric Sky Themes**:
-  - The website's background atmosphere dynamically morphs to reflect the local time of the searched location:
-    - 🌅 **Dawn / Sunrise (05:00 - 06:59)**: Soft peach, blush rose, lavender, and sunrise glow.
-    - ☀️ **Broad Daylight (07:00 - 16:59)**: Bright cerulean sky with sunbeam flare.
-    - 🌇 **Golden Hour Sunset (17:00 - 19:29)**: Deep amber, burning crimson, and violet horizon.
-    - 🌆 **Twilight / Dusk (19:30 - 21:29)**: Deep cobalt, electric indigo, magenta edge with early stars.
-    - 🌙 **Midnight Starlit Night (21:30 - 04:59)**: Deep obsidian night with shimmering celestial starfield.
 
 - **Web Audio API Escapement Sound Engine**:
   - Crisp mechanical escapement ticking on each second step.

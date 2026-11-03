@@ -1,6 +1,7 @@
 /* ==========================================================================
    Watch World - Horological Global Timepiece Stylesheet
    Luxury Swiss Aesthetic with Dynamic Atmospheric Lighting
+   Zero-Scroll Autofit Architecture across All Screens & Dimensions
    ========================================================================== */
 
 :root {
@@ -20,7 +21,7 @@
 
   --glass-bg: rgba(15, 23, 42, 0.65);
   --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  --glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
 
   --font-serif: "Cinzel", "Playfair Display", "Times New Roman", serif;
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, sans-serif;
@@ -31,7 +32,7 @@
   --transition-fast: 0.2s ease;
 }
 
-/* Reset & Base */
+/* Reset & Base - Guaranteed Zero Scrolling */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -41,7 +42,11 @@
 html, body {
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  position: fixed;
+  inset: 0;
   font-family: var(--font-sans);
   color: var(--text-primary);
   background: transparent;
@@ -66,6 +71,7 @@ html, body {
   inset: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   z-index: 1;
   pointer-events: none;
   display: block;
@@ -188,18 +194,24 @@ body.theme-sunset #stars-layer {
 }
 
 /* ==========================================================================
-   App Layout
+   App Layout - Dynamic Viewport Autofit
    ========================================================================== */
 
 #app-container {
   position: relative;
   z-index: 2;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 2rem 2.5rem;
+  justify-content: space-between;
+  padding: clamp(6px, 1.4vh, 18px) clamp(10px, 2.5vw, 28px);
   max-width: 1440px;
   margin: 0 auto;
+  overflow: visible;
 }
 
 /* Header & Brand */
@@ -207,41 +219,47 @@ body.theme-sunset #stars-layer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: clamp(4px, 1vh, 12px);
+  flex-shrink: 0;
+  width: 100%;
 }
 
 .brand-badge {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: clamp(0.4rem, 1vw, 0.85rem);
 }
 
 .brand-icon {
-  font-size: 1.75rem;
+  width: clamp(22px, 3vh, 28px);
+  height: clamp(22px, 3vh, 28px);
   filter: drop-shadow(0 0 12px var(--accent-gold-glow));
+  flex-shrink: 0;
 }
 
 .brand-title {
   font-family: var(--font-serif);
-  font-size: 1.5rem;
+  font-size: clamp(1.15rem, 2.3vh, 1.55rem);
   font-weight: 700;
-  letter-spacing: 3px;
+  letter-spacing: clamp(1.5px, 0.3vw, 3px);
+  line-height: 1.1;
   background: linear-gradient(135deg, #ffffff 40%, var(--accent-gold) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .brand-tagline {
-  font-size: 0.72rem;
-  letter-spacing: 2px;
+  font-size: clamp(0.58rem, 1vh, 0.72rem);
+  letter-spacing: clamp(1px, 0.2vw, 2px);
   text-transform: uppercase;
   color: var(--text-secondary);
+  line-height: 1.2;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 /* Sound Button */
@@ -249,17 +267,17 @@ body.theme-sunset #stars-layer {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   color: var(--text-primary);
-  width: 44px;
-  height: 44px;
+  width: clamp(34px, 4.4vh, 42px);
+  height: clamp(34px, 4.4vh, 42px);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
   cursor: pointer;
   backdrop-filter: blur(12px);
   transition: all var(--transition-normal);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
 }
 .icon-btn:hover {
   transform: translateY(-2px);
@@ -271,37 +289,10 @@ body.theme-sunset #stars-layer {
 }
 
 .sound-icon {
-  font-size: 0.72rem;
+  font-size: clamp(0.65rem, 1vh, 0.72rem);
   font-weight: 700;
   letter-spacing: 1px;
   color: var(--accent-gold);
-}
-
-/* View Mode Switcher */
-.view-modes {
-  display: flex;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  padding: 4px;
-  border-radius: 30px;
-  backdrop-filter: blur(12px);
-}
-.view-mode-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 6px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-.view-mode-btn.active {
-  background: var(--accent-gold);
-  color: #11141a;
-  font-weight: 600;
-  box-shadow: 0 2px 10px var(--accent-gold-glow);
 }
 
 /* ==========================================================================
@@ -312,14 +303,17 @@ body.theme-sunset #stars-layer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: clamp(4px, 1vh, 12px);
   width: 100%;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
 }
 
 .search-container {
   position: relative;
   width: 100%;
-  max-width: 580px;
+  max-width: min(560px, 100%);
 }
 
 .search-form {
@@ -334,7 +328,7 @@ body.theme-sunset #stars-layer {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 40px;
-  padding: 0.5rem 1rem 0.5rem 1.4rem;
+  padding: clamp(0.28rem, 0.7vh, 0.48rem) clamp(0.6rem, 1.5vw, 1.2rem);
   box-shadow: var(--glass-shadow);
   backdrop-filter: blur(20px);
   transition: all var(--transition-normal);
@@ -342,13 +336,15 @@ body.theme-sunset #stars-layer {
 .search-input-wrapper:focus-within {
   border-color: var(--accent-gold);
   box-shadow: 0 0 25px var(--accent-gold-glow), var(--glass-shadow);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .search-icon {
-  font-size: 1.15rem;
-  margin-right: 0.75rem;
+  width: clamp(14px, 2vh, 18px);
+  height: clamp(14px, 2vh, 18px);
+  margin-right: clamp(0.4rem, 1vw, 0.75rem);
   opacity: 0.7;
+  flex-shrink: 0;
 }
 
 .search-input {
@@ -356,9 +352,10 @@ body.theme-sunset #stars-layer {
   background: transparent;
   border: none;
   outline: none;
-  font-size: 1.05rem;
+  font-size: clamp(0.82rem, 1.4vh, 0.98rem);
   color: var(--text-primary);
   font-family: inherit;
+  min-width: 0;
 }
 .search-input::placeholder {
   color: var(--text-muted);
@@ -369,34 +366,35 @@ body.theme-sunset #stars-layer {
   color: #0b0e14;
   border: none;
   border-radius: 30px;
-  padding: 0.55rem 1.25rem;
-  font-size: 0.88rem;
+  padding: clamp(0.3rem, 0.65vh, 0.48rem) clamp(0.65rem, 1.4vw, 1.1rem);
+  font-size: clamp(0.72rem, 1.2vh, 0.85rem);
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
+  flex-shrink: 0;
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 .search-submit-btn:hover {
-  transform: scale(1.04);
+  transform: scale(1.03);
   box-shadow: 0 4px 14px var(--accent-gold-glow);
 }
 
 /* Autocomplete Suggestions Dropdown */
 .suggestions-dropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 6px);
   left: 0;
   right: 0;
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(15, 23, 42, 0.96);
   border: 1px solid var(--glass-border);
   border-radius: 18px;
   backdrop-filter: blur(24px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
-  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.75);
   z-index: 100;
-  max-height: 340px;
+  max-height: clamp(140px, 35vh, 300px);
   overflow-y: auto;
   transition: opacity var(--transition-fast);
 }
@@ -407,7 +405,7 @@ body.theme-sunset #stars-layer {
 .suggestion-item {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1.25rem;
+  padding: clamp(0.5rem, 1vh, 0.75rem) clamp(0.8rem, 1.5vw, 1.25rem);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   cursor: pointer;
   transition: background var(--transition-fast);
@@ -421,102 +419,127 @@ body.theme-sunset #stars-layer {
 .suggestion-item.no-match {
   cursor: default;
   color: var(--text-muted);
-  font-size: 0.88rem;
+  font-size: 0.85rem;
 }
 
 .city-badge {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 1px;
   color: var(--accent-gold);
   background: rgba(229, 179, 126, 0.15);
   border: 1px solid rgba(229, 179, 126, 0.35);
   border-radius: 6px;
-  padding: 0.2rem 0.45rem;
-  margin-right: 0.85rem;
+  padding: 0.15rem 0.4rem;
+  margin-right: 0.75rem;
   font-family: var(--font-mono, monospace);
-  min-width: 32px;
+  min-width: 30px;
   text-align: center;
+  flex-shrink: 0;
 }
 .city-details {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 .city-title {
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .city-country {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .city-tz {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   font-family: var(--font-mono);
+  flex-shrink: 0;
 }
 
-/* Popular City Chips */
+/* Popular City Chips - Single line swipeable or centered */
 .popular-cities {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: clamp(3px, 0.5vw, 6px);
+  margin-top: clamp(3px, 0.6vh, 8px);
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 2px 0;
+}
+.popular-cities::-webkit-scrollbar {
+  display: none;
 }
 .popular-label {
-  font-size: 0.75rem;
+  font-size: clamp(0.64rem, 1vh, 0.72rem);
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   color: var(--text-muted);
-  margin-right: 0.4rem;
+  margin-right: 0.25rem;
+  flex-shrink: 0;
 }
 .city-chip {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   color: var(--text-secondary);
-  font-size: 0.82rem;
-  padding: 0.35rem 0.85rem;
+  font-size: clamp(0.7rem, 1.1vh, 0.78rem);
+  padding: clamp(0.18rem, 0.35vh, 0.3rem) clamp(0.48rem, 1vw, 0.75rem);
   border-radius: 20px;
   cursor: pointer;
   backdrop-filter: blur(10px);
   transition: all var(--transition-fast);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .city-chip:hover {
   border-color: var(--accent-gold);
   color: var(--text-primary);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 0 4px 12px var(--accent-gold-glow);
 }
 
 /* ==========================================================================
-   Hero Stage: 3D Wristwatch Core
+   Hero Stage: Responsive 3D Mechanical Buckled Wristwatch
    ========================================================================== */
 
 .hero-stage {
   position: relative;
-  flex: 1;
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 560px;
   perspective: 1400px;
+  width: 100%;
+  overflow: visible;
+  container-type: size;
 }
 
-/* 3D Watch Wrapper */
+/* 3D Watch Wrapper - Freely hovers on the page, unconstrained by the stage box */
 .watch-wrapper {
   position: relative;
-  width: 620px;
-  height: 620px;
-  max-width: 94vw;
-  max-height: 94vw;
+  width: min(96cqmin, 620px);
+  height: min(96cqmin, 620px);
+  aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
-  transition: transform var(--transition-slow);
+  z-index: 50;
+  will-change: transform;
+  transform-origin: center center;
+  pointer-events: auto;
 }
 
 .watch-3d-canvas {
@@ -524,7 +547,7 @@ body.theme-sunset #stars-layer {
   height: 100%;
   display: block;
   cursor: grab;
-  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.75));
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.75));
   touch-action: none;
 }
 
@@ -541,25 +564,28 @@ body.theme-sunset #stars-layer {
 /* Watch Telemetry Status Pill */
 .watch-telemetry {
   position: absolute;
-  top: -12px;
+  top: clamp(2px, 1.2vh, 12px);
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(15, 23, 42, 0.9);
+  background: rgba(15, 23, 42, 0.92);
   border: 1px solid var(--accent-gold);
-  padding: 8px 24px;
+  padding: clamp(3px, 0.7vh, 7px) clamp(10px, 1.5vw, 20px);
   border-radius: 40px;
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: clamp(0.65rem, 1.1vh, 0.82rem);
   font-weight: 600;
-  letter-spacing: 1.5px;
+  letter-spacing: 1.2px;
   color: #ffffff;
   backdrop-filter: blur(16px);
-  box-shadow: 0 0 25px var(--accent-gold-glow);
+  box-shadow: 0 0 20px var(--accent-gold-glow);
   z-index: 20;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s ease, transform 0.4s ease;
   white-space: nowrap;
+  max-width: 90%;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .watch-telemetry.visible {
@@ -576,150 +602,176 @@ body.theme-sunset #stars-layer {
 }
 
 /* ==========================================================================
-   Information Deck & Complications
+   Information Deck & Complications - Zero-Overflow Grid
    ========================================================================== */
 
 .info-deck {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-top: 1.5rem;
-  gap: 1.5rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1fr;
+  align-items: stretch;
+  gap: clamp(6px, 1.2vw, 16px);
+  margin-top: clamp(4px, 1vh, 12px);
+  flex-shrink: 0;
+  width: 100%;
+  position: relative;
+  z-index: 5;
 }
 
 .location-card, .time-card, .watch-customizer {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  padding: 1.25rem 1.6rem;
+  border-radius: clamp(14px, 1.6vh, 20px);
+  padding: clamp(0.5rem, 1.1vh, 0.95rem) clamp(0.7rem, 1.3vw, 1.25rem);
   box-shadow: var(--glass-shadow);
   backdrop-filter: blur(20px);
   transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
 }
 .location-card:hover, .time-card:hover, .watch-customizer:hover {
   border-color: rgba(255, 255, 255, 0.25);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 /* Location Card */
 .location-card {
-  flex: 1;
-  min-width: 260px;
+  min-width: 0;
 }
 .card-header-tag {
-  font-size: 0.72rem;
-  letter-spacing: 2px;
+  font-size: clamp(0.6rem, 0.9vh, 0.68rem);
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--accent-gold);
-  margin-bottom: 0.35rem;
+  margin-bottom: clamp(1px, 0.3vh, 3px);
   font-weight: 600;
+  white-space: nowrap;
 }
 .location-name {
   font-family: var(--font-serif);
-  font-size: 1.65rem;
+  font-size: clamp(1.05rem, 2.2vh, 1.45rem);
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .location-country {
-  font-size: 0.95rem;
+  font-size: clamp(0.72rem, 1.1vh, 0.85rem);
   color: var(--text-secondary);
-  margin-bottom: 0.75rem;
+  margin-bottom: clamp(2px, 0.5vh, 5px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .card-meta-pills {
   display: flex;
-  gap: 0.5rem;
+  gap: clamp(3px, 0.5vw, 6px);
   flex-wrap: wrap;
 }
 .meta-pill {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0.25rem 0.7rem;
-  border-radius: 14px;
-  font-size: 0.74rem;
+  padding: clamp(1px, 0.3vh, 3px) clamp(5px, 0.7vw, 8px);
+  border-radius: 12px;
+  font-size: clamp(0.62rem, 0.95vh, 0.7rem);
   font-family: var(--font-mono);
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 /* Digital Time Card */
 .time-card {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   text-align: center;
-  min-width: 240px;
 }
 .time-display-wrapper {
   display: flex;
   align-items: baseline;
-  gap: 0.4rem;
-  margin: 0.2rem 0;
+  gap: 0.3rem;
+  margin: clamp(1px, 0.3vh, 3px) 0;
 }
 .digital-time {
   font-family: var(--font-mono);
-  font-size: 2.2rem;
+  font-size: clamp(1.35rem, 2.8vh, 1.95rem);
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   color: #ffffff;
-  text-shadow: 0 0 20px var(--accent-gold-glow);
+  text-shadow: 0 0 16px var(--accent-gold-glow);
+  line-height: 1.1;
 }
 .digital-time .sec {
   color: var(--accent-gold);
 }
 .time-period {
-  font-size: 1rem;
+  font-size: clamp(0.72rem, 1.2vh, 0.88rem);
   font-weight: 600;
   color: var(--accent-gold);
 }
 .relative-time {
-  font-size: 0.82rem;
+  font-size: clamp(0.65rem, 1vh, 0.76rem);
   color: var(--accent-cyan);
-  margin-bottom: 0.4rem;
+  margin-bottom: clamp(1px, 0.3vh, 3px);
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 .solar-status {
-  font-size: 0.78rem;
+  font-size: clamp(0.62rem, 0.95vh, 0.72rem);
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 /* Watch Finish Customizer */
 .watch-customizer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  min-width: 220px;
+  gap: clamp(2px, 0.5vh, 5px);
 }
 .customizer-title {
-  font-size: 0.72rem;
+  font-size: clamp(0.6rem, 0.9vh, 0.68rem);
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--text-muted);
   font-weight: 600;
+  white-space: nowrap;
 }
 .finish-options {
-  display: flex;
-  gap: 0.6rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(2px, 0.5vw, 5px);
+  width: 100%;
 }
 .finish-btn {
-  flex: 1;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid var(--glass-border);
   color: var(--text-secondary);
-  border-radius: 12px;
-  padding: 0.5rem 0.2rem;
+  border-radius: clamp(8px, 1.2vh, 12px);
+  padding: clamp(0.2rem, 0.5vh, 0.4rem) 2px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.3rem;
-  font-size: 0.7rem;
+  justify-content: center;
+  gap: clamp(1px, 0.3vh, 3px);
+  font-size: clamp(0.58rem, 0.9vh, 0.66rem);
   cursor: pointer;
   transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+.finish-btn span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 .finish-swatch {
-  width: 14px;
-  height: 14px;
+  width: clamp(10px, 1.3vh, 13px);
+  height: clamp(10px, 1.3vh, 13px);
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
 }
 .swatch-gold { background: linear-gradient(135deg, #fff0cb, #d4af37, #856218); }
 .swatch-rosegold { background: linear-gradient(135deg, #fae2d2, #d6936d, #854728); }
@@ -734,35 +786,115 @@ body.theme-sunset #stars-layer {
 }
 
 /* ==========================================================================
-   Responsive Adaptations
+   Responsive Adaptations - Multi-Screen & Orientation Rules
    ========================================================================== */
 
-@media (max-width: 920px) {
+/* 1. Mobile Devices (<= 680px width) */
+@media (max-width: 680px) {
+  #app-container {
+    padding: 8px 12px;
+  }
   .info-deck {
-    flex-direction: column;
-    align-items: stretch;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 6px;
+  }
+  .location-card {
+    grid-column: 1 / 2;
+    padding: 6px 10px;
+  }
+  .time-card {
+    grid-column: 2 / 3;
+    padding: 6px 10px;
+  }
+  .watch-customizer {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 12px;
+    gap: 8px;
+  }
+  .customizer-title {
+    margin-bottom: 0;
+  }
+  .finish-options {
+    width: auto;
+    display: flex;
+    gap: 8px;
+  }
+  .finish-btn {
+    flex-direction: row;
+    padding: 4px 8px;
+    gap: 4px;
+  }
+  .finish-btn span:last-child {
+    display: none; /* Show clean luxury swatches on mobile */
   }
 }
 
-@media (max-width: 600px) {
+/* 2. Narrow Mobile Devices (<= 380px width) */
+@media (max-width: 380px) {
+  .brand-tagline {
+    display: none;
+  }
+  .card-meta-pills {
+    display: none;
+  }
+  .relative-time {
+    display: none;
+  }
+}
+
+/* 3. Short Vertical Screens / Laptops / Landscape Tablets (<= 640px height) */
+@media (max-height: 640px) {
   #app-container {
-    padding: 1rem 1rem 2rem;
+    padding: 4px 14px;
   }
-  .brand-title {
-    font-size: 1.25rem;
+  .site-header {
+    margin-bottom: 2px;
   }
-  .watch-wrapper {
-    width: 340px;
-    height: 340px;
+  .brand-tagline {
+    display: none;
   }
-  .digital-time {
-    font-size: 1.8rem;
+  .search-section {
+    margin-bottom: 4px;
   }
-  .search-input-wrapper {
-    padding: 0.4rem 0.75rem 0.4rem 1rem;
+  .popular-cities {
+    display: none; /* Frees up critical vertical height for 3D watch */
   }
-  .search-submit-btn {
-    padding: 0.45rem 0.9rem;
-    font-size: 0.8rem;
+  .info-deck {
+    margin-top: 4px;
+    gap: 6px;
+  }
+  .location-card, .time-card, .watch-customizer {
+    padding: 4px 8px;
+  }
+  .card-meta-pills {
+    display: none;
+  }
+  .relative-time {
+    display: none;
+  }
+}
+
+/* 4. Ultra-Short Heights (<= 460px height, e.g. Phone Landscape) */
+@media (max-height: 460px) {
+  #app-container {
+    padding: 2px 10px;
+  }
+  .site-header {
+    display: none; /* Maximize watch and complications view */
+  }
+  .search-section {
+    margin-bottom: 2px;
+  }
+  .info-deck {
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-top: 2px;
+    gap: 4px;
+  }
+  .customizer-title {
+    display: none;
   }
 }

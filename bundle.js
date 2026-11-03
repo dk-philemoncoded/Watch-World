@@ -1820,10 +1820,18 @@ class Watch3DEngine {
     // 3D Orientation & Camera (Initial elegant beauty angle showing face + 3D volume + buckle)
     this.rotation = { x: -0.16, y: 0.32, z: 0 };
     this.targetRotation = { x: -0.16, y: 0.32, z: 0 };
-    this.cameraDistance = 4.1;
-    this.targetDistance = 4.1;
-    this.minDistance = 2.4;
-    this.maxDistance = 6.5;
+    // Camera distance 5.25 ensures the entire watch with buckled strap and clasp fits completely inside view at ALL 360-degree rotation angles with zero clipping
+    this.cameraDistance = 5.25;
+    this.targetDistance = 5.25;
+    this.minDistance = 5.25;
+    this.maxDistance = 5.25;
+
+    // Zoom scale: zooms the watch wrapper freely across the page without clipping any part of the watch
+    this.wrapper = this.canvas.parentElement;
+    this.zoomScale = 1.0;
+    this.targetZoomScale = 1.0;
+    this.minZoomScale = 0.75;
+    this.maxZoomScale = 1.65;
 
     // Interaction
     this.isDragging = false;
@@ -2688,19 +2696,64 @@ class Watch3DEngine {
 
     const onWheel = (e) => {
       e.preventDefault();
-      this.targetDistance = Math.max(this.minDistance, Math.min(this.maxDistance, this.targetDistance + e.deltaY * 0.002));
+      // Zoom in (scroll up / negative deltaY) or zoom out (scroll down / positive deltaY)
+      const zoomFactor = -e.deltaY * 0.0014;
+      this.targetZoomScale = Math.max(this.minZoomScale, Math.min(this.maxZoomScale, this.targetZoomScale + zoomFactor));
     };
 
-    canvas.addEventListener("mousedown", onPointerDown);
-    window.addEventListener("mousemove", onPointerMove);
-    window.addEventListener("mouseup", onPointerUp);
+    // Double-click to smoothly reset zoom scale and angle
+    canvas.addEventListener("dblclick", () => {
+      this.targetZoomScale = 1.0;
+      this.targetRotation = { x: -0.16, y: 0.32, z: 0 };
+    });
 
-    canvas.addEventListener("touchstart", onPointerDown, { passive: true });
-    window.addEventListener("touchmove", onPointerMove, { passive: true });
-    window.addEventListener("touchend", onPointerUp, { passive: true });
+    // Touch pinch-to-zoom support
+    let initialPinchDist = null;
+    let initialPinchScale = 1.0;
+
+    const onTouchStart = (e) => {
+      if (e.touches && e.touches.length === 2) {
+        this.isDragging = false;
+        initialPinchDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        initialPinchScale = this.targetZoomScale;
+      } else {
+        onPointerDown(e);
+      }
+    };
+
+    const onTouchMove = (e) => {
+      if (e.touches && e.touches.length === 2 && initialPinchDist) {
+        e.preventDefault();
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        const factor = dist / initialPinchDist;
+        this.targetZoomScale = Math.max(this.minZoomScale, Math.min(this.maxZoomScale, initialPinchScale * factor));
+      } else {
+        onPointerMove(e);
+      }
+    };
+
+    const onTouchEnd = (e) => {
+      if (!e.touches || e.touches.length < 2) {
+        initialPinchDist = null;
+      }
+      onPointerUp();
+    };
+
+    canvas.addEventListener("touchstart", onTouchStart, { passive: false });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
 
     canvas.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("resize", () => this.resize());
+    if (typeof ResizeObserver !== "undefined" && this.canvas.parentElement) {
+      new ResizeObserver(() => this.resize()).observe(this.canvas.parentElement);
+    }
   }
 
   resize() {
@@ -2733,8 +2786,9 @@ class Watch3DEngine {
       z: 0
     };
 
-    this.startDist = this.cameraDistance;
-    this.endDist = this.cameraDistance; // Equal size throughout spinning and at completion
+    this.targetZoomScale = 1.0;
+    this.startDist = 5.25;
+    this.endDist = 5.25; // Equal size throughout spinning and at completion
 
     if (this.sound) {
       this.sound.playWindingEffect(1.8);
@@ -2797,6 +2851,14 @@ class Watch3DEngine {
       this.rotation.y += (this.targetRotation.y - this.rotation.y) * 0.1;
       this.rotation.z += (this.targetRotation.z - this.rotation.z) * 0.1;
       this.cameraDistance += (this.targetDistance - this.cameraDistance) * 0.1;
+
+      // Smooth zoom scaling of the watch wrapper
+      if (Math.abs(this.targetZoomScale - this.zoomScale) > 0.0005) {
+        this.zoomScale += (this.targetZoomScale - this.zoomScale) * 0.12;
+        if (this.wrapper) {
+          this.wrapper.style.transform = `scale(${this.zoomScale.toFixed(4)})`;
+        }
+      }
     }
   }
 

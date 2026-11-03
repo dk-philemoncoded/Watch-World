@@ -867,52 +867,102 @@ export class Watch3DEngine {
 
   bindEvents() {
     const canvas = this.canvas;
+    const activePointers = new Map();
+    let initialPinchDist = null;
+    let initialPinchScale = 1.0;
 
     const onPointerDown = (e) => {
-      this.isDragging = true;
-      this.autoIdle = false;
-      const x = e.clientX || (e.touches && e.touches[0].clientX);
-      const y = e.clientY || (e.touches && e.touches[0].clientY);
-      this.lastMouse = { x, y };
+      // Only handle primary button for mouse (left click) or touches
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+
+      activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       clearTimeout(this.idleTimer);
+      this.autoIdle = false;
+
+      if (activePointers.size === 1) {
+        this.isDragging = true;
+        this.lastMouse = { x: e.clientX, y: e.clientY };
+        try {
+          canvas.setPointerCapture(e.pointerId);
+        } catch (_) {}
+      } else if (activePointers.size === 2) {
+        this.isDragging = false;
+        const pts = Array.from(activePointers.values());
+        initialPinchDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+        initialPinchScale = this.targetZoomScale;
+      }
     };
 
     const onPointerMove = (e) => {
+      if (!activePointers.has(e.pointerId)) return;
+      activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      // Two-pointer pinch-zoom (mobile / touchscreen)
+      if (activePointers.size === 2 && initialPinchDist) {
+        const pts = Array.from(activePointers.values());
+        const currentDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+        const factor = currentDist / (initialPinchDist || 1);
+        this.targetZoomScale = Math.max(this.minZoomScale, Math.min(this.maxZoomScale, initialPinchScale * factor));
+        return;
+      }
+
+      // Single-pointer dragging to rotate watch in 3D
       if (!this.isDragging || this.isSpinning) return;
-      const x = e.clientX || (e.touches && e.touches[0].clientX);
-      const y = e.clientY || (e.touches && e.touches[0].clientY);
 
-      const dx = x - this.lastMouse.x;
-      const dy = y - this.lastMouse.y;
+      const dx = e.clientX - this.lastMouse.x;
+      const dy = e.clientY - this.lastMouse.y;
 
-      // Unconstrained yaw allows inspecting the buckled back completely in 360 degrees!
+      // Smooth 3D yaw (360-degree rotation) & pitch tilt
       this.targetRotation.y += dx * 0.009;
       this.targetRotation.x += dy * 0.009;
 
-      // Constrain tilt to prevent disorientation
+      // Constrain tilt to prevent upside-down disorientation
       this.targetRotation.x = Math.max(-Math.PI / 2.3, Math.min(Math.PI / 2.3, this.targetRotation.x));
-      this.lastMouse = { x, y };
+      this.lastMouse = { x: e.clientX, y: e.clientY };
     };
 
-    const onPointerUp = () => {
-      if (!this.isDragging) return;
-      this.isDragging = false;
-
-      // Return smoothly to beauty angle after 5 seconds of inactivity
-      this.idleTimer = setTimeout(() => {
-        if (!this.isSpinning) {
-          this.targetRotation = { x: -0.16, y: 0.32, z: 0 };
-          this.autoIdle = true;
+    const onPointerUp = (e) => {
+      activePointers.delete(e.pointerId);
+      try {
+        if (canvas.hasPointerCapture && canvas.hasPointerCapture(e.pointerId)) {
+          canvas.releasePointerCapture(e.pointerId);
         }
-      }, 5000);
+      } catch (_) {}
+
+      if (activePointers.size === 1) {
+        // Fall back to dragging with the remaining pointer
+        const remaining = activePointers.values().next().value;
+        this.isDragging = true;
+        this.lastMouse = { x: remaining.x, y: remaining.y };
+        initialPinchDist = null;
+      } else if (activePointers.size === 0) {
+        this.isDragging = false;
+        initialPinchDist = null;
+
+        // Return smoothly to beauty angle after 5 seconds of inactivity
+        clearTimeout(this.idleTimer);
+        this.idleTimer = setTimeout(() => {
+          if (!this.isSpinning) {
+            this.targetRotation = { x: -0.16, y: 0.32, z: 0 };
+            this.autoIdle = true;
+          }
+        }, 5000);
+      }
     };
 
+    // Attach Unified Pointer Event Listeners (Mouse, Touch, Pen)
+    canvas.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
+
+    // Mouse wheel zoom
     const onWheel = (e) => {
       e.preventDefault();
-      // Zoom in (scroll up / negative deltaY) or zoom out (scroll down / positive deltaY)
       const zoomFactor = -e.deltaY * 0.0014;
       this.targetZoomScale = Math.max(this.minZoomScale, Math.min(this.maxZoomScale, this.targetZoomScale + zoomFactor));
     };
+    canvas.addEventListener("wheel", onWheel, { passive: false });
 
     // Double-click to smoothly reset zoom scale and angle
     canvas.addEventListener("dblclick", () => {
@@ -920,49 +970,6 @@ export class Watch3DEngine {
       this.targetRotation = { x: -0.16, y: 0.32, z: 0 };
     });
 
-    // Touch pinch-to-zoom support
-    let initialPinchDist = null;
-    let initialPinchScale = 1.0;
-
-    const onTouchStart = (e) => {
-      if (e.touches && e.touches.length === 2) {
-        this.isDragging = false;
-        initialPinchDist = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-        initialPinchScale = this.targetZoomScale;
-      } else {
-        onPointerDown(e);
-      }
-    };
-
-    const onTouchMove = (e) => {
-      if (e.touches && e.touches.length === 2 && initialPinchDist) {
-        e.preventDefault();
-        const dist = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-        const factor = dist / initialPinchDist;
-        this.targetZoomScale = Math.max(this.minZoomScale, Math.min(this.maxZoomScale, initialPinchScale * factor));
-      } else {
-        onPointerMove(e);
-      }
-    };
-
-    const onTouchEnd = (e) => {
-      if (!e.touches || e.touches.length < 2) {
-        initialPinchDist = null;
-      }
-      onPointerUp();
-    };
-
-    canvas.addEventListener("touchstart", onTouchStart, { passive: false });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
-
-    canvas.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("resize", () => this.resize());
     if (typeof ResizeObserver !== "undefined" && this.canvas.parentElement) {
       new ResizeObserver(() => this.resize()).observe(this.canvas.parentElement);

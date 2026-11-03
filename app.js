@@ -97,6 +97,12 @@ class WatchWorldApp {
       this.handleSearchInput(query);
     });
 
+    this.searchInput.addEventListener("blur", () => {
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    });
+
     this.searchInput.addEventListener("focus", () => {
       if (this.searchInput.value.trim()) {
         this.handleSearchInput(this.searchInput.value.trim());
@@ -217,6 +223,8 @@ class WatchWorldApp {
           this.selectLocation(loc, true);
         }
         this.suggestionsDropdown.classList.add("hidden");
+        this.searchInput.blur();
+        window.scrollTo(0, 0);
       });
     });
   }

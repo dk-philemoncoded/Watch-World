@@ -352,7 +352,7 @@ body.theme-sunset #stars-layer {
   background: transparent;
   border: none;
   outline: none;
-  font-size: clamp(0.82rem, 1.4vh, 0.98rem);
+  font-size: 16px; /* Prevents mobile browser auto-zoom on input focus */
   color: var(--text-primary);
   font-family: inherit;
   min-width: 0;

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHILL | World Watch & Planetary Timepiece</title>
+  <meta name="description" content="Explore time across Earth on an analog luxury wrist watch by PHILL. Search any country, city, or town on the 3D globe to watch time and celestial atmosphere unfold.">
+  
+  <!-- Google Fonts: Luxury Serif & Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-night">
+
+  <!-- Dynamic Atmospheric Background (Reflects local time of target location) -->
+  <div id="sky-background">
+    <div id="sun-moon-glow"></div>
+    <div id="stars-layer"></div>
+  </div>
+
+  <div id="app-container">
+
+    <!-- Site Header -->
+    <header class="site-header">
+      <div class="brand-badge">
+        <span class="brand-icon">⏱️</span>
+        <div>
+          <h1 class="brand-title">PHILL</h1>
+          <p class="brand-tagline">Planetary Horology & World Time</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- View Mode Switcher -->
+        <div class="view-modes">
+          <button class="view-mode-btn active" data-mode="cinema" title="Cinematic Zoom Sequence">Cinematic</button>
+          <button class="view-mode-btn" data-mode="split" title="Side-by-Side Dual View">Split View</button>
+        </div>
+
+        <!-- Sound Toggle -->
+        <button id="sound-toggle-btn" class="icon-btn" aria-label="Toggle mechanical watch sound" title="Toggle Mechanical Audio">
+          <span class="sound-icon">🔊</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section">
+      <div class="search-container">
+        <form id="search-form" class="search-form" autocomplete="off">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input 
+              type="text" 
+              id="search-input" 
+              class="search-input" 
+              placeholder="Search any country, city, or town (e.g. Nigeria, Japan, Oxford, Paris)..." 
+              aria-label="Search destination for time"
+              spellcheck="false"
+            >
+            <button type="submit" class="search-submit-btn">
+              <span>Find Time</span>
+              <span class="btn-arrow">→</span>
+            </button>
+          </div>
+
+          <!-- Autocomplete Dropdown -->
+          <div id="suggestions-dropdown" class="suggestions-dropdown hidden"></div>
+        </form>
+
+        <!-- Quick Access Popular Locations -->
+        <div class="popular-cities">
+          <span class="popular-label">Popular:</span>
+          <button type="button" class="city-chip" data-city="Nigeria">Nigeria 🇳🇬</button>
+          <button type="button" class="city-chip" data-city="Tokyo">Tokyo 🇯🇵</button>
+          <button type="button" class="city-chip" data-city="London">London 🇬🇧</button>
+          <button type="button" class="city-chip" data-city="New York">New York 🇺🇸</button>
+          <button type="button" class="city-chip" data-city="Paris">Paris 🇫🇷</button>
+          <button type="button" class="city-chip" data-city="Dubai">Dubai 🇦🇪</button>
+          <button type="button" class="city-chip" data-city="Sydney">Sydney 🇦🇺</button>
+          <button type="button" class="city-chip" data-city="Cairo">Cairo 🇪🇬</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hero Stage: The Analog Wrist Watch & 3D Globe Cinematic Experience -->
+    <main id="hero-stage" class="hero-stage cinema-view">
+      
+      <!-- Analog Wrist Watch Canvas Container (Hero Section) -->
+      <div id="watch-wrapper" class="watch-wrapper">
+        <canvas id="watch-canvas" width="500" height="500"></canvas>
+      </div>
+
+      <!-- 3D Interactive WebGL Globe Canvas Container -->
+      <div id="globe-wrapper" class="globe-wrapper">
+        <div id="globe-telemetry" class="globe-telemetry">✦ EXPLORING PLANET EARTH</div>
+        <canvas id="globe-canvas" width="520" height="520"></canvas>
+        <div class="globe-hud">✦ Drag to rotate • Click anywhere on Earth to inspect</div>
+      </div>
+
+    </main>
+
+    <!-- Information Deck & Horological Complications -->
+    <footer class="info-deck">
+      
+      <!-- Target Location Card -->
+      <div class="location-card">
+        <div class="card-header-tag">Target Location</div>
+        <h2 id="location-name" class="location-name">--</h2>
+        <div id="location-country" class="location-country">--</div>
+        <div class="card-meta-pills">
+          <span id="timezone-badge" class="meta-pill">UTC+0</span>
+          <span id="coords-badge" class="meta-pill">0.00°, 0.00°</span>
+        </div>
+      </div>
+
+      <!-- Digital Readout & Solar Day/Night Status -->
+      <div class="time-card">
+        <div class="card-header-tag">Local Time</div>
+        <div class="time-display-wrapper">
+          <div id="digital-time" class="digital-time">
+            <span class="digit">12</span><span class="colon">:</span><span class="digit">00</span><span class="colon">:</span><span class="digit sec">00</span>
+          </div>
+          <span id="time-period" class="time-period">PM</span>
+        </div>
+        <div id="relative-time" class="relative-time">Calculating difference...</div>
+        <div id="solar-status" class="solar-status">☀️ Daytime</div>
+      </div>
+
+      <!-- Watch Customizer (Case Finish) -->
+      <div class="watch-customizer">
+        <div class="customizer-title">Bezel & Case Finish</div>
+        <div class="finish-options">
+          <button type="button" class="finish-btn active" data-finish="steel" title="Stainless Steel">
+            <span class="finish-swatch swatch-steel"></span>
+            <span>Steel</span>
+          </button>
+          <button type="button" class="finish-btn" data-finish="rose-gold" title="Royal Rose Gold">
+            <span class="finish-swatch swatch-rosegold"></span>
+            <span>Rose Gold</span>
+          </button>
+          <button type="button" class="finish-btn" data-finish="obsidian" title="Obsidian DLC">
+            <span class="finish-swatch swatch-obsidian"></span>
+            <span>Obsidian</span>
+          </button>
+          <button type="button" class="finish-btn" data-finish="bronze" title="Vintage Bronze">
+            <span class="finish-swatch swatch-bronze"></span>
+            <span>Bronze</span>
+          </button>
+        </div>
+      </div>
+
+    </footer>
+
+  </div>
+
+  <!-- Application Scripts (Unified Bundle for zero-dependency execution) -->
+  <script src="bundle.js"></script>
+
+</body>
+</html>

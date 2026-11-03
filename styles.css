@@ -1,0 +1,871 @@
+/* ==========================================================================
+   Watch World - Horological Global Timepiece Stylesheet
+   Luxury Swiss Aesthetic with Dynamic Atmospheric Lighting
+   ========================================================================== */
+
+:root {
+  /* Color Palette - Default Midnight Obsidian */
+  --bg-primary: #07090e;
+  --bg-secondary: rgba(16, 22, 34, 0.7);
+  --bg-tertiary: rgba(25, 33, 48, 0.85);
+  
+  --accent-gold: #e5b37e;
+  --accent-gold-glow: rgba(229, 179, 126, 0.4);
+  --accent-cyan: #38ef7d;
+  --accent-sky: #4facfe;
+
+  --text-primary: #f0f4f8;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --glass-bg: rgba(15, 23, 42, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+
+  --font-serif: "Cinzel", "Playfair Display", "Times New Roman", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, sans-serif;
+  --font-mono: "SF Mono", "Fira Code", "Courier New", monospace;
+
+  --transition-slow: 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.2s ease;
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   Dynamic Time-of-Day Sky Themes
+   ========================================================================== */
+
+#sky-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  transition: background var(--transition-slow), opacity var(--transition-slow);
+  pointer-events: none;
+}
+
+/* 1. Dawn / Sunrise (05:00 - 06:59) */
+body.theme-dawn #sky-background {
+  background: radial-gradient(circle at 50% 85%, #ff9a76 0%, #ff6e7f 25%, #764ba2 60%, #1a1636 100%);
+}
+body.theme-dawn {
+  --text-primary: #ffffff;
+  --text-secondary: #fce4ec;
+  --glass-bg: rgba(45, 25, 55, 0.55);
+  --glass-border: rgba(255, 180, 200, 0.25);
+  --accent-gold: #ffbe88;
+}
+
+/* 2. Broad Daylight (07:00 - 16:59) */
+body.theme-day #sky-background {
+  background: radial-gradient(circle at 50% 20%, #68bbfd 0%, #3a88e9 40%, #1b4e9b 75%, #0f2c59 100%);
+}
+body.theme-day {
+  --text-primary: #ffffff;
+  --text-secondary: #e2e8f0;
+  --glass-bg: rgba(15, 35, 70, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.22);
+  --accent-gold: #ffd166;
+}
+
+/* 3. Golden Hour & Sunset (17:00 - 19:29) */
+body.theme-sunset #sky-background {
+  background: radial-gradient(circle at 50% 75%, #ff7e40 0%, #e83e8c 30%, #592055 65%, #150928 100%);
+}
+body.theme-sunset {
+  --text-primary: #ffffff;
+  --text-secondary: #fbd38d;
+  --glass-bg: rgba(50, 20, 45, 0.6);
+  --glass-border: rgba(255, 140, 100, 0.28);
+  --accent-gold: #ffa94d;
+}
+
+/* 4. Twilight & Dusk (19:30 - 21:29) */
+body.theme-dusk #sky-background {
+  background: radial-gradient(circle at 50% 70%, #6b21a8 0%, #31135e 35%, #180b38 70%, #080318 100%);
+}
+body.theme-dusk {
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --glass-bg: rgba(25, 15, 45, 0.65);
+  --glass-border: rgba(180, 130, 240, 0.2);
+  --accent-gold: #d8b4fe;
+}
+
+/* 5. Deep Starry Night (21:30 - 04:59) */
+body.theme-night #sky-background {
+  background: radial-gradient(circle at 50% 50%, #0e172a 0%, #070c18 45%, #03060d 85%, #000205 100%);
+}
+body.theme-night {
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --glass-bg: rgba(15, 23, 42, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --accent-gold: #e5b37e;
+}
+
+/* Sun / Moon Celestial Atmosphere Glow */
+#sun-moon-glow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: blur(80px);
+  opacity: 0.6;
+  transition: all var(--transition-slow);
+}
+body.theme-dawn #sun-moon-glow {
+  background: radial-gradient(circle, rgba(255, 180, 100, 0.8) 0%, rgba(255, 100, 100, 0) 70%);
+}
+body.theme-day #sun-moon-glow {
+  background: radial-gradient(circle, rgba(255, 245, 200, 0.85) 0%, rgba(100, 200, 255, 0) 70%);
+}
+body.theme-sunset #sun-moon-glow {
+  background: radial-gradient(circle, rgba(255, 120, 40, 0.85) 0%, rgba(200, 50, 100, 0) 70%);
+}
+body.theme-dusk #sun-moon-glow {
+  background: radial-gradient(circle, rgba(160, 100, 255, 0.6) 0%, rgba(70, 30, 150, 0) 70%);
+}
+body.theme-night #sun-moon-glow {
+  background: radial-gradient(circle, rgba(180, 220, 255, 0.45) 0%, rgba(30, 60, 120, 0) 70%);
+}
+
+/* Starfield */
+#stars-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.85;
+  transition: opacity var(--transition-slow);
+}
+body.theme-day #stars-layer {
+  opacity: 0.05;
+}
+body.theme-dawn #stars-layer,
+body.theme-sunset #stars-layer {
+  opacity: 0.35;
+}
+
+.star {
+  position: absolute;
+  background-color: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #ffffff;
+  animation: twinkle ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  0% { opacity: 0.2; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.3); }
+}
+
+/* ==========================================================================
+   App Layout
+   ========================================================================== */
+
+#app-container {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 2rem 2.5rem;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* Header & Brand */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.brand-icon {
+  font-size: 1.75rem;
+  filter: drop-shadow(0 0 12px var(--accent-gold-glow));
+}
+
+.brand-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, #ffffff 40%, var(--accent-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-tagline {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Sound Button */
+.icon-btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: all var(--transition-normal);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.icon-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-gold);
+  box-shadow: 0 8px 22px var(--accent-gold-glow);
+}
+.icon-btn.muted {
+  opacity: 0.6;
+}
+
+/* View Mode Switcher */
+.view-modes {
+  display: flex;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  padding: 4px;
+  border-radius: 30px;
+  backdrop-filter: blur(12px);
+}
+.view-mode-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.view-mode-btn.active {
+  background: var(--accent-gold);
+  color: #11141a;
+  font-weight: 600;
+  box-shadow: 0 2px 10px var(--accent-gold-glow);
+}
+
+/* ==========================================================================
+   Search Section
+   ========================================================================== */
+
+.search-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+}
+
+.search-form {
+  position: relative;
+  width: 100%;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 40px;
+  padding: 0.5rem 1rem 0.5rem 1.4rem;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(20px);
+  transition: all var(--transition-normal);
+}
+.search-input-wrapper:focus-within {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 25px var(--accent-gold-glow), var(--glass-shadow);
+  transform: translateY(-2px);
+}
+
+.search-icon {
+  font-size: 1.15rem;
+  margin-right: 0.75rem;
+  opacity: 0.7;
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  font-family: inherit;
+}
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-submit-btn {
+  background: linear-gradient(135deg, var(--accent-gold) 0%, #c48b4e 100%);
+  color: #0b0e14;
+  border: none;
+  border-radius: 30px;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all var(--transition-fast);
+}
+.search-submit-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 14px var(--accent-gold-glow);
+}
+
+/* Autocomplete Suggestions Dropdown */
+.suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  z-index: 100;
+  max-height: 340px;
+  overflow-y: auto;
+  transition: opacity var(--transition-fast);
+}
+.suggestions-dropdown.hidden {
+  display: none;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+.suggestion-item:hover {
+  background: rgba(229, 179, 126, 0.15);
+}
+.suggestion-item.no-match {
+  cursor: default;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+.city-flag {
+  font-size: 1.35rem;
+  margin-right: 0.85rem;
+}
+.city-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.city-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.city-country {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+.city-tz {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* Popular City Chips */
+.popular-cities {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.popular-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  margin-right: 0.4rem;
+}
+.city-chip {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-fast);
+}
+.city-chip:hover {
+  border-color: var(--accent-gold);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--accent-gold-glow);
+}
+
+/* ==========================================================================
+   Hero Stage: Watch & Globe Cinematic Core
+   ========================================================================== */
+
+.hero-stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 520px;
+  perspective: 1200px;
+}
+
+/* Watch Wrapper */
+.watch-wrapper {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  max-width: 90vw;
+  max-height: 90vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transform-style: preserve-3d;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.9s ease;
+  will-change: transform, opacity;
+}
+
+#watch-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Globe Wrapper */
+.globe-wrapper {
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  max-width: 92vw;
+  max-height: 92vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  opacity: 0;
+  transform: scale(0.65) rotateY(-20deg);
+  pointer-events: none;
+  transition: transform 1.3s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+#globe-canvas {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+#globe-canvas:active {
+  cursor: grabbing;
+}
+
+.globe-hud {
+  position: absolute;
+  bottom: 12px;
+  background: rgba(10, 15, 25, 0.7);
+  border: 1px solid var(--glass-border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: var(--accent-sky);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Cinematic Transitions
+   -------------------------------------------------------------------------- */
+
+/* Step 1: Watch zooms in into screen / camera dives in */
+.hero-stage.state-watch-zooming .watch-wrapper {
+  transform: scale(2.8) translateZ(200px);
+  opacity: 0;
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+/* Step 2: Globe emerges in foreground and FILLS THE ENTIRE UI */
+.hero-stage.state-globe-flying .watch-wrapper {
+  opacity: 0;
+  transform: scale(2.8);
+  pointer-events: none;
+}
+
+.hero-stage.state-globe-flying .globe-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  z-index: 1000;
+  opacity: 1;
+  transform: none;
+  background: radial-gradient(circle at center, rgba(10, 16, 28, 0.95) 0%, rgba(2, 4, 8, 0.98) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-stage.state-globe-flying #globe-canvas {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  display: block;
+}
+
+.globe-telemetry {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid var(--accent-gold);
+  padding: 10px 28px;
+  border-radius: 40px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #ffffff;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 0 30px var(--accent-gold-glow);
+  z-index: 1010;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  white-space: nowrap;
+}
+
+.hero-stage.state-globe-flying .globe-telemetry {
+  opacity: 1;
+  animation: telemetry-pulse 2s infinite alternate;
+}
+
+@keyframes telemetry-pulse {
+  0% { transform: translateX(-50%) scale(0.98); box-shadow: 0 0 15px rgba(229, 179, 126, 0.4); }
+  100% { transform: translateX(-50%) scale(1.02); box-shadow: 0 0 35px rgba(229, 179, 126, 0.9); }
+}
+
+/* Step 3: Watch reveals smoothly back into frame */
+.hero-stage.state-watch-reveal .globe-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-stage.state-watch-reveal .watch-wrapper {
+  opacity: 1;
+  transform: scale(1) translateZ(0);
+  filter: blur(0);
+  z-index: 1001;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+}
+
+/* --------------------------------------------------------------------------
+   Split View Mode (Side-by-Side)
+   -------------------------------------------------------------------------- */
+
+.hero-stage.split-view {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+  justify-items: center;
+  max-width: 1100px;
+  width: 100%;
+}
+
+.hero-stage.split-view .watch-wrapper {
+  position: relative;
+  width: 440px;
+  height: 440px;
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  pointer-events: auto;
+}
+
+.hero-stage.split-view .globe-wrapper {
+  position: relative;
+  width: 440px;
+  height: 440px;
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   Information Deck & Complications
+   ========================================================================== */
+
+.info-deck {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 1.5rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.location-card, .time-card, .watch-customizer {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 1.25rem 1.6rem;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(20px);
+  transition: all var(--transition-normal);
+}
+.location-card:hover, .time-card:hover, .watch-customizer:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Location Card */
+.location-card {
+  flex: 1;
+  min-width: 260px;
+}
+.card-header-tag {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+.location-name {
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.location-country {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+.card-meta-pills {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.meta-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0.7rem;
+  border-radius: 14px;
+  font-size: 0.74rem;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+}
+
+/* Digital Time Card */
+.time-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 240px;
+}
+.time-display-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.2rem 0;
+}
+.digital-time {
+  font-family: var(--font-mono);
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #ffffff;
+  text-shadow: 0 0 20px var(--accent-gold-glow);
+}
+.digital-time .sec {
+  color: var(--accent-gold);
+}
+.time-period {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+}
+.relative-time {
+  font-size: 0.82rem;
+  color: var(--accent-cyan);
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+.solar-status {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+/* Watch Finish Customizer */
+.watch-customizer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 220px;
+}
+.customizer-title {
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.finish-options {
+  display: flex;
+  gap: 0.6rem;
+}
+.finish-btn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  border-radius: 12px;
+  padding: 0.5rem 0.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.finish-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.swatch-steel { background: linear-gradient(135deg, #f0f3f6, #9aa0a6); }
+.swatch-rosegold { background: linear-gradient(135deg, #f5c49f, #b36e4b); }
+.swatch-obsidian { background: linear-gradient(135deg, #444b58, #16181f); }
+.swatch-bronze { background: linear-gradient(135deg, #e4b875, #7d592b); }
+
+.finish-btn.active {
+  border-color: var(--accent-gold);
+  background: rgba(229, 179, 126, 0.18);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+
+@media (max-width: 920px) {
+  .hero-stage.split-view {
+    grid-template-columns: 1fr;
+  }
+  .info-deck {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 600px) {
+  #app-container {
+    padding: 1rem 1rem 2rem;
+  }
+  .brand-title {
+    font-size: 1.25rem;
+  }
+  .watch-wrapper, .globe-wrapper {
+    width: 340px;
+    height: 340px;
+  }
+  .digital-time {
+    font-size: 1.8rem;
+  }
+  .search-input-wrapper {
+    padding: 0.4rem 0.75rem 0.4rem 1rem;
+  }
+  .search-submit-btn {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.8rem;
+  }
+}

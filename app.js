@@ -302,7 +302,7 @@ class WatchWorldApp {
   }
 
   updateInfoCards(city, timeInfo) {
-    if (this.locationNameEl) this.locationNameEl.textContent = `${city.flag} ${city.name}`;
+    if (this.locationNameEl) this.locationNameEl.textContent = city.name;
     if (this.locationCountryEl) this.locationCountryEl.textContent = city.country;
 
     // Format digital clock

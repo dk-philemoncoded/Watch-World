@@ -50,25 +50,28 @@ An interactive, Swiss luxury dress watch experience by **PHILL** (inspired by th
       - Night thinker resting on a park bench under the lantern light.
       - Periodic shooting stars streaking across the upper stratosphere with radiant trails.
 
-- **Hero 2D Mechanical Wrist Watch by PHILL**:
-  - **Double Bezel**: Outer delicate coin-edge fluted bezel with microscopic golden notches, inner mirror-polished domed gold ring.
-  - **Pure Porcelain White/Ivory Dial**: Refined lacquer finish with a delicate outer railroad minute track (*chemin-de-fer*) and minute dot pips.
-  - **Applied Faceted Gold Numerals**: Hand-finished applied numerals at `12`, `3`, and `9` with 3D drop shadow and dual-tone faceted relief.
-  - **Applied Faceted Dagger Markers**: Chamfered gold dagger batons at hours 1, 2, 4, 5, 7, 8, 10, 11, each split with bright and shadow facets.
-  - **Small Seconds Subdial (at 6 o'clock)**:
-    - Recessed aperture with authentic circular snailing (*azurage*).
-    - Subdial railroad track with printed `60`, `20`, `40` markers.
-    - Arched **SUPERLATIVE CHRONOMETER** inscription curved elegantly above the subdial.
-    - Slender golden needle second hand ticking dead-beat in the subdial.
-  - **Signature Horological Hands**:
-    - **Hour Hand**: Distinctive open circular Observatory / Breguet eye near the tip, ending in a sharp faceted needle point.
-    - **Minute Hand**: Sleek double-edged sword hand tapering all the way to the railroad track.
-    - Center arbor in polished domed gold with a central jewel pin.
-  - **Alligator-Grain Leather Straps & Sculpted Lugs**:
-    - Deep chestnut brown alligator leather with segmental scale plates and tone-on-tone saddle stitching.
-    - 4 sculpted, tapering lugs curving naturally from the polished case.
+- **Hero 3D Buckled Mechanical Wristwatch by PHILL**:
+  - **Fully Buckled 3D Leather Strap & Clasp**:
+    - Modeled as a complete, closed anatomical wrist loop with realistic thickness, inner lining, edge stitching, adjustment pinholes, and strap tail.
+    - **Complete 3D Buckle Assembly**: Polished metallic buckle frame, cylindrical crossbar, articulated prong/tongue pin piercing through the strap hole, fixed keeper loop, and floating keeper loop holding down the strap tail.
+  - **Rolex 1908 Case Architecture in Full 3D**:
+    - **Double Bezel**: Outer delicate coin-edge fluted bezel with 72 microscopic golden notches, inner mirror-polished domed gold ring.
+    - **Sculpted Lugs**: 4 tapered, curving case horns smoothly framing the leather strap.
+    - **Winding Crown**: Knurled grip grooves at 3 o'clock with a domed cabochon cap.
+    - **Brushed Case Back**: Circular radial brushing with screw-down perimeter notches visible when rotating the watch to the back.
+    - **Sapphire Crystal Dome**: Optically convex crystal dome with dynamic Fresnel reflections and sweeping specular glare.
+  - **Live Dial Texture Projection**:
+    - The high-resolution 2D Swiss dial face is projected in real-time onto the 3D watch dial.
+    - Pure porcelain white/ivory dial with outer railroad minute track (*chemin-de-fer*).
+    - Applied faceted gold numerals (`12`, `3`, `9`) and faceted dagger hour markers.
+    - Small seconds subdial at 6 o'clock with circular snailing (*azurage*), printed markers `60`, `20`, `40`, and arched **SUPERLATIVE CHRONOMETER** inscription.
+    - Observatory / Breguet-ring hour hand, double-edged sword minute hand, and slender seconds needle.
+  - **Interactive 3D Orbit Controls**:
+    - **Click & Drag / Touch Swipe**: Rotate the watch smoothly in full 360° to inspect the front dial, coin-edge bezel, sculpted lugs, winding crown, and the buckled strap clasp at the back.
+    - **Scroll Wheel**: Smoothly zoom in and out between macro dial inspection and wide overview.
+    - **Idle Wrist Sway**: Subtle, elegant ambient floating sway when untouched.
   - **Case & Metal Customizer**:
-    - **18ct Yellow Gold** (default, matching the classic reference timepiece).
+    - **18ct Yellow Gold** (default, classic reference timepiece).
     - **18ct Everose Gold**.
     - **18ct White Gold**.
     - **950 Platinum**.
